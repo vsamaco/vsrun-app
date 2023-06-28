@@ -1,15 +1,8 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Run from "~/components/Run";
+import { type ActivityProps } from "~/types";
 import { api } from "~/utils/api";
-
-type HighlightRun = {
-  id: string;
-  name: string;
-  moving_time: number;
-  distance: number;
-  total_elevation_gain: number;
-};
 
 export default function Home() {
   const { data, isLoading } = api.runProfile.getProfile.useQuery();
@@ -18,7 +11,7 @@ export default function Home() {
     return null;
   }
 
-  const highlightRun = data?.highlightRun as HighlightRun;
+  const highlightRun = data?.highlightRun as ActivityProps;
 
   return (
     <>

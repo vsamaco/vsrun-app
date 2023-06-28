@@ -1,3 +1,5 @@
+import dynamic from "next/dynamic";
+import { ActivityProps } from "~/types";
 import {
   formatHumanizeSeconds,
   metersToFeet,
@@ -5,14 +7,12 @@ import {
 } from "~/utils/activity";
 
 type RunProps = {
-  activity: {
-    id: string;
-    name: string;
-    moving_time: number;
-    distance: number;
-    total_elevation_gain: number;
-  };
+  activity: ActivityProps;
 };
+
+const MapWithNoSSR = dynamic(() => import("./ActivityMap"), {
+  ssr: false,
+});
 
 function Run({ activity }: RunProps) {
   const top_stats = [
@@ -44,11 +44,11 @@ function Run({ activity }: RunProps) {
             </li>
           ))}
         </ul>
-        {/* {activity && (
+        {activity && (
           <div className="mt-10 sm:mt-5">
             <MapWithNoSSR activity={activity} />
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
