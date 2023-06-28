@@ -13,9 +13,10 @@ async function main() {
       highlightRun: {
         id: "123",
         name: "Sample Run",
-        distance: 100,
-        moving_time: 200,
-        total_elevation_gain: 300,
+        distance: 42560.4,
+        moving_time: 13614,
+        elapsed_time: 13922,
+        total_elevation_gain: 173,
         start_latlng: [37.81, -122.26],
         summary_polyline:
           "mlweF|rfiV]o@eBoAwJgC`@yHf@iB`CwCfHeCrBNxEzB|AEhBsAVq@DeAUwBk@qAeAgA_FgCk@}@c@eBUyAAqJo@eAyBi@AoIm@mCmAaCF_@|AyBZAtBzA~MhE~DdBz@|At@zGv@hBlDnAtDfC~EBpA`@t@t@rAbDtArAR@r@i@~@dFbF}ErNmPXL`DxEdEfHaBjCmK~LyCdEcN~d@uE|Ps@fBa@P}FwBa@lCw@zA_@fBcBrEUlBwAxCoBdIFZr@HbE~BhA_Et@EvJtFfBb@vCdCfGbDN^m@rC}FzQeA~DUhB_ApBcArDgMz|@c@`Ao@\\cADuCs@qF{AK]nJ}r@jAyJ^iFhD}Lr@yDiB{Auj@wYcFgDByB|AiNHsCrAcF?e@eAW}AqAcHqDoBm@{@_AqBgA_FkBi@o@cF_DkJiEaKcGmE_BcFmDqPiJaEkAmGmEgKcFePeJSJDhMKVsAQSeAMiGMJJEISu@i@y@?wCu@DaGj@ErKlFzf@dXlMdGrAhAr_@pSfH`DxFpDzL`GfNpH^r@mAtFvBBbN`CxAp@dD\\~C|A^Sl@kDn@sAjEqP~CwJlCmLsCwBaEmBiFcDg@H_A`AgCxDaLhG{D_@wB{AsJcCDkBr@{Fh@oAhB_CtDuAtCk@xATpDlBjBDz@Wp@o@\\k@PgAIeB{@eCy@}@oE_CsAwBk@sCAuJs@iAyBe@P_GK_Bi@sBsAyBAY~A_CVGzB|AfSxGtAzBv@bHn@rA|D~A~CtBnFHfAXx@|@xAfDtAlAl@c@XBv@|EbAm@fSaVb@@t@`A~GvKXl@A\\iSlVwVlz@g@NaCmAqBc@kE~N[fD[B]zA}C~HArAnBl@jCzA`@_@x@aDhAR|NvHhAbAxGdDLZaOhh@uMr~@e@r@gARaLmCMm@jBkNr@{CC_@lGkf@f@aHnDiMr@sEqCmBwMwGwGaEaMiG}J{FGa@b@iDPyD|@_H@mAtA_GEWsAe@k@m@oD{A{CqBcCy@iAkAwHaDwGsEoHaDqL{GiDyA{LqHaLwF{CcAmDqByAqAeYgOwA{@]DIbANvKcBI_@oI}@q@gA?_@]oBWDcGLOv@RnL|F|f@bXhFnChBj@jJ|F`YhOrEzBhCp@p@|@dF`DfUpLfDr@D`Ac@bC}@pAZb@`BBjFrA~Fl@pCz@hCL`DpAb@s@l@uC|@{A`BeJrC_IvA_H|AgFX_CsMoHmAeAs@G{@t@qBxDmDnMc@dA",

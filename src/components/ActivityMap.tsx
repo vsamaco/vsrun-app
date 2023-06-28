@@ -2,13 +2,7 @@ import React from "react";
 import polyline from "@mapbox/polyline";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  Polyline,
-} from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
 import { type ActivityProps } from "~/types";
 
 type Props = {
