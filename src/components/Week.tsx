@@ -1,0 +1,57 @@
+import React from "react";
+import { WeekStatProp, type ActivityProps } from "~/types";
+import {
+  formatHumanizeSeconds,
+  metersToFeet,
+  metersToMiles,
+} from "~/utils/activity";
+
+type WeekProps = {
+  weekStats: WeekStatProp;
+};
+
+function Week({ weekStats }: WeekProps) {
+  const startMonth = weekStats.start_date.toLocaleString("en-US", {
+    month: "long",
+  });
+  const startDay = weekStats.start_date.getDay();
+
+  const endMonth = weekStats.end_date.toLocaleString("en-US", {
+    month: "long",
+  });
+  const endDay = weekStats.end_date.getDay();
+
+  const { total_distance, total_duration, total_elevation } = weekStats;
+
+  return (
+    <div className="flex flex-col justify-center border-t-4 border-blue-300 px-5 py-10 sm:px-10 sm:py-20">
+      <h2 className="text-8xl font-light text-blue-300">WEEK</h2>
+      <p className="mt-3 text-4xl uppercase">
+        {startMonth} {startDay} - {endMonth} {endDay}
+      </p>
+
+      <div className="mt-10 grid grid-cols-1 justify-center gap-5 sm:mt-10 md:mt-40 md:grid-cols-3">
+        <div className="flex h-64 w-full flex-col items-center justify-center border-b-4 border-blue-300 bg-white">
+          <div data-testid="distance-value" className="text-right text-6xl">
+            {metersToMiles(total_distance).toLocaleString()} mi
+          </div>
+          <div className="mt-5 text-left text-2xl font-light">DISTANCE</div>
+        </div>
+        <div className="flex h-64 flex-col items-center justify-center border-b-4 border-blue-300 bg-white">
+          <div data-testid="time-value" className="text-right text-6xl">
+            {formatHumanizeSeconds(total_duration)}
+          </div>
+          <div className="mt-5 text-left text-2xl font-light">TIME</div>
+        </div>
+        <div className="flex h-64 flex-col items-center justify-center border-b-4 border-blue-300 bg-white">
+          <div data-testid="elevation-value" className="text-right text-6xl">
+            {Math.ceil(metersToFeet(total_elevation)).toLocaleString()} ft
+          </div>
+          <div className="text-lef mt-5 text-2xl font-light">ELEVATION</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Week;
