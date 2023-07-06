@@ -1,5 +1,5 @@
 import React from "react";
-import { WeekStatProp, type ActivityProps } from "~/types";
+import { type WeekStat } from "~/types";
 import {
   formatHumanizeSeconds,
   metersToFeet,
@@ -7,7 +7,7 @@ import {
 } from "~/utils/activity";
 
 type WeekProps = {
-  weekStats: WeekStatProp;
+  weekStats: WeekStat;
 };
 
 function Week({ weekStats }: WeekProps) {

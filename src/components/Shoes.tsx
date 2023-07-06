@@ -1,9 +1,9 @@
 import React from "react";
-import { type ShoeProps } from "~/types";
+import { type Shoe } from "~/types";
 import { metersToMiles } from "~/utils/activity";
 
 type Props = {
-  shoes: ShoeProps[];
+  shoes: Shoe[];
 };
 
 export default function Shoes({ shoes }: Props) {
