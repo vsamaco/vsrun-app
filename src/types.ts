@@ -9,7 +9,7 @@ export type ActivityProps = {
   summary_polyline: string;
 };
 
-export type WeekStatProp = {
+export type WeekStat = {
   start_date: Date;
   end_date: Date;
   total_runs: number;
@@ -18,9 +18,16 @@ export type WeekStatProp = {
   total_elevation: number;
 };
 
-export type ShoeProps = {
+export type Shoe = {
   id: string;
   brand_name: string;
   model_name: string;
+  distance: number;
+};
+
+export type Event = {
+  id: string;
+  name: string;
+  start_date: Date;
   distance: number;
 };

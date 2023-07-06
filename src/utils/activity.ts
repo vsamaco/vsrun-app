@@ -13,6 +13,10 @@ export const formatDate = (isoString: string) => {
   return dayjs(isoString).format("MMM D, YYYY");
 };
 
+export const formatEventDate = (event_date: Date) => {
+  return dayjs(event_date).format("MMM.D.YYYY");
+};
+
 export const formatTime = (isoString: string) => {
   return dayjs(isoString).format("h:mm a");
 };

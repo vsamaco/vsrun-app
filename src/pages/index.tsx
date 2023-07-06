@@ -3,6 +3,7 @@ import Head from "next/head";
 import Run from "~/components/Run";
 import Shoes from "~/components/Shoes";
 import Week from "~/components/Week";
+import Events from "~/components/Events";
 import { type ActivityProps } from "~/types";
 import { api } from "~/utils/api";
 
@@ -42,6 +43,26 @@ export default function Home() {
       distance: 10000,
     },
   ];
+  const events = [
+    {
+      id: "123",
+      name: "Oakland Marathon",
+      start_date: new Date(2023, 3, 19),
+      distance: 26.2,
+    },
+    {
+      id: "234",
+      name: "San Francisco Marathon",
+      start_date: new Date(2023, 7, 2023),
+      distance: 26.2,
+    },
+    {
+      id: "345",
+      name: "Chicago Marathon",
+      start_date: new Date(2023, 10, 8),
+      distance: 26.2,
+    },
+  ];
 
   return (
     <>
@@ -60,6 +81,9 @@ export default function Home() {
         </div>
         <div className="bg-gray-100">
           {data?.shoes && <Shoes shoes={shoes} />}
+        </div>
+        <div className="bg-gray-100">
+          {data?.events && <Events events={events} />}
         </div>
       </main>
     </>
