@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { ActivityProps } from "~/types";
+import { type Activity } from "~/types";
 import {
   formatHumanizeSeconds,
   metersToFeet,
@@ -7,7 +7,7 @@ import {
 } from "~/utils/activity";
 
 type RunProps = {
-  activity: ActivityProps;
+  activity: Activity;
 };
 
 const MapWithNoSSR = dynamic(() => import("./ActivityMap"), {

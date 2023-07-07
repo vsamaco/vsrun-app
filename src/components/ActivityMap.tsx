@@ -3,10 +3,10 @@ import polyline from "@mapbox/polyline";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
-import { type ActivityProps } from "~/types";
+import { type Activity } from "~/types";
 
 type Props = {
-  activity: ActivityProps;
+  activity: Activity;
   zoom?: number;
 };
 

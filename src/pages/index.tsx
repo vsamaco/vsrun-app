@@ -4,7 +4,7 @@ import Run from "~/components/Run";
 import Shoes from "~/components/Shoes";
 import Week from "~/components/Week";
 import Events from "~/components/Events";
-import { type ActivityProps } from "~/types";
+import { type Shoe, type Activity, type Event, type WeekStat } from "~/types";
 import { api } from "~/utils/api";
 
 export default function Home() {
@@ -14,55 +14,10 @@ export default function Home() {
     return null;
   }
 
-  const highlightRun = data?.highlightRun as ActivityProps;
-  const weekStats = {
-    start_date: new Date(2023, 5, 29),
-    end_date: new Date(2023, 6, 4),
-    total_runs: 5,
-    total_distance: 12000,
-    total_duration: 30000,
-    total_elevation: 1000,
-  };
-  const shoes = [
-    {
-      id: "123",
-      brand_name: "Saucony",
-      model_name: "Ride 15",
-      distance: 100000,
-    },
-    {
-      id: "234",
-      brand_name: "Adidas",
-      model_name: "Adizero Pro 3",
-      distance: 20000,
-    },
-    {
-      id: "345",
-      brand_name: "New Balance",
-      model_name: "Rebel v3",
-      distance: 10000,
-    },
-  ];
-  const events = [
-    {
-      id: "123",
-      name: "Oakland Marathon",
-      start_date: new Date(2023, 3, 19),
-      distance: 26.2,
-    },
-    {
-      id: "234",
-      name: "San Francisco Marathon",
-      start_date: new Date(2023, 7, 2023),
-      distance: 26.2,
-    },
-    {
-      id: "345",
-      name: "Chicago Marathon",
-      start_date: new Date(2023, 10, 8),
-      distance: 26.2,
-    },
-  ];
+  const highlightRun = data?.highlightRun as Activity;
+  const weekStats = data?.weekStats as WeekStat;
+  const shoes = data?.shoes as Shoe[];
+  const events = data?.events as Event[];
 
   return (
     <>

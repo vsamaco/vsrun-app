@@ -1,4 +1,4 @@
-export type ActivityProps = {
+export type Activity = {
   id: string;
   name: string;
   moving_time: number;
