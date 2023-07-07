@@ -8,7 +8,10 @@ type Props = {
 
 export default function Shoes({ shoes }: Props) {
   return (
-    <div className="flex flex-col justify-center border-t-4 border-green-300 px-5 py-10 sm:px-10 sm:py-20">
+    <div
+      id="shoes"
+      className="flex flex-col justify-center border-t-4 border-green-300 px-5 py-10 sm:px-10 sm:py-20"
+    >
       <h3 className="flex flex-col justify-center text-8xl font-light text-green-300">
         SHOES
       </h3>

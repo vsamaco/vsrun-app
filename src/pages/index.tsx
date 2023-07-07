@@ -6,6 +6,7 @@ import Week from "~/components/Week";
 import Events from "~/components/Events";
 import { type Shoe, type Activity, type Event, type WeekStat } from "~/types";
 import { api } from "~/utils/api";
+import Hero from "~/components/Hero";
 
 export default function Home() {
   const { data, isLoading } = api.runProfile.getProfile.useQuery();
@@ -27,7 +28,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <h1 className="text-white">{data?.username}</h1>
+        <Hero username={data?.username} />
         <div className="bg-gray-100">
           {data?.highlightRun && <Run activity={highlightRun} />}
         </div>

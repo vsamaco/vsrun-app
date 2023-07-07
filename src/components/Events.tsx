@@ -8,7 +8,10 @@ type EventsProps = {
 
 function Events({ events }: EventsProps) {
   return (
-    <div className="flex flex-col justify-center border-t-4 border-red-400 px-5 py-10 sm:px-10 sm:py-20">
+    <div
+      id="races"
+      className="flex flex-col justify-center border-t-4 border-red-400 px-5 py-10 sm:px-10 sm:py-20"
+    >
       <h2 className="text-8xl font-light uppercase text-red-400">Races</h2>
       <div className="mt-20 flex flex-col justify-end space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
         {events.map(({ name, start_date, distance, id }) => {

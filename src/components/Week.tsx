@@ -22,7 +22,10 @@ function Week({ weekStats }: WeekProps) {
   const { total_distance, total_duration, total_elevation } = weekStats;
 
   return (
-    <div className="flex flex-col justify-center border-t-4 border-blue-300 px-5 py-10 sm:px-10 sm:py-20">
+    <div
+      id="week"
+      className="flex flex-col justify-center border-t-4 border-blue-300 px-5 py-10 sm:px-10 sm:py-20"
+    >
       <h2 className="text-8xl font-light text-blue-300">WEEK</h2>
       <p className="mt-3 text-4xl uppercase">
         {startMonth} {startDay} - {endMonth} {endDay}

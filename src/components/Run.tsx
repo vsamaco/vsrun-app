@@ -33,7 +33,10 @@ function Run({ activity }: RunProps) {
   ];
 
   return (
-    <div className="flex flex-col justify-center border-t-4 border-yellow-300 px-5 py-10 sm:px-10 sm:py-20">
+    <div
+      id="run"
+      className="flex flex-col justify-center border-t-4 border-yellow-300 px-5 py-10 sm:px-10 sm:py-20"
+    >
       <h3 className="text-8xl font-light uppercase text-yellow-300">Run</h3>
       <h4 className="mt-3 text-5xl">{activity.name}</h4>
       <div className="mt-10 grid sm:grid-cols-1 md:grid-cols-2">
