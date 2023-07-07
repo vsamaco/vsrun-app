@@ -23,7 +23,7 @@ export default function Shoes({ shoes }: Props) {
               <div className="text-lg sm:text-2xl ">{shoe.model_name}</div>
             </div>
             <div className="flex flex-none flex-col justify-center bg-white pr-5 text-2xl font-light sm:text-5xl">
-              {metersToMiles(shoe.distance)} mi
+              {Math.ceil(metersToMiles(shoe.distance))} mi
             </div>
           </li>
         ))}

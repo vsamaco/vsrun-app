@@ -1,6 +1,6 @@
 import React from "react";
 import { type Event } from "../types";
-import { formatEventDate } from "~/utils/activity";
+import { formatEventDate, metersToMiles } from "~/utils/activity";
 
 type EventsProps = {
   events: Event[];
@@ -20,7 +20,9 @@ function Events({ events }: EventsProps) {
               <div className="text-5xl">{name}</div>
               <div className="mt-2 text-lg">{formatEventDate(start_date)}</div>
               <div className="absolute bottom-10 mt-20 text-right text-6xl font-light">
-                {distance}
+                {metersToMiles(distance).toLocaleString("en-US", {
+                  maximumFractionDigits: 1,
+                })}
               </div>
             </div>
           );
