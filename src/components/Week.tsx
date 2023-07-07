@@ -4,6 +4,8 @@ import {
   formatHumanizeSeconds,
   metersToFeet,
   metersToMiles,
+  parseDateDay,
+  parseDateMonth,
 } from "~/utils/activity";
 
 type WeekProps = {
@@ -11,15 +13,11 @@ type WeekProps = {
 };
 
 function Week({ weekStats }: WeekProps) {
-  const startMonth = weekStats.start_date.toLocaleString("en-US", {
-    month: "long",
-  });
-  const startDay = weekStats.start_date.getDay();
+  const startMonth = parseDateMonth(weekStats.start_date);
+  const startDay = parseDateDay(weekStats.start_date);
 
-  const endMonth = weekStats.end_date.toLocaleString("en-US", {
-    month: "long",
-  });
-  const endDay = weekStats.end_date.getDay();
+  const endMonth = parseDateMonth(weekStats.end_date);
+  const endDay = parseDateDay(weekStats.end_date);
 
   const { total_distance, total_duration, total_elevation } = weekStats;
 

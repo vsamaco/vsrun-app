@@ -25,6 +25,14 @@ export const formatHumanizeSeconds = (seconds: number) => {
   return dayjs.duration(seconds, "seconds").format("H[h] m[m]");
 };
 
+export const parseDateMonth = (weekDate: Date) => {
+  return dayjs(weekDate).format("MMM");
+};
+
+export const parseDateDay = (weekDate: Date) => {
+  return dayjs(weekDate).format("D");
+};
+
 export const metersToMiles = (i: number) => {
   return Math.round(i * 0.000621371192 * 100) / 100;
 };
