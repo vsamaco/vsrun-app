@@ -11,8 +11,9 @@ async function main() {
       userId: "cljdfv2yx0000smvl6hsz37tx",
       username: "milesperdonut",
       highlightRun: {
-        id: "123",
+        id: 123,
         name: "Sample Run",
+        start_date: new Date(2023, 5, 30).toUTCString(),
         distance: 42560.4,
         moving_time: 13614,
         elapsed_time: 13922,
