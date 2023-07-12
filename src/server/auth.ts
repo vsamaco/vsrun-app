@@ -4,6 +4,8 @@ import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
+  type Session,
+  TokenSet,
 } from "next-auth";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
@@ -30,6 +32,66 @@ declare module "next-auth" {
   // }
 }
 
+async function refreshAccessToken(refreshToken: string) {
+  const url = "https://www.strava.com/api/v3/oauth/token";
+
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      client_id: env.STRAVA_CLIENT_ID,
+      client_secret: env.STRAVA_CLIENT_SECRET,
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+    }),
+    method: "POST",
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const tokens: TokenSet = await response.json();
+
+  if (!response.ok) throw tokens;
+
+  return tokens;
+}
+
+const maybeRefreshSessionToken = async (
+  session: Session,
+  refreshToken: string | null,
+  providerAccountId: string,
+  expiresAt: number | null
+) => {
+  if (!refreshToken || !expiresAt) {
+    return;
+  }
+
+  if (expiresAt * 1000 < Date.now()) {
+    // access token expired, refresh it
+    console.log("=== access token expired ===");
+    try {
+      const tokens = await refreshAccessToken(refreshToken);
+
+      await prisma.account.update({
+        data: {
+          access_token: tokens.access_token,
+          expires_at: tokens.expires_at,
+          refresh_token: tokens.refresh_token ?? refreshToken,
+        },
+        where: {
+          provider_providerAccountId: {
+            provider: "strava",
+            providerAccountId: providerAccountId,
+          },
+        },
+      });
+    } catch (error) {
+      console.error("error refresh token");
+      // session.error = "RefreshAccessTokenError" as const;
+    }
+  }
+};
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -37,13 +99,32 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      console.log("session auth");
+      const [strava] = await prisma.account.findMany({
+        where: {
+          userId: user.id,
+          provider: "strava",
+        },
+      });
+
+      if (strava) {
+        await maybeRefreshSessionToken(
+          session,
+          strava.refresh_token,
+          strava.providerAccountId,
+          strava.expires_at
+        );
+      }
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+        },
+      };
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
