@@ -4,7 +4,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { Activity } from "~/types";
+import { Activity, WeekStat } from "~/types";
 
 export const runProfileRouter = createTRPCRouter({
   getProfile: publicProcedure.query(async ({ ctx }) => {
@@ -14,18 +14,30 @@ export const runProfileRouter = createTRPCRouter({
   updateProfile: protectedProcedure
     .input(
       z.object({
-        username: z.string(),
-        highlightRun: z.object({
-          id: z.number(),
-          name: z.string(),
-          start_date: z.string(),
-          start_latlng: z.array(z.number()),
-          elapsed_time: z.number(),
-          moving_time: z.number(),
-          distance: z.number(),
-          total_elevation_gain: z.number(),
-          summary_polyline: z.string(),
-        }),
+        username: z.string().optional(),
+        highlightRun: z
+          .object({
+            id: z.number(),
+            name: z.string(),
+            start_date: z.string(),
+            start_latlng: z.array(z.number()),
+            elapsed_time: z.number(),
+            moving_time: z.number(),
+            distance: z.number(),
+            total_elevation_gain: z.number(),
+            summary_polyline: z.string(),
+          })
+          .optional(),
+        weekStats: z
+          .object({
+            total_runs: z.number(),
+            total_distance: z.number(),
+            total_duration: z.number(),
+            total_elevation: z.number(),
+            start_date: z.string(),
+            end_date: z.string(),
+          })
+          .optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -38,17 +50,16 @@ export const runProfileRouter = createTRPCRouter({
       });
 
       const highlightRun = profile?.highlightRun as Activity;
+      const weekStats = profile?.weekStats as WeekStat;
 
       const result = await ctx.prisma.runProfile.update({
         where: {
           userId: userId,
         },
         data: {
-          username: input.username,
-          highlightRun: {
-            ...highlightRun,
-            ...input.highlightRun,
-          },
+          ...(input.username ? { username: input.username } : null),
+          ...(input.highlightRun ? { highlightRun: input.highlightRun } : null),
+          ...(input.weekStats ? { weekStats: input.weekStats } : null),
         },
       });
 

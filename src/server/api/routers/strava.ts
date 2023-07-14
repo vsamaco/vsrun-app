@@ -11,7 +11,7 @@ strava.config({
 });
 
 export type StravaActivity = {
-  id: string;
+  id: number;
   name: string;
   moving_time: number;
   elapsed_time: number;
@@ -42,8 +42,6 @@ export const stravaRouter = createTRPCRouter({
     })) as StravaActivity[];
 
     // console.log({ activities });
-    return {
-      activities: activities.length ? activities : [],
-    };
+    return activities;
   }),
 });
