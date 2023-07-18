@@ -17,7 +17,7 @@ export type StravaActivity = {
   elapsed_time: number;
   type: string;
   distance: number;
-  start_date: Date;
+  start_date: string;
   start_latlng: [number, number];
   map: {
     summary_polyline: string;

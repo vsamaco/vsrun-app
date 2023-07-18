@@ -14,7 +14,8 @@ type FormValues = {
   highlightRun: {
     id: number;
     name: string;
-    start_date: Date;
+    start_date: string;
+    elapsed_time: number;
     moving_time: number;
     distance: number;
     total_elevation_gain: number;
@@ -28,10 +29,11 @@ function SettingForm({ profile }: SettingFormProps) {
 
   const methods = useForm<FormValues>({
     defaultValues: {
-      username: profile.username,
       highlightRun: {
         id: highlightRun.id,
         name: highlightRun.name,
+        start_date: highlightRun.start_date,
+        elapsed_time: highlightRun.elapsed_time,
         moving_time: highlightRun.moving_time,
         distance: highlightRun.distance,
         total_elevation_gain: highlightRun.total_elevation_gain,
@@ -54,7 +56,11 @@ function SettingForm({ profile }: SettingFormProps) {
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-    updateProfile.mutate(data);
+    updateProfile.mutate({
+      highlightRun: {
+        ...data.highlightRun,
+      },
+    });
   });
 
   return (
@@ -87,6 +93,13 @@ function HighlightRunSettings() {
           <input
             {...register("highlightRun.name")}
             placeholder="activity name"
+          />
+        </div>
+        <div>
+          <label htmlFor="moving_time">Elapsed Time:</label>
+          <input
+            {...register("highlightRun.elapsed_time")}
+            placeholder="elapsed time"
           />
         </div>
         <div>
@@ -127,7 +140,7 @@ function StravaActivities({ handleImportActivity }: StravaActivitiesProps) {
   const [selectedActivity, setSelectedActivity] = useState<Activity>();
 
   const handleSelectActivity = (activity: StravaActivity) => {
-    const selectedActivity: Activity = {
+    const selectedActivity = {
       id: activity.id,
       name: activity.name,
       start_date: activity.start_date,
@@ -148,33 +161,30 @@ function StravaActivities({ handleImportActivity }: StravaActivitiesProps) {
   if (!data) {
     return null;
   }
-
-  if ("activities" in data) {
-    return (
-      <div>
-        <button
-          type="button"
-          className=""
-          onClick={() => handleImportActivity(selectedActivity)}
-        >
-          Import
-        </button>
-        <ul>
-          {data.activities.map((activity: StravaActivity) => {
-            return (
-              <div key={activity.id}>
-                <input
-                  type="checkbox"
-                  onClick={() => handleSelectActivity(activity)}
-                />
-                {activity.name}
-              </div>
-            );
-          })}
-        </ul>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <button
+        type="button"
+        className=""
+        onClick={() => handleImportActivity(selectedActivity)}
+      >
+        Import
+      </button>
+      <ul>
+        {data.map((activity: StravaActivity) => {
+          return (
+            <div key={activity.id}>
+              <input
+                type="checkbox"
+                onClick={() => handleSelectActivity(activity)}
+              />
+              {activity.name}
+            </div>
+          );
+        })}
+      </ul>
+    </div>
+  );
 }
 
 function Settings() {
