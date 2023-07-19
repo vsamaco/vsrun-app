@@ -7,10 +7,8 @@ type ShoesSettingsProps = {};
 
 function ShoesSettings({}: ShoesSettingsProps) {
   const { data, isLoading } = api.runProfile.getProfile.useQuery();
-  const { data: activities, isLoading: loadingActivities } =
-    api.strava.getActivities.useQuery();
 
-  if (isLoading && loadingActivities) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
