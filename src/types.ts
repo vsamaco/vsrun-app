@@ -27,8 +27,8 @@ export type Shoe = {
 };
 
 export type Event = {
-  id: string;
+  id: number;
   name: string;
-  start_date: Date;
+  start_date: string;
   distance: number;
 };

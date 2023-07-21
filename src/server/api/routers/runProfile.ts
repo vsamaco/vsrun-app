@@ -38,14 +38,26 @@ export const runProfileRouter = createTRPCRouter({
             end_date: z.string(),
           })
           .optional(),
-        shoes: z.array(
-          z.object({
-            id: z.string(),
-            brand_name: z.string(),
-            model_name: z.string(),
-            distance: z.number(),
-          })
-        ),
+        shoes: z
+          .array(
+            z.object({
+              id: z.string(),
+              brand_name: z.string(),
+              model_name: z.string(),
+              distance: z.number(),
+            })
+          )
+          .optional(),
+        events: z
+          .array(
+            z.object({
+              id: z.string(),
+              name: z.string(),
+              start_date: z.string(),
+              distance: z.number(),
+            })
+          )
+          .optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -69,6 +81,7 @@ export const runProfileRouter = createTRPCRouter({
           ...(input.highlightRun ? { highlightRun: input.highlightRun } : null),
           ...(input.weekStats ? { weekStats: input.weekStats } : null),
           ...(input.shoes ? { shoes: input.shoes } : null),
+          ...(input.events ? { events: input.events } : null),
         },
       });
 
