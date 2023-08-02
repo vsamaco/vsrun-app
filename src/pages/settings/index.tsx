@@ -1,12 +1,41 @@
+import { Button } from "~/components/ui/button";
 import { type RunProfile } from "@prisma/client";
 import React, { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { StravaActivity } from "~/server/api/routers/strava";
-import { Activity } from "~/types";
-import { RouterOutputs, api } from "~/utils/api";
+import { type StravaActivity } from "~/server/api/routers/strava";
+import { type Activity } from "~/types";
+import { api } from "~/utils/api";
+import SettingsLayout from "~/components/settings/layout";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { metersToMiles } from "~/utils/activity";
+import { Input } from "~/components/ui/input";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
+import { Separator } from "~/components/ui/separator";
 
 type SettingFormProps = {
-  profile: RunProfile;
+  profile: RunProfile | null;
 };
 
 type FormValues = {
@@ -29,6 +58,7 @@ function SettingForm({ profile }: SettingFormProps) {
 
   const methods = useForm<FormValues>({
     defaultValues: {
+      username: "username",
       highlightRun: {
         id: highlightRun.id,
         name: highlightRun.name,
@@ -42,7 +72,7 @@ function SettingForm({ profile }: SettingFormProps) {
       },
     },
   });
-  const { register, handleSubmit } = methods;
+  const { handleSubmit } = methods;
 
   const utils = api.useContext();
   const updateProfile = api.runProfile.updateProfile.useMutation({
@@ -65,14 +95,10 @@ function SettingForm({ profile }: SettingFormProps) {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={onSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input {...register("username")} placeholder="username" />
-        </div>
+      <form onSubmit={onSubmit} className="space-y-8">
         <HighlightRunSettings />
         <div>
-          <button type="submit">Submit</button>
+          <Button type="submit">Submit</Button>
         </div>
       </form>
     </FormProvider>
@@ -80,54 +106,159 @@ function SettingForm({ profile }: SettingFormProps) {
 }
 
 function HighlightRunSettings() {
-  const { register, setValue } = useFormContext();
+  const { setValue, control } = useFormContext();
   const handleImportActivity = (activity: Activity | undefined) => {
+    console.log("handle import", activity);
     setValue("highlightRun", activity);
   };
 
   return (
-    <div className="flex">
-      <div className="flex-col">
-        <div>
-          <label htmlFor="activity_name">Activity Name:</label>
-          <input
-            {...register("highlightRun.name")}
-            placeholder="activity name"
-          />
-        </div>
-        <div>
-          <label htmlFor="moving_time">Elapsed Time:</label>
-          <input
-            {...register("highlightRun.elapsed_time")}
-            placeholder="elapsed time"
-          />
-        </div>
-        <div>
-          <label htmlFor="moving_time">Moving Time:</label>
-          <input
-            {...register("highlightRun.moving_time")}
-            placeholder="moving time"
-          />
-        </div>
-        <div>
-          <label htmlFor="distance">Distance:</label>
-          <input
-            {...register("highlightRun.distance")}
-            placeholder="distance"
-          />
-        </div>
-        <div>
-          <label htmlFor="moving_time">Total Elevation Gain:</label>
-          <input
-            {...register("highlightRun.total_elevation_gain")}
-            placeholder="elevation gain"
-          />
-        </div>
-      </div>
-      <div className="flex-col">
-        <StravaActivities handleImportActivity={handleImportActivity} />
-      </div>
-    </div>
+    <>
+      <FormField
+        control={control}
+        name="highlightRun.name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Name</FormLabel>
+            <FormControl>
+              <Input placeholder="name" {...field} />
+            </FormControl>
+            <FormDescription>The name of the run activity.</FormDescription>
+          </FormItem>
+        )}
+      ></FormField>
+      <FormField
+        control={control}
+        name="highlightRun.moving_time"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Moving Time</FormLabel>
+            <FormControl>
+              <Input placeholder="moving time" {...field} />
+            </FormControl>
+          </FormItem>
+        )}
+      ></FormField>
+      <FormField
+        control={control}
+        name="highlightRun.elapsed_time"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Elapsed Time</FormLabel>
+            <FormControl>
+              <Input placeholder="elapsed time" {...field} />
+            </FormControl>
+          </FormItem>
+        )}
+      ></FormField>
+      <FormField
+        control={control}
+        name="highlightRun.distance"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Distance</FormLabel>
+            <FormControl>
+              <Input placeholder="distance" {...field} />
+            </FormControl>
+          </FormItem>
+        )}
+      ></FormField>
+      <FormField
+        control={control}
+        name="highlightRun.total_elevation_gain"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Elevation</FormLabel>
+            <FormControl>
+              <Input placeholder="elevation" {...field} />
+            </FormControl>
+          </FormItem>
+        )}
+      ></FormField>
+      <ImportDialogContent handleImportActivity={handleImportActivity} />
+    </>
+  );
+}
+
+type ImportDialogContentProps = {
+  handleImportActivity: (activity: Activity | undefined) => void;
+};
+
+function ImportDialogContent({
+  handleImportActivity,
+}: ImportDialogContentProps) {
+  const { data, isLoading } = api.strava.getActivities.useQuery();
+  const [selectedActivity, setSelectedActivity] = useState<Activity>();
+  const [open, setOpen] = useState(false);
+  const handleSelectActivity = (id: string) => {
+    const activity = data?.find((a) => a.id.toString() === id);
+
+    if (!activity) return;
+
+    console.log("handle select activity", activity);
+    const selectedActivity = {
+      id: activity.id,
+      name: activity.name,
+      start_date: activity.start_date,
+      moving_time: activity.moving_time,
+      elapsed_time: activity.elapsed_time,
+      distance: activity.distance,
+      total_elevation_gain: activity.total_elevation_gain,
+      start_latlng: activity.start_latlng,
+      summary_polyline: activity.map.summary_polyline,
+    };
+    console.log("selectedActivity:", selectedActivity);
+    setSelectedActivity(selectedActivity);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (!data) {
+    return null;
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">Import Strava Activity</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Import Strava Activity</DialogTitle>
+          <DialogDescription>
+            Select any activity to be imported as highlight run.
+          </DialogDescription>
+        </DialogHeader>
+        <Select onValueChange={(e) => handleSelectActivity(e)}>
+          <SelectTrigger className="">
+            <SelectValue placeholder="Select activity" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {data.map((activity: StravaActivity) => {
+                return (
+                  <SelectItem key={activity.id} value={activity.id.toString()}>
+                    {activity.name} {metersToMiles(activity.distance)} mi
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <DialogFooter>
+          <Button
+            type="submit"
+            onClick={() => {
+              handleImportActivity(selectedActivity);
+              setOpen(false);
+            }}
+          >
+            Import
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -163,13 +294,13 @@ function StravaActivities({ handleImportActivity }: StravaActivitiesProps) {
   }
   return (
     <div>
-      <button
+      <Button
         type="button"
-        className=""
+        variant="secondary"
         onClick={() => handleImportActivity(selectedActivity)}
       >
         Import
-      </button>
+      </Button>
       <ul>
         {data.map((activity: StravaActivity) => {
           return (
@@ -187,7 +318,7 @@ function StravaActivities({ handleImportActivity }: StravaActivitiesProps) {
   );
 }
 
-function Settings() {
+const RunSettingsPage = () => {
   const { data, isLoading } = api.runProfile.getProfile.useQuery();
 
   if (isLoading) {
@@ -199,11 +330,21 @@ function Settings() {
   }
 
   return (
-    <div>
-      <h1>Settings</h1>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text=lg font-medium">Run</h3>
+        <p className="text-sm text-muted-foreground">
+          Showcase an activity for highlighted run.
+        </p>
+      </div>
+      <Separator />
       <SettingForm profile={data} />
     </div>
   );
-}
+};
 
-export default Settings;
+RunSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <SettingsLayout>{page}</SettingsLayout>;
+};
+
+export default RunSettingsPage;
