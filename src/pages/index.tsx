@@ -1,4 +1,3 @@
-import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Run from "~/components/Run";
 import Shoes from "~/components/Shoes";
@@ -7,11 +6,16 @@ import Events from "~/components/Events";
 import { type Shoe, type Activity, type Event, type WeekStat } from "~/types";
 import { api } from "~/utils/api";
 import Hero from "~/components/Hero";
+import Layout from "~/components/layout";
 
-export default function Home() {
+const Home = () => {
   const { data, isLoading } = api.runProfile.getProfile.useQuery();
 
   if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!data) {
     return null;
   }
 
@@ -27,8 +31,7 @@ export default function Home() {
         <meta name="description" content="Running profile" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <button onClick={() => signIn("strava")}>Sign in</button>
+      <div className="container space-y-5">
         <Hero username={data?.username} />
         <div className="bg-gray-100">
           {data?.highlightRun && <Run activity={highlightRun} />}
@@ -42,7 +45,13 @@ export default function Home() {
         <div className="bg-gray-100">
           {data?.events && <Events events={events} />}
         </div>
-      </main>
+      </div>
     </>
   );
-}
+};
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return <Layout>{page}</Layout>;
+};
+
+export default Home;
