@@ -11,8 +11,8 @@ export type Activity = {
 };
 
 export type WeekStat = {
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
   total_runs: number;
   total_duration: number;
   total_distance: number;

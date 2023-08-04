@@ -8,7 +8,7 @@ const sidebarNavItems = [
   },
   {
     title: "Week",
-    href: "/settings/week_stat",
+    href: "/settings/week",
   },
   {
     title: "Shoes",
