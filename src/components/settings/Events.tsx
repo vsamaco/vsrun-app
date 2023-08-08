@@ -1,40 +1,45 @@
-import React, { useState } from "react";
-import {
-  type UseFieldArrayAppend,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import React from "react";
+import { useFieldArray, useForm, FormProvider } from "react-hook-form";
 import { type Event } from "~/types";
 import { api } from "~/utils/api";
-
-type Props = {
-  events: Event[];
-};
-
-function EventSettings({ events }: Props) {
-  return (
-    <div>
-      <h1>EventSettings</h1>
-      <EventSettingsForm events={events} />
-    </div>
-  );
-}
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
+import { cn } from "~/lib/utils";
+import { format } from "date-fns";
 
 type EventSettingsFormProps = {
   events: Event[];
 };
 
 type EventsFormValues = {
-  events: Event[];
+  events: {
+    id: number;
+    name: string;
+    start_date: Date;
+    distance: number;
+  }[];
 };
 
 function EventSettingsForm({ events }: EventSettingsFormProps) {
   const methods = useForm<EventsFormValues>({
     defaultValues: {
-      events: events,
+      events: events.map((event) => ({
+        ...event,
+        start_date: new Date(event.start_date),
+      })),
     },
   });
-  const { control, register, handleSubmit } = methods;
+  const { control, handleSubmit } = methods;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -53,106 +58,115 @@ function EventSettingsForm({ events }: EventSettingsFormProps) {
 
   const onSubmit = handleSubmit((data) => {
     console.log("submit", data);
-    updateProfile.mutate({ events: data.events });
+    updateProfile.mutate({
+      events: data.events.map((event) => ({
+        ...event,
+        id: event.id.toString(),
+        start_date: event.start_date.toISOString(),
+      })),
+    });
   });
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className="flex">
-        <div className="flex-col">
+    <FormProvider {...methods}>
+      <form onSubmit={onSubmit}>
+        <div className="space-y-4">
           {fields.map((event, index) => {
             return (
-              <div className="flex" key={index}>
-                <div className="flex flex-col">
-                  <label htmlFor="name">Name</label>
-                  <input {...register(`events.${index}.name`)} />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="distance">Distance</label>
-                  <input {...register(`events.${index}.distance`)} />
-                </div>
-                <div className="flex flex-col">{event.start_date}</div>
-                <div className="flex-col">
-                  <span onClick={() => remove(index)}>Remove</span>
-                </div>
-              </div>
+              <FormItem key={event.id} className="rounded-lg border p-4">
+                <FormField
+                  control={methods.control}
+                  name={`events.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name:</FormLabel>
+                      <FormControl>
+                        <Input placeholder="name" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                ></FormField>
+                <FormField
+                  control={methods.control}
+                  name={`events.${index}.start_date`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Start Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormDescription>
+                        The end date of the event.
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={methods.control}
+                  name={`events.${index}.distance`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Distance:</FormLabel>
+                      <FormControl>
+                        <Input placeholder="name" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                ></FormField>
+                <Button type="button" onClick={() => remove(index)}>
+                  Remove
+                </Button>
+              </FormItem>
             );
           })}
-          <button type="submit">Save</button>
         </div>
-        <div className="flex-col">
-          <NewEventForm append={append} />
+        <div className="flex flex-row items-center justify-between">
+          <Button
+            type="button"
+            onClick={() =>
+              append({
+                id: Date.now(),
+                name: "",
+                start_date: new Date(),
+                distance: 0,
+              })
+            }
+          >
+            Create New Event
+          </Button>
+          <Button type="submit">Save</Button>
         </div>
-      </div>
-    </form>
+      </form>
+    </FormProvider>
   );
 }
 
-type NewEventFormProps = {
-  append: UseFieldArrayAppend<EventsFormValues, "events">;
-};
-
-type NewEventProps = {
-  id: string | null;
-  name: string;
-  start_date: string;
-  distance: number | null;
-};
-
-function NewEventForm({ append }: NewEventFormProps) {
-  const [newEvent, setNewEvent] = useState<NewEventProps>({
-    id: null,
-    name: "test event",
-    start_date: new Date().toUTCString(),
-    distance: 100,
-  });
-
-  const handleAddEvent = () => {
-    append({
-      ...newEvent,
-      id: Date.now().toString(),
-    });
-  };
-
-  return (
-    <>
-      <div>
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          name="name"
-          value={newEvent.name}
-          onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
-        />
-      </div>
-      <div>
-        <label htmlFor="start_date">Start Date</label>
-        <input
-          type="text"
-          name="start_date"
-          value={newEvent.start_date}
-          onChange={(e) =>
-            setNewEvent({ ...newEvent, start_date: e.target.value })
-          }
-        />
-      </div>
-      <div>
-        <label htmlFor="distance">Distance</label>
-        <input
-          type="number"
-          name="distance"
-          pattern="[0-9]*"
-          value={newEvent.distance}
-          onChange={(e) =>
-            setNewEvent({ ...newEvent, distance: +e.target.value })
-          }
-        />
-      </div>
-      <button type="button" onClick={() => handleAddEvent()}>
-        Add Event
-      </button>
-    </>
-  );
-}
-
-export default EventSettings;
+export default EventSettingsForm;

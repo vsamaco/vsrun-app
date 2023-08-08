@@ -1,5 +1,7 @@
 import React from "react";
-import EventSettings from "~/components/settings/Events";
+import EventSettingsForm from "~/components/settings/Events";
+import SettingsLayout from "~/components/settings/layout";
+import { Separator } from "~/components/ui/separator";
 import { type Event } from "~/types";
 import { api } from "~/utils/api";
 
@@ -18,10 +20,21 @@ function EventSettingsPage({}: Props) {
   const events = data.events as Event[];
 
   return (
-    <div>
-      <EventSettings events={events} />
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Events</h3>
+        <p className="text-sm text-muted-foreground">
+          Showcase upcoming events.
+        </p>
+      </div>
+      <Separator />
+      <EventSettingsForm events={events} />
     </div>
   );
 }
+
+EventSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <SettingsLayout>{page}</SettingsLayout>;
+};
 
 export default EventSettingsPage;
