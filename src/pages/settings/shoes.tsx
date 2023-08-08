@@ -1,7 +1,7 @@
 import React from "react";
-import ShoesSettingsForm from "~/components/settings/Shoes";
+import ShoeSettingsForm from "~/components/settings/Shoes";
 import SettingsLayout from "~/components/settings/layout";
-import { Shoe } from "~/types";
+import { type Shoe } from "~/types";
 import { api } from "~/utils/api";
 
 type ShoesSettingsProps = {};
@@ -21,7 +21,7 @@ function ShoesSettingsPage({}: ShoesSettingsProps) {
   return (
     <div>
       <h1>Shoe Settings</h1>
-      <ShoesSettingsForm shoes={shoes} />
+      <ShoeSettingsForm shoes={shoes} />
     </div>
   );
 }

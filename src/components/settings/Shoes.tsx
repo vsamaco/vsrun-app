@@ -26,7 +26,7 @@ type ShoesSettingsProps = {
   shoes: Shoe[];
 };
 
-function ShoesSettingsForm({ shoes }: ShoesSettingsProps) {
+function ShoeSettingsForm({ shoes }: ShoesSettingsProps) {
   const methods = useForm<ShoesFormValues>({
     defaultValues: {
       shoes: shoes,
@@ -212,4 +212,4 @@ function ImportDialogContent({ handleImportShoes }: ImportDialogContentProps) {
   );
 }
 
-export default ShoesSettingsForm;
+export default ShoeSettingsForm;
