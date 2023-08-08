@@ -1,11 +1,12 @@
 import React from "react";
 import ShoesSettingsForm from "~/components/settings/Shoes";
+import SettingsLayout from "~/components/settings/layout";
 import { Shoe } from "~/types";
 import { api } from "~/utils/api";
 
 type ShoesSettingsProps = {};
 
-function ShoesSettings({}: ShoesSettingsProps) {
+function ShoesSettingsPage({}: ShoesSettingsProps) {
   const { data, isLoading } = api.runProfile.getProfile.useQuery();
 
   if (isLoading) {
@@ -19,10 +20,14 @@ function ShoesSettings({}: ShoesSettingsProps) {
 
   return (
     <div>
-      <h1>shoes settings</h1>
+      <h1>Shoe Settings</h1>
       <ShoesSettingsForm shoes={shoes} />
     </div>
   );
 }
 
-export default ShoesSettings;
+ShoesSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <SettingsLayout>{page}</SettingsLayout>;
+};
+
+export default ShoesSettingsPage;
