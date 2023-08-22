@@ -1,6 +1,7 @@
 import React from "react";
 import ShoeSettingsForm from "~/components/settings/Shoes";
 import SettingsLayout from "~/components/settings/layout";
+import { Separator } from "~/components/ui/separator";
 import { type Shoe } from "~/types";
 import { api } from "~/utils/api";
 
@@ -19,8 +20,14 @@ function ShoesSettingsPage({}: ShoesSettingsProps) {
   const shoes = data.shoes as Shoe[];
 
   return (
-    <div>
-      <h1>Shoe Settings</h1>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Shoes</h3>
+        <p className="text-sm text-muted-foreground">
+          Showcase your shoe rotation for the current season.
+        </p>
+      </div>
+      <Separator />
       <ShoeSettingsForm shoes={shoes} />
     </div>
   );

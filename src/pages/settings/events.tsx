@@ -24,7 +24,7 @@ function EventSettingsPage({}: Props) {
       <div>
         <h3 className="text-lg font-medium">Events</h3>
         <p className="text-sm text-muted-foreground">
-          Showcase upcoming events.
+          Showcase your upcoming events.
         </p>
       </div>
       <Separator />

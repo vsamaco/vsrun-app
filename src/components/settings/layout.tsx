@@ -15,8 +15,8 @@ const sidebarNavItems = [
     href: "/settings/shoes",
   },
   {
-    title: "Races",
-    href: "/settings/races",
+    title: "Events",
+    href: "/settings/events",
   },
 ];
 

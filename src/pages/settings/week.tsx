@@ -1,6 +1,7 @@
 import WeekSettingsForm from "~/components/settings/Week";
 import { api } from "~/utils/api";
 import SettingsLayout from "~/components/settings/layout";
+import { Separator } from "~/components/ui/separator";
 
 function WeekSettingsPage() {
   const { data, isLoading } = api.runProfile.getProfile.useQuery();
@@ -12,8 +13,14 @@ function WeekSettingsPage() {
   }
 
   return (
-    <div>
-      <h1>Week Stats</h1>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Stats</h3>
+        <p className="text-sm text-muted-foreground">
+          Showcase your weekly running stats.
+        </p>
+      </div>
+      <Separator />
       <WeekSettingsForm profile={data} activities={activities} />
     </div>
   );

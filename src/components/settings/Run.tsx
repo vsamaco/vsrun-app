@@ -1,11 +1,5 @@
-import { Button } from "~/components/ui/button";
-import { type RunProfile } from "@prisma/client";
-import React, { useState } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { type StravaActivity } from "~/server/api/routers/strava";
-import { type Activity } from "~/types";
-import { api } from "~/utils/api";
-import SettingsLayout from "~/components/settings/layout";
+import { metersToMiles } from "~/utils/activity";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog";
+} from "../ui/dialog";
 import {
   Select,
   SelectContent,
@@ -22,17 +16,21 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
-import { metersToMiles } from "~/utils/activity";
-import { Input } from "~/components/ui/input";
+} from "../ui/select";
+import { api } from "~/utils/api";
+import { useState } from "react";
+import { type Activity } from "~/types";
 import {
   FormControl,
   FormDescription,
   FormField,
   FormItem,
   FormLabel,
-} from "~/components/ui/form";
-import { Separator } from "~/components/ui/separator";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { type RunProfile } from "@prisma/client";
+import { type StravaActivity } from "~/server/api/routers/strava";
 
 type SettingFormProps = {
   profile: RunProfile | null;
@@ -53,7 +51,7 @@ type FormValues = {
   };
 };
 
-function SettingForm({ profile }: SettingFormProps) {
+function RunSettingForm({ profile }: SettingFormProps) {
   const highlightRun = profile.highlightRun as Activity;
 
   const methods = useForm<FormValues>({
@@ -262,89 +260,4 @@ function ImportDialogContent({
   );
 }
 
-type StravaActivitiesProps = {
-  handleImportActivity: (activity: Activity | undefined) => void;
-};
-
-function StravaActivities({ handleImportActivity }: StravaActivitiesProps) {
-  const { data, isLoading } = api.strava.getActivities.useQuery();
-  const [selectedActivity, setSelectedActivity] = useState<Activity>();
-
-  const handleSelectActivity = (activity: StravaActivity) => {
-    const selectedActivity = {
-      id: activity.id,
-      name: activity.name,
-      start_date: activity.start_date,
-      moving_time: activity.moving_time,
-      elapsed_time: activity.elapsed_time,
-      distance: activity.distance,
-      total_elevation_gain: activity.total_elevation_gain,
-      start_latlng: activity.start_latlng,
-      summary_polyline: activity.map.summary_polyline,
-    };
-    console.log("selectedActivity:", selectedActivity);
-    setSelectedActivity(selectedActivity);
-  };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (!data) {
-    return null;
-  }
-  return (
-    <div>
-      <Button
-        type="button"
-        variant="secondary"
-        onClick={() => handleImportActivity(selectedActivity)}
-      >
-        Import
-      </Button>
-      <ul>
-        {data.map((activity: StravaActivity) => {
-          return (
-            <div key={activity.id}>
-              <input
-                type="checkbox"
-                onClick={() => handleSelectActivity(activity)}
-              />
-              {activity.name}
-            </div>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
-const RunSettingsPage = () => {
-  const { data, isLoading } = api.runProfile.getProfile.useQuery();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!data) {
-    return <div>Not Found</div>;
-  }
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text=lg font-medium">Run</h3>
-        <p className="text-sm text-muted-foreground">
-          Showcase an activity for highlighted run.
-        </p>
-      </div>
-      <Separator />
-      <SettingForm profile={data} />
-    </div>
-  );
-};
-
-RunSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <SettingsLayout>{page}</SettingsLayout>;
-};
-
-export default RunSettingsPage;
+export default RunSettingForm;
