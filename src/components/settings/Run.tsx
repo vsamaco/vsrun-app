@@ -26,11 +26,17 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { type RunProfile } from "@prisma/client";
 import { type StravaActivity } from "~/server/api/routers/strava";
+import { useToast } from "../ui/use-toast";
+import { ToastClose } from "@radix-ui/react-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { RunSettingsFormSchema } from "~/utils/schemas";
 
 type SettingFormProps = {
   profile: RunProfile | null;
@@ -52,9 +58,11 @@ type FormValues = {
 };
 
 function RunSettingForm({ profile }: SettingFormProps) {
+  const { toast } = useToast();
   const highlightRun = profile.highlightRun as Activity;
 
   const methods = useForm<FormValues>({
+    resolver: zodResolver(z.object({ highlightRun: RunSettingsFormSchema })),
     defaultValues: {
       username: "username",
       highlightRun: {
@@ -76,9 +84,16 @@ function RunSettingForm({ profile }: SettingFormProps) {
   const updateProfile = api.runProfile.updateProfile.useMutation({
     onSuccess: async (newEntry) => {
       await utils.runProfile.getProfile.invalidate();
+
+      toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
       console.log({ error });
+      toast({
+        title: "Error",
+        description: error.message,
+        action: <ToastClose>Close</ToastClose>,
+      });
     },
   });
 
@@ -122,6 +137,7 @@ function HighlightRunSettings() {
               <Input placeholder="name" {...field} />
             </FormControl>
             <FormDescription>The name of the run activity.</FormDescription>
+            <FormMessage />
           </FormItem>
         )}
       ></FormField>
@@ -134,6 +150,7 @@ function HighlightRunSettings() {
             <FormControl>
               <Input placeholder="moving time" {...field} />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       ></FormField>
@@ -146,6 +163,7 @@ function HighlightRunSettings() {
             <FormControl>
               <Input placeholder="elapsed time" {...field} />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       ></FormField>
@@ -158,6 +176,7 @@ function HighlightRunSettings() {
             <FormControl>
               <Input placeholder="distance" {...field} />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       ></FormField>
@@ -170,6 +189,7 @@ function HighlightRunSettings() {
             <FormControl>
               <Input placeholder="elevation" {...field} />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       ></FormField>

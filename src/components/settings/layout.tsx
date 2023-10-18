@@ -1,5 +1,6 @@
 import { Separator } from "~/components/ui/separator";
 import { SidebarNav } from "./sidebar-nav";
+import { Toaster } from "../ui/toaster";
 
 const sidebarNavItems = [
   {
@@ -41,6 +42,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           </aside>
           <div className="flex-1 lg:max-w-2xl">{children}</div>
         </div>
+        <Toaster />
       </div>
     </>
   );

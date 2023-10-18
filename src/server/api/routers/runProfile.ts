@@ -5,6 +5,7 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import { Activity, WeekStat } from "~/types";
+import { RunSettingsFormSchema } from "~/utils/schemas";
 
 export const runProfileRouter = createTRPCRouter({
   getProfile: publicProcedure.query(async ({ ctx }) => {
@@ -15,19 +16,7 @@ export const runProfileRouter = createTRPCRouter({
     .input(
       z.object({
         username: z.string().optional(),
-        highlightRun: z
-          .object({
-            id: z.number(),
-            name: z.string(),
-            start_date: z.string(),
-            start_latlng: z.array(z.number()),
-            elapsed_time: z.number(),
-            moving_time: z.number(),
-            distance: z.number(),
-            total_elevation_gain: z.number(),
-            summary_polyline: z.string(),
-          })
-          .optional(),
+        highlightRun: RunSettingsFormSchema.optional(),
         weekStats: z
           .object({
             total_runs: z.number(),

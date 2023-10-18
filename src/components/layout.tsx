@@ -1,4 +1,5 @@
 import { ThemeProvider } from "~/components/theme-provider";
+import { Toaster } from "./ui/toaster";
 
 type LayoutProps = {
   children: React.ReactNode;
