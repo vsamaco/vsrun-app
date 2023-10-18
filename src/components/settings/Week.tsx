@@ -11,6 +11,7 @@ import {
   FormControl,
   FormDescription,
   Form,
+  FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { CalendarIcon } from "lucide-react";
@@ -31,6 +32,11 @@ import {
 import { metersToMiles } from "~/utils/activity";
 import { Checkbox } from "../ui/checkbox";
 import { ScrollArea } from "../ui/scroll-area";
+import { toast } from "../ui/use-toast";
+import { ToastClose } from "@radix-ui/react-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { WeekSettingsFormSchema } from "~/utils/schemas";
+import { z } from "zod";
 
 type Props = {
   profile: RunProfile;
@@ -52,6 +58,7 @@ function WeekSettingsForm({ profile, activities }: Props) {
   const weekStat = profile.weekStats as WeekStat;
 
   const methods = useForm<WeekStatFormValues>({
+    resolver: zodResolver(z.object({ weekStats: WeekSettingsFormSchema })),
     defaultValues: {
       weekStats: {
         start_date: new Date(weekStat.start_date),
@@ -69,9 +76,15 @@ function WeekSettingsForm({ profile, activities }: Props) {
   const updateProfile = tApi.runProfile.updateProfile.useMutation({
     onSuccess: async (newEntry) => {
       await utils.runProfile.getProfile.invalidate();
+      toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
       console.log({ error });
+      toast({
+        title: "Error",
+        description: error.message,
+        action: <ToastClose>Close</ToastClose>,
+      });
     },
   });
 
@@ -153,6 +166,7 @@ function WeekSettingsForm({ profile, activities }: Props) {
               <FormDescription>
                 The start date of the week activities.
               </FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -196,6 +210,7 @@ function WeekSettingsForm({ profile, activities }: Props) {
               <FormDescription>
                 The end date of the week activities.
               </FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -208,18 +223,20 @@ function WeekSettingsForm({ profile, activities }: Props) {
               <FormControl>
                 <Input placeholder="total runs" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         ></FormField>
         <FormField
           control={methods.control}
-          name="weekStats.total_runs"
+          name="weekStats.total_distance"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Total Distance</FormLabel>
               <FormControl>
                 <Input placeholder="total distance" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         ></FormField>
@@ -232,6 +249,7 @@ function WeekSettingsForm({ profile, activities }: Props) {
               <FormControl>
                 <Input placeholder="total duration" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         ></FormField>
@@ -244,6 +262,7 @@ function WeekSettingsForm({ profile, activities }: Props) {
               <FormControl>
                 <Input placeholder="total elevation" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         ></FormField>

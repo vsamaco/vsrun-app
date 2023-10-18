@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { type Shoe } from "~/types";
 import { api as tApi } from "~/utils/api";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import {
@@ -17,6 +24,11 @@ import {
 import { ScrollArea } from "../ui/scroll-area";
 import { Checkbox } from "../ui/checkbox";
 import { metersToMiles } from "~/utils/activity";
+import { z } from "zod";
+import { ShoeSettingsFormSchema } from "~/utils/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ToastClose } from "@radix-ui/react-toast";
+import { toast } from "../ui/use-toast";
 
 type ShoesFormValues = {
   shoes: Shoe[];
@@ -28,6 +40,7 @@ type ShoesSettingsProps = {
 
 function ShoeSettingsForm({ shoes }: ShoesSettingsProps) {
   const methods = useForm<ShoesFormValues>({
+    resolver: zodResolver(z.object({ shoes: ShoeSettingsFormSchema })),
     defaultValues: {
       shoes: shoes,
     },
@@ -43,9 +56,16 @@ function ShoeSettingsForm({ shoes }: ShoesSettingsProps) {
   const updateProfile = tApi.runProfile.updateProfile.useMutation({
     onSuccess: async (newEntry) => {
       await utils.runProfile.getProfile.invalidate();
+
+      toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
       console.log({ error });
+      toast({
+        title: "Error",
+        description: error.message,
+        action: <ToastClose>Close</ToastClose>,
+      });
     },
   });
 
@@ -78,6 +98,7 @@ function ShoeSettingsForm({ shoes }: ShoesSettingsProps) {
                       <FormControl>
                         <Input placeholder="brand" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 ></FormField>
@@ -90,6 +111,7 @@ function ShoeSettingsForm({ shoes }: ShoesSettingsProps) {
                       <FormControl>
                         <Input placeholder="model" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 ></FormField>
@@ -102,6 +124,7 @@ function ShoeSettingsForm({ shoes }: ShoesSettingsProps) {
                       <FormControl>
                         <Input placeholder="distance" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 ></FormField>

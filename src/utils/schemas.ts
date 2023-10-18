@@ -30,3 +30,45 @@ export const RunSettingsFormSchema = z.object({
     .min(-1000),
   summary_polyline: z.string(),
 });
+
+export const WeekSettingsFormSchema = z.object({
+  total_runs: z.coerce
+    .number({
+      required_error: "Total runs is required.",
+    })
+    .min(1),
+  total_distance: z.coerce
+    .number({
+      required_error: "Total distance is required.",
+    })
+    .min(1),
+  total_duration: z.coerce
+    .number({
+      required_error: "Total duration is required.",
+    })
+    .min(1),
+  total_elevation: z.coerce
+    .number({
+      required_error: "Total elevation is required.",
+    })
+    .min(1),
+  start_date: z.coerce.date(),
+  end_date: z.coerce.date(),
+});
+
+export const ShoeSettingsFormSchema = z.array(
+  z.object({
+    id: z.string(),
+    brand_name: z
+      .string({
+        required_error: "Brand is required",
+      })
+      .min(1),
+    model_name: z
+      .string({
+        required_error: "Model is required",
+      })
+      .min(1),
+    distance: z.number().min(1),
+  })
+);
