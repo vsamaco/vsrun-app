@@ -4,7 +4,6 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { Activity, WeekStat } from "~/types";
 import {
   GeneralSettingsFormSchema,
   RunSettingsFormSchema,
@@ -20,7 +19,6 @@ export const runProfileRouter = createTRPCRouter({
   updateProfile: protectedProcedure
     .input(
       z.object({
-        general: GeneralSettingsFormSchema.optional(),
         highlightRun: RunSettingsFormSchema.optional(),
         weekStats: WeekSettingsFormSchema.optional(),
         shoes: ShoeSettingsFormSchema.optional(),
@@ -39,21 +37,11 @@ export const runProfileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
-      const profile = await ctx.prisma.runProfile.findUnique({
-        where: {
-          userId: userId,
-        },
-      });
-
-      const highlightRun = profile?.highlightRun as Activity;
-      const weekStats = profile?.weekStats as WeekStat;
-
       const result = await ctx.prisma.runProfile.update({
         where: {
           userId: userId,
         },
         data: {
-          ...(input.general ? { username: input.general.username } : null),
           ...(input.highlightRun ? { highlightRun: input.highlightRun } : null),
           ...(input.weekStats ? { weekStats: input.weekStats } : null),
           ...(input.shoes ? { shoes: input.shoes } : null),
@@ -64,6 +52,30 @@ export const runProfileRouter = createTRPCRouter({
       return {
         success: true,
         profile: result,
+      };
+    }),
+  updateGeneralProfile: protectedProcedure
+    .input(
+      z.object({
+        general: GeneralSettingsFormSchema,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const result = await ctx.prisma.runProfile.update({
+        where: {
+          userId: userId,
+        },
+        data: {
+          ...(input.general ? { username: input.general.username } : null),
+        },
+      });
+
+      return {
+        success: true,
+        general: {
+          username: result.username,
+        },
       };
     }),
 });

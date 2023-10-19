@@ -42,7 +42,7 @@ function GeneralSettingsForm({ profile }: SettingFormProps) {
   const { handleSubmit } = methods;
 
   const utils = api.useContext();
-  const updateProfile = api.runProfile.updateProfile.useMutation({
+  const updateProfile = api.runProfile.updateGeneralProfile.useMutation({
     onSuccess: async (newEntry) => {
       await utils.runProfile.getProfile.invalidate();
 
