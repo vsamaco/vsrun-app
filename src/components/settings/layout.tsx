@@ -4,6 +4,10 @@ import { Toaster } from "../ui/toaster";
 
 const sidebarNavItems = [
   {
+    title: "General",
+    href: "/settings",
+  },
+  {
     title: "Run",
     href: "/settings/run",
   },

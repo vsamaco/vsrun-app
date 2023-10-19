@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+export const GeneralSettingsFormSchema = z.object({
+  username: z
+    .string({
+      required_error: "Username is required.",
+    })
+    .min(3),
+});
+
 export const RunSettingsFormSchema = z.object({
   id: z.number(),
   name: z

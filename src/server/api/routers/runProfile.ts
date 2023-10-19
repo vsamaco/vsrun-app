@@ -6,6 +6,7 @@ import {
 } from "~/server/api/trpc";
 import { Activity, WeekStat } from "~/types";
 import {
+  GeneralSettingsFormSchema,
   RunSettingsFormSchema,
   ShoeSettingsFormSchema,
   WeekSettingsFormSchema,
@@ -19,7 +20,7 @@ export const runProfileRouter = createTRPCRouter({
   updateProfile: protectedProcedure
     .input(
       z.object({
-        username: z.string().optional(),
+        general: GeneralSettingsFormSchema.optional(),
         highlightRun: RunSettingsFormSchema.optional(),
         weekStats: WeekSettingsFormSchema.optional(),
         shoes: ShoeSettingsFormSchema.optional(),
@@ -52,7 +53,7 @@ export const runProfileRouter = createTRPCRouter({
           userId: userId,
         },
         data: {
-          ...(input.username ? { username: input.username } : null),
+          ...(input.general ? { username: input.general.username } : null),
           ...(input.highlightRun ? { highlightRun: input.highlightRun } : null),
           ...(input.weekStats ? { weekStats: input.weekStats } : null),
           ...(input.shoes ? { shoes: input.shoes } : null),
