@@ -8,6 +8,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -16,6 +17,11 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { cn } from "~/lib/utils";
 import { format } from "date-fns";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EventSettingsFormSchema } from "~/utils/schemas";
+import { z } from "zod";
+import { ToastClose } from "../ui/toast";
+import { toast } from "../ui/use-toast";
 
 type EventSettingsFormProps = {
   events: Event[];
@@ -32,6 +38,7 @@ type EventsFormValues = {
 
 function EventSettingsForm({ events }: EventSettingsFormProps) {
   const methods = useForm<EventsFormValues>({
+    resolver: zodResolver(z.object({ events: EventSettingsFormSchema })),
     defaultValues: {
       events: events.map((event) => ({
         ...event,
@@ -50,9 +57,15 @@ function EventSettingsForm({ events }: EventSettingsFormProps) {
   const updateProfile = api.runProfile.updateProfile.useMutation({
     onSuccess: async (newEntry) => {
       await utils.runProfile.getProfile.invalidate();
+      toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
       console.log({ error });
+      toast({
+        title: "Error",
+        description: error.message,
+        action: <ToastClose>Close</ToastClose>,
+      });
     },
   });
 
@@ -83,6 +96,7 @@ function EventSettingsForm({ events }: EventSettingsFormProps) {
                       <FormControl>
                         <Input placeholder="name" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 ></FormField>
@@ -126,6 +140,7 @@ function EventSettingsForm({ events }: EventSettingsFormProps) {
                       <FormDescription>
                         The end date of the event.
                       </FormDescription>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -136,8 +151,9 @@ function EventSettingsForm({ events }: EventSettingsFormProps) {
                     <FormItem>
                       <FormLabel>Distance:</FormLabel>
                       <FormControl>
-                        <Input placeholder="name" {...field} />
+                        <Input placeholder="distance" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 ></FormField>

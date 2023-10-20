@@ -5,6 +5,7 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import {
+  EventSettingsFormSchema,
   GeneralSettingsFormSchema,
   RunSettingsFormSchema,
   ShoeSettingsFormSchema,
@@ -22,16 +23,7 @@ export const runProfileRouter = createTRPCRouter({
         highlightRun: RunSettingsFormSchema.optional(),
         weekStats: WeekSettingsFormSchema.optional(),
         shoes: ShoeSettingsFormSchema.optional(),
-        events: z
-          .array(
-            z.object({
-              id: z.string(),
-              name: z.string(),
-              start_date: z.string(),
-              distance: z.number(),
-            })
-          )
-          .optional(),
+        events: EventSettingsFormSchema.optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
