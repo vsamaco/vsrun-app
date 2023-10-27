@@ -5,7 +5,7 @@ import { Separator } from "~/components/ui/separator";
 import RunSettingForm from "~/components/settings/Run";
 
 const RunSettingsPage = () => {
-  const { data, isLoading } = api.runProfile.getProfile.useQuery();
+  const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;

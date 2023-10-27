@@ -18,24 +18,24 @@ import { Input } from "../ui/input";
 import { GeneralSettingsFormSchema } from "~/utils/schemas";
 
 type SettingFormProps = {
-  profile: RunProfile | null;
+  profile: RunProfile;
 };
 
 type FormValues = {
   general: {
-    username: string;
+    name: string;
+    slug: string;
   };
 };
 
 function GeneralSettingsForm({ profile }: SettingFormProps) {
-  const username = profile?.username;
+  const slug = profile?.slug as string;
+  const name = profile?.name as string;
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ general: GeneralSettingsFormSchema })),
     defaultValues: {
-      general: {
-        username: username,
-      },
+      general: { slug, name },
     },
   });
 
@@ -44,7 +44,7 @@ function GeneralSettingsForm({ profile }: SettingFormProps) {
   const utils = api.useContext();
   const updateProfile = api.runProfile.updateGeneralProfile.useMutation({
     onSuccess: async (newEntry) => {
-      await utils.runProfile.getProfile.invalidate();
+      await utils.runProfile.getUserProfile.invalidate();
 
       toast({ title: "Success", description: "Successfully saved changes." });
     },
@@ -84,14 +84,28 @@ function GeneralSettings() {
     <>
       <FormField
         control={control}
-        name="general.username"
+        name="general.name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Username</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input placeholder="username" {...field} />
+              <Input placeholder="name" {...field} />
             </FormControl>
-            <FormDescription>https://vsrun.app/username</FormDescription>
+            <FormDescription>Profile Name</FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      ></FormField>
+      <FormField
+        control={control}
+        name="general.slug"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Slug</FormLabel>
+            <FormControl>
+              <Input placeholder="slug" {...field} />
+            </FormControl>
+            <FormDescription>https://vsrun.app/[slug]</FormDescription>
             <FormMessage />
           </FormItem>
         )}

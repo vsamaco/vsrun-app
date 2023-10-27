@@ -20,16 +20,21 @@ export const runProfileRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const profile = await ctx.prisma.runProfile.findMany({
+      const profile = await ctx.prisma.runProfile.findUnique({
         where: {
-          username: input.slug,
+          slug: input.slug,
         },
       });
-      return profile.length ? profile[0] : null;
+      return profile;
     }),
-  getProfile: publicProcedure.query(async ({ ctx }) => {
-    const profiles = await ctx.prisma.runProfile.findMany();
-    return profiles.length ? profiles[0] : null;
+  getUserProfile: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    const profile = await ctx.prisma.runProfile.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+    return profile;
   }),
   updateProfile: protectedProcedure
     .input(
@@ -73,14 +78,15 @@ export const runProfileRouter = createTRPCRouter({
           userId: userId,
         },
         data: {
-          ...(input.general ? { username: input.general.username } : null),
+          ...(input.general ? { ...input.general } : null),
         },
       });
 
       return {
         success: true,
         general: {
-          username: result.username,
+          slug: result.slug as string,
+          name: result.name as string,
         },
       };
     }),

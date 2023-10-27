@@ -8,7 +8,7 @@ import { api } from "~/utils/api";
 type Props = {};
 
 function EventSettingsPage({}: Props) {
-  const { data, isLoading } = api.runProfile.getProfile.useQuery();
+  const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;

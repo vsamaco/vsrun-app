@@ -55,7 +55,7 @@ function ShoeSettingsForm({ shoes }: ShoesSettingsProps) {
   const utils = tApi.useContext();
   const updateProfile = tApi.runProfile.updateProfile.useMutation({
     onSuccess: async (newEntry) => {
-      await utils.runProfile.getProfile.invalidate();
+      await utils.runProfile.getUserProfile.invalidate();
 
       toast({ title: "Success", description: "Successfully saved changes." });
     },

@@ -9,7 +9,7 @@ import Hero from "~/components/Hero";
 import Layout from "~/components/layout";
 
 const Home = () => {
-  const { data, isLoading } = api.runProfile.getProfile.useQuery();
+  const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -19,6 +19,7 @@ const Home = () => {
     return null;
   }
 
+  const name = data?.name as string;
   const highlightRun = data?.highlightRun as Activity;
   const weekStats = data?.weekStats as WeekStat;
   const shoes = data?.shoes as Shoe[];
@@ -27,12 +28,12 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>{data?.username}</title>
+        <title>{name}</title>
         <meta name="description" content="Running profile" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container space-y-5">
-        <Hero username={data?.username} />
+        <Hero name={name} />
         <div className="bg-gray-100">
           {data?.highlightRun && <Run activity={highlightRun} />}
         </div>

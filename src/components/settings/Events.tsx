@@ -56,7 +56,7 @@ function EventSettingsForm({ events }: EventSettingsFormProps) {
   const utils = api.useContext();
   const updateProfile = api.runProfile.updateProfile.useMutation({
     onSuccess: async (newEntry) => {
-      await utils.runProfile.getProfile.invalidate();
+      await utils.runProfile.getUserProfile.invalidate();
       toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {

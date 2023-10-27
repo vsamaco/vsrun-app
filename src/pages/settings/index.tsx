@@ -5,7 +5,7 @@ import SettingsLayout from "~/components/settings/layout";
 import { api } from "~/utils/api";
 
 function GeneralSettingsPage() {
-  const { data, isLoading } = api.runProfile.getProfile.useQuery();
+  const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;

@@ -4,12 +4,13 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.runProfile.upsert({
     where: {
-      userId: "cljdfv2yx0000smvl6hsz37tx",
+      userId: "clo96eqp50000bo3jkclmjhwv",
     },
     update: {},
     create: {
-      userId: "cljdfv2yx0000smvl6hsz37tx",
-      username: "milesperdonut",
+      userId: "clo96eqp50000bo3jkclmjhwv",
+      slug: "milesperdonut",
+      name: "milesperdonut",
       highlightRun: {
         id: 123,
         name: "Sample Run",

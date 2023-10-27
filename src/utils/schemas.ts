@@ -1,9 +1,14 @@
 import { z } from "zod";
 
 export const GeneralSettingsFormSchema = z.object({
-  username: z
+  slug: z
     .string({
-      required_error: "Username is required.",
+      required_error: "Slug is required.",
+    })
+    .min(3),
+  name: z
+    .string({
+      required_error: "Name is required.",
     })
     .min(3),
 });

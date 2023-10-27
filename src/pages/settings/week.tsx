@@ -4,7 +4,7 @@ import SettingsLayout from "~/components/settings/layout";
 import { Separator } from "~/components/ui/separator";
 
 function WeekSettingsPage() {
-  const { data, isLoading } = api.runProfile.getProfile.useQuery();
+  const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
   const { data: activities, isLoading: loadingActivities } =
     api.strava.getActivities.useQuery();
 

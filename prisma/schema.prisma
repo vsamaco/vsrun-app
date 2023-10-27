@@ -69,7 +69,8 @@ model VerificationToken {
 
 model RunProfile {
     id String @id @default(cuid())
-    username String
+    slug String @unique
+    name String
     userId String
     highlightRun Json
     weekStats Json

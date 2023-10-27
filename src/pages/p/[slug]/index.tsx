@@ -23,6 +23,7 @@ function RunProfilePage() {
     return <div>Loading...</div>;
   }
 
+  const name = profile?.name as string;
   const highlightRun = profile?.highlightRun as Activity;
   const weekStats = profile?.weekStats as WeekStat;
   const shoes = profile?.shoes as Shoe[];
@@ -31,12 +32,12 @@ function RunProfilePage() {
   return (
     <>
       <Head>
-        <title>{profile?.username}</title>
-        <meta name="description" content="Running profile" />
+        <title>{profile?.name}</title>
+        <meta name="description" content={`${name} Running profile`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container space-y-5">
-        <Hero username={profile?.username} />
+        <Hero name={name} />
         <div className="bg-gray-100">
           {highlightRun && <Run activity={highlightRun} />}
         </div>
