@@ -13,6 +13,20 @@ import {
 } from "~/utils/schemas";
 
 export const runProfileRouter = createTRPCRouter({
+  getProfileBySlug: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const profile = await ctx.prisma.runProfile.findMany({
+        where: {
+          username: input.slug,
+        },
+      });
+      return profile.length ? profile[0] : null;
+    }),
   getProfile: publicProcedure.query(async ({ ctx }) => {
     const profiles = await ctx.prisma.runProfile.findMany();
     return profiles.length ? profiles[0] : null;
