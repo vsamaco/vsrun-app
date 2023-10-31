@@ -1,17 +1,25 @@
+import {
+  type InferGetServerSidePropsType,
+  type GetServerSidePropsContext,
+} from "next";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import superjson from "superjson";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import Events from "~/components/Events";
 import Hero from "~/components/Hero";
 import Run from "~/components/Run";
 import Shoes from "~/components/Shoes";
 import Week from "~/components/Week";
 import Layout from "~/components/layout";
-import { type Activity, type Shoe, type WeekStat } from "~/types";
+import { type Activity, type Shoe, type WeekStat, type Event } from "~/types";
 import { api } from "~/utils/api";
+import { appRouter } from "~/server/api/root";
+import { prisma } from "~/server/db";
 
-function RunProfilePage() {
-  const router = useRouter();
-  const slug = router.query.slug as string;
+function RunProfilePage(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
+  const { slug } = props;
 
   const { data: profile, isLoading } = api.runProfile.getProfileBySlug.useQuery(
     {
@@ -51,6 +59,28 @@ function RunProfilePage() {
       </div>
     </>
   );
+}
+
+export async function getServerSideProps(
+  ctx: GetServerSidePropsContext<{ slug: string }>
+) {
+  const ssg = createServerSideHelpers({
+    router: appRouter,
+    ctx: {
+      session: null,
+      prisma,
+    },
+    transformer: superjson,
+  });
+  const slug = ctx.params?.slug as string;
+  await ssg.runProfile.getProfileBySlug.prefetch({ slug });
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      slug,
+    },
+  };
 }
 
 RunProfilePage.getLayout = function getLayout(page: React.ReactElement) {
