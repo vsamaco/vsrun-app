@@ -18,6 +18,20 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "dgalywyr863hv.cloudfront.net",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+        port: "",
+      },
+    ],
+  },
 };
 
 export default config;

@@ -16,6 +16,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { GeneralSettingsFormSchema } from "~/utils/schemas";
+import { signOut } from "next-auth/react";
 
 type SettingFormProps = {
   profile: RunProfile;
