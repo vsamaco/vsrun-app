@@ -7,44 +7,35 @@ import { type Shoe, type Activity, type Event, type WeekStat } from "~/types";
 import { api } from "~/utils/api";
 import Hero from "~/components/Hero";
 import Layout from "~/components/layout";
+import { Button, buttonVariants } from "~/components/ui/button";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 const Home = () => {
-  const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!data) {
-    return null;
-  }
-
-  const name = data?.name as string;
-  const highlightRun = data?.highlightRun as Activity;
-  const weekStats = data?.weekStats as WeekStat;
-  const shoes = data?.shoes as Shoe[];
-  const events = data?.events as Event[];
-
   return (
     <>
       <Head>
-        <title>{name}</title>
+        <title>mpdrun</title>
         <meta name="description" content="Running profile" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="container space-y-5">
-        <Hero name={name} />
-        <div className="bg-gray-100">
-          {data?.highlightRun && <Run activity={highlightRun} />}
-        </div>
-        <div className="bg-gray-100">
-          {data?.highlightRun && <Week weekStats={weekStats} />}
-        </div>
-        <div className="bg-gray-100">
-          {data?.shoes && <Shoes shoes={shoes} />}
-        </div>
-        <div className="bg-gray-100">
-          {data?.events && <Events events={events} />}
+      <div className="mx-auto max-w-screen-xl px-4 py-8 text-center lg:py-16">
+        <h1 className="mb-4 text-4xl font-bold leading-none tracking-tight md:text-5xl lg:text-6xl">
+          mpdrun
+        </h1>
+        <p className="mb-8 text-lg font-normal text-gray-500 dark:text-gray-400 sm:px-16 lg:px-48 lg:text-xl">
+          Showcase runs, stats, shoes, and races
+        </p>
+        <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0">
+          <Button variant="default" onClick={() => void signIn("strava")}>
+            Login with Strava
+          </Button>
+          <Link
+            className={buttonVariants({ variant: "secondary" })}
+            href="/p/milesperdonut"
+          >
+            Preview
+          </Link>
         </div>
       </div>
     </>
