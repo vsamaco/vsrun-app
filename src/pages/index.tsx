@@ -9,9 +9,10 @@ import Hero from "~/components/Hero";
 import Layout from "~/components/layout";
 import { Button, buttonVariants } from "~/components/ui/button";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 const Home = () => {
+  const session = useSession();
   return (
     <>
       <Head>
@@ -27,9 +28,25 @@ const Home = () => {
           Showcase runs, stats, shoes, and races
         </p>
         <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0">
-          <Button variant="default" onClick={() => void signIn("strava")}>
-            Login with Strava
-          </Button>
+          {!session?.data?.user && (
+            <Button
+              variant="default"
+              onClick={() =>
+                void signIn("strava", { callbackUrl: "/settings" })
+              }
+            >
+              Login with Strava
+            </Button>
+          )}
+          {session?.data?.user && (
+            <Link
+              href="/settings"
+              className={buttonVariants({ variant: "default" })}
+            >
+              Manage Profile
+            </Link>
+          )}
+
           <Link
             className={buttonVariants({ variant: "secondary" })}
             href="/p/milesperdonut"

@@ -38,14 +38,11 @@ function UserNavigation() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem>Profile</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <div onClick={() => void signOut()}>Logout</div>
+        <DropdownMenuItem onClick={() => void signOut({ callbackUrl: "/" })}>
+          Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
