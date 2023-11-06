@@ -7,7 +7,7 @@ import { parse } from "./lib/utils";
 import { getToken } from "next-auth/jwt";
 
 export const config = {
-  matcher: ["/settings"],
+  matcher: ["/settings", "/settings/:path*"],
 };
 
 export default async function middleware(req: NextRequest) {
@@ -16,21 +16,11 @@ export default async function middleware(req: NextRequest) {
     req,
     secret: process.env.NEXTAUTH_SECRET,
     raw: true,
-    cookieName: "next-auth.session-token",
   });
 
-  console.log("=== APP MIDDLEWARE === ", { domain, path, key });
-  console.log("=== SESSION: ", session);
-
   if (!session) {
-    return NextResponse.redirect(
-      new URL(
-        `/api/auth/signin/strava?callback=${encodeURI("/settings")}`,
-        req.url
-      )
+    return NextResponse.rewrite(
+      new URL(`/api/auth/signin/strava?callbackUrl=${encodeURI(path)}`, req.url)
     );
   }
-  // return AppMiddleware(req);
 }
-
-// async function AppMiddleware(req: NextRequest) {}
