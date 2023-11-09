@@ -73,18 +73,26 @@ export const runProfileRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const result = await ctx.prisma.runProfile.update({
+      const result = await ctx.prisma.runProfile.upsert({
         where: {
           userId: userId,
         },
-        data: {
-          ...(input.general ? { ...input.general } : null),
+        create: {
+          userId,
+          ...input.general,
+          highlightRun: {},
+          weekStats: {},
+          shoes: [],
+          events: [],
+        },
+        update: {
+          ...input.general,
         },
       });
 
       return {
         success: true,
-        general: {
+        profile: {
           slug: result.slug as string,
           name: result.name as string,
         },
