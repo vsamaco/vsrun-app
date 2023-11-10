@@ -4,6 +4,7 @@ import GeneralSettingsForm from "~/components/settings/General";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import CreateProfileModal from "~/components/settings/edit-profile-modal";
 import EditRunModal from "~/components/settings/edit-run-modal";
+import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
 import SettingsLayout from "~/components/settings/layout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -168,7 +169,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">Edit Stats</Button>
+                {profile && <EditWeekStatsModal profile={profile} />}
               </CardFooter>
             </Card>
           </DemoContainer>
