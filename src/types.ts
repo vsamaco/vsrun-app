@@ -20,7 +20,7 @@ export type WeekStat = {
 };
 
 export type Shoe = {
-  id: number;
+  id: string;
   brand_name: string;
   model_name: string;
   distance: number;

@@ -4,6 +4,9 @@ import GeneralSettingsForm from "~/components/settings/General";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import CreateProfileModal from "~/components/settings/edit-profile-modal";
 import EditRunModal from "~/components/settings/edit-run-modal";
+import EditShoeModal, {
+  AddShoeModal,
+} from "~/components/settings/edit-shoe-modal";
 import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
 import SettingsLayout from "~/components/settings/layout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
@@ -179,12 +182,39 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 <CardTitle>Shoes</CardTitle>
                 <CardDescription>Highlight shoe rotation.</CardDescription>
               </CardHeader>
-              <CardContent className="grid gap-4"></CardContent>
+              <CardContent className="grid gap-4">
+                {profile.shoes.map((shoe, index) => {
+                  const shoeObj = shoe as Shoe;
+                  return (
+                    <>
+                      <div
+                        className="flex items-center justify-between space-x-4"
+                        key={shoeObj.id}
+                      >
+                        <div className="flex items-center space-x-4">
+                          <p className="text-sm font-medium leading-none">
+                            {shoeObj.brand_name} {shoeObj.model_name}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <p className="text-sm text-muted-foreground">
+                            {metersToMiles(shoeObj.distance)} mi
+                          </p>
+                          {profile.shoes && (
+                            <EditShoeModal
+                              profile={profile}
+                              shoeIndex={index}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+              </CardContent>
+
               <CardFooter>
-                <Button className="w-full">
-                  <Check className="mr-2 h-4 w-4" />
-                  Add Shoe
-                </Button>
+                <AddShoeModal profile={profile} />
               </CardFooter>
             </Card>
           </DemoContainer>
