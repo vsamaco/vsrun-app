@@ -1,5 +1,5 @@
 import { api } from "~/utils/api";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { default as strava, Strava } from "strava-v3";
 import { TRPCClientError } from "@trpc/client";
 import { parseShoeBrandModel } from "~/utils/shoe";
@@ -28,7 +28,7 @@ export type StravaActivity = {
 
 export type StravaAthlete = {
   shoes: {
-    id: number;
+    id: string;
     name: string;
     distance: number;
   }[];
@@ -53,7 +53,7 @@ export const stravaRouter = createTRPCRouter({
     // console.log({ activities });
     return activities;
   }),
-  getShoes: publicProcedure.query(async ({ ctx }) => {
+  getShoes: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const account = await ctx.prisma.account.findFirst({
       where: { userId },

@@ -31,6 +31,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { metersToMiles } from "~/utils/activity";
 
 type FormValues = {
   shoes: Shoe[];
@@ -181,6 +182,17 @@ export function AddShoeModal({ profile }: { profile: RunProfile }) {
     }
   );
 
+  const [showImport, setShowImport] = useState(false);
+  const handleImportShoe = () => setShowImport(true);
+
+  const setSelectedShoe = (shoe: Shoe) => {
+    setShowImport(false);
+    console.log("import shoe:", shoe);
+    methods.setValue("shoes.0.model_name", shoe.model_name);
+    methods.setValue("shoes.0.brand_name", shoe.brand_name);
+    methods.setValue("shoes.0.distance", shoe.distance);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -195,16 +207,89 @@ export function AddShoeModal({ profile }: { profile: RunProfile }) {
                 Make changes to your profile here. Click save when you're done.
               </DialogDescription>
             </DialogHeader>
-            <EditShoeForm />
+            {showImport && <ImportShoeForm setSelectedShoe={setSelectedShoe} />}
+            {!showImport && <EditShoeForm />}
             <DialogFooter>
-              <Button type="submit" form="hook-form">
-                Save changes
-              </Button>
+              {showImport && (
+                <>
+                  <Button type="button" onClick={() => setShowImport(false)}>
+                    Cancel
+                  </Button>
+                </>
+              )}
+              {!showImport && (
+                <div className="flex w-full items-center justify-between">
+                  <>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={handleImportShoe}
+                    >
+                      Import from Strava
+                    </Button>
+                    <Button type="submit" form="hook-form">
+                      Save changes
+                    </Button>
+                  </>
+                </div>
+              )}
             </DialogFooter>
           </form>
         </FormProvider>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ImportShoeForm({
+  setSelectedShoe,
+}: {
+  setSelectedShoe: (shoe: Shoe) => void;
+}) {
+  const { data: shoes, isLoading } = api.strava.getShoes.useQuery();
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!shoes) {
+    return <div>No shoes found</div>;
+  }
+
+  const handleImportSelect = (shoe: Shoe) => {
+    setSelectedShoe(shoe);
+  };
+
+  return (
+    <>
+      <p className="text-sm">Choose shoe to import:</p>
+      <div className="max-h-[300px] overflow-scroll">
+        {shoes.map((shoe, index) => {
+          return (
+            <div
+              key={shoe.id}
+              className="flex items-center justify-between space-x-2 space-y-1"
+            >
+              <div className="flex w-full justify-between text-sm">
+                <div className="w-[200px] truncate font-medium">
+                  {shoe.brand_name} {shoe.model_name}
+                </div>
+                <div className="font-light">
+                  {Math.ceil(metersToMiles(shoe.distance))} mi
+                </div>
+              </div>
+              <div>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleImportSelect(shoe)}
+                >
+                  Select
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 

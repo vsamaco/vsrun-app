@@ -192,13 +192,13 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                         key={shoeObj.id}
                       >
                         <div className="flex items-center space-x-4">
-                          <p className="text-sm font-medium leading-none">
+                          <p className="w-[180px] truncate text-sm font-medium leading-none">
                             {shoeObj.brand_name} {shoeObj.model_name}
                           </p>
                         </div>
                         <div className="flex items-center space-x-4">
                           <p className="text-sm text-muted-foreground">
-                            {metersToMiles(shoeObj.distance)} mi
+                            {Math.ceil(metersToMiles(shoeObj.distance))} mi
                           </p>
                           {profile.shoes && (
                             <EditShoeModal
