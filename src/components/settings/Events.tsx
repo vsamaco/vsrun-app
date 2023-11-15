@@ -1,6 +1,6 @@
 import React from "react";
 import { useFieldArray, useForm, FormProvider } from "react-hook-form";
-import { type Event } from "~/types";
+import { type RaceEvent } from "~/types";
 import { api } from "~/utils/api";
 import {
   FormControl,
@@ -24,7 +24,7 @@ import { ToastClose } from "../ui/toast";
 import { toast } from "../ui/use-toast";
 
 type EventSettingsFormProps = {
-  events: Event[];
+  events: RaceEvent[];
 };
 
 type EventsFormValues = {

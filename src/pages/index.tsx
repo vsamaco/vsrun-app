@@ -3,7 +3,12 @@ import Run from "~/components/Run";
 import Shoes from "~/components/Shoes";
 import Week from "~/components/Week";
 import Events from "~/components/Events";
-import { type Shoe, type Activity, type Event, type WeekStat } from "~/types";
+import {
+  type Shoe,
+  type Activity,
+  type RaceEvent,
+  type WeekStat,
+} from "~/types";
 import { api } from "~/utils/api";
 import Hero from "~/components/Hero";
 import Layout from "~/components/layout";

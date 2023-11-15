@@ -11,7 +11,12 @@ import Run from "~/components/Run";
 import Shoes from "~/components/Shoes";
 import Week from "~/components/Week";
 import Layout from "~/components/layout";
-import { type Activity, type Shoe, type WeekStat, type Event } from "~/types";
+import {
+  type Activity,
+  type Shoe,
+  type WeekStat,
+  type RaceEvent,
+} from "~/types";
 import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
@@ -35,7 +40,7 @@ function RunProfilePage(
   const highlightRun = profile?.highlightRun as Activity;
   const weekStats = profile?.weekStats as WeekStat;
   const shoes = profile?.shoes as Shoe[];
-  const events = profile?.events as unknown as Event[];
+  const events = profile?.events as unknown as RaceEvent[];
 
   return (
     <>

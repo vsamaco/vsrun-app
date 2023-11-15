@@ -3,6 +3,9 @@ import { BellRing, Check } from "lucide-react";
 import GeneralSettingsForm from "~/components/settings/General";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import CreateProfileModal from "~/components/settings/edit-profile-modal";
+import EditRaceModal, {
+  AddRaceModal,
+} from "~/components/settings/edit-race-modal";
 import EditRunModal from "~/components/settings/edit-run-modal";
 import EditShoeModal, {
   AddShoeModal,
@@ -25,7 +28,7 @@ import UserNavigation from "~/components/ui/layout/user-navigation";
 import { Separator } from "~/components/ui/separator";
 import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/utils";
-import { type Activity, type Shoe, type WeekStat } from "~/types";
+import { RaceEvent, type Activity, type Shoe, type WeekStat } from "~/types";
 import {
   formatDate,
   formatSeconds,
@@ -224,12 +227,38 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 <CardTitle>Races</CardTitle>
                 <CardDescription>Highlight upcoming races.</CardDescription>
               </CardHeader>
-              <CardContent className="grid gap-4"></CardContent>
+              <CardContent className="grid gap-4">
+                {profile.events.map((event, index) => {
+                  const raceEvent = event as RaceEvent;
+                  return (
+                    <>
+                      <div
+                        className="flex items-center justify-between space-x-4"
+                        key={raceEvent.id}
+                      >
+                        <div className="flex items-center space-x-4">
+                          <p className="w-[180px] truncate text-sm font-medium leading-none">
+                            {raceEvent.name}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <p className="text-sm text-muted-foreground">
+                            {Math.ceil(metersToMiles(raceEvent.distance))} mi
+                          </p>
+                          {profile.shoes && (
+                            <EditRaceModal
+                              profile={profile}
+                              raceIndex={index}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+              </CardContent>
               <CardFooter>
-                <Button className="w-full">
-                  <Check className="mr-2 h-4 w-4" />
-                  Add Race
-                </Button>
+                {profile && <AddRaceModal profile={profile} />}
               </CardFooter>
             </Card>
           </DemoContainer>

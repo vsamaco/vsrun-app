@@ -1,9 +1,9 @@
 import React from "react";
-import { type Event } from "../types";
+import { type RaceEvent } from "../types";
 import { formatEventDate, metersToMiles } from "~/utils/activity";
 
 type EventsProps = {
-  events: Event[];
+  events: RaceEvent[];
 };
 
 function Events({ events }: EventsProps) {

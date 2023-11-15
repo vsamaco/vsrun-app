@@ -2,7 +2,7 @@ import React from "react";
 import EventSettingsForm from "~/components/settings/Events";
 import SettingsLayout from "~/components/settings/layout";
 import { Separator } from "~/components/ui/separator";
-import { type Event } from "~/types";
+import { type RaceEvent } from "~/types";
 import { api } from "~/utils/api";
 
 type Props = {};
@@ -17,7 +17,7 @@ function EventSettingsPage({}: Props) {
   if (!data) {
     return <div>Not found</div>;
   }
-  const events = data.events as Event[];
+  const events = data.events as RaceEvent[];
 
   return (
     <div className="space-y-6">

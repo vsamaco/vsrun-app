@@ -26,8 +26,8 @@ export type Shoe = {
   distance: number;
 };
 
-export type Event = {
-  id: number;
+export type RaceEvent = {
+  id: string;
   name: string;
   start_date: string;
   distance: number;
