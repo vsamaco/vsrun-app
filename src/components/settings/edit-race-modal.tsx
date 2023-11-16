@@ -49,22 +49,14 @@ function EditRaceModal({
   profile: RunProfile;
   raceIndex: number;
 }) {
-  const races = profile.events
-    .filter((_, index) => index === raceIndex)
-    .map((event) => {
-      const race = event as RaceEvent;
-      return {
-        ...race,
-        start_date: new Date(race.start_date),
-      };
-    });
+  const raceEvents = profile.events as RaceEvent[];
 
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ events: EventSettingsFormSchema })),
     defaultValues: {
-      events: races,
+      events: [raceEvents[raceIndex]],
     },
   });
 
@@ -90,11 +82,16 @@ function EditRaceModal({
 
   const onSubmit = handleSubmit(
     (data) => {
-      console.log("onsubmit:", data);
-      const updatedRaces = races.map((event, index) => {
-        return index === raceIndex ? data.events[0] : event;
+      const updatedRace = {
+        ...data.events[0],
+        start_date: new Date(data.events[0]!.start_date).toUTCString(),
+      };
+      console.log("updatedRace:", updatedRace);
+      updateRacesProfile.mutate({
+        events: raceEvents.map((event, index) => {
+          return index === raceIndex ? updatedRace : event;
+        }),
       });
-      updateRacesProfile.mutate({ events: updatedRaces });
     },
     (errors) => {
       console.log("errors:", errors);
@@ -102,8 +99,9 @@ function EditRaceModal({
   );
 
   const handleRemove = () => {
-    const updatedRaces = races.filter((race, index) => index !== raceIndex);
-    console.log("remove new race:", updatedRaces);
+    const updatedRaces = raceEvents.filter(
+      (race, index) => index !== raceIndex
+    );
     updateRacesProfile.mutate({ events: updatedRaces });
   };
 
@@ -195,17 +193,6 @@ export function AddRaceModal({ profile }: { profile: RunProfile }) {
     }
   );
 
-  const [showImport, setShowImport] = useState(false);
-  const handleImportShoe = () => setShowImport(true);
-
-  const setSelectedShoe = (race: RaceEvent) => {
-    setShowImport(false);
-    console.log("import shoe:", race);
-    methods.setValue("events.0.name", race.name);
-    methods.setValue("events.0.start_date", race.start_date);
-    methods.setValue("events.0.distance", race.distance);
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -222,13 +209,9 @@ export function AddRaceModal({ profile }: { profile: RunProfile }) {
             </DialogHeader>
             <EditRaceForm />
             <DialogFooter>
-              {!showImport && (
-                <>
-                  <Button type="submit" form="hook-form">
-                    Save changes
-                  </Button>
-                </>
-              )}
+              <Button type="submit" form="hook-form">
+                Save changes
+              </Button>
             </DialogFooter>
           </form>
         </FormProvider>
@@ -268,7 +251,7 @@ function EditRaceForm() {
               name={`events.${index}.start_date`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Start Date</FormLabel>
+                  <FormLabel>Race Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -280,7 +263,7 @@ function EditRaceForm() {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(new Date(field.value), "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -291,11 +274,9 @@ function EditRaceForm() {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
+                        selected={new Date(field.value)}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={(date) => date < new Date("1900-01-01")}
                         initialFocus
                       />
                     </PopoverContent>
