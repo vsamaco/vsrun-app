@@ -39,7 +39,7 @@ export const runProfileRouter = createTRPCRouter({
   updateProfile: protectedProcedure
     .input(
       z.object({
-        highlightRun: RunSettingsFormSchema.optional(),
+        highlightRun: RunSettingsFormSchema.nullable().optional(),
         weekStats: WeekSettingsFormSchema.optional(),
         shoes: ShoeSettingsFormSchema.optional(),
         events: EventSettingsFormSchema.optional(),
@@ -53,7 +53,9 @@ export const runProfileRouter = createTRPCRouter({
           userId: userId,
         },
         data: {
-          ...(input.highlightRun ? { highlightRun: input.highlightRun } : null),
+          ...(input.highlightRun !== undefined
+            ? { highlightRun: input.highlightRun }
+            : null),
           ...(input.weekStats ? { weekStats: input.weekStats } : null),
           ...(input.shoes ? { shoes: input.shoes } : null),
           ...(input.events ? { events: input.events } : null),

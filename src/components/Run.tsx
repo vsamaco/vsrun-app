@@ -47,7 +47,7 @@ function Run({ activity }: RunProps) {
             </li>
           ))}
         </ul>
-        {activity && (
+        {activity?.summary_polyline && (
           <div className="mt-10 sm:mt-5">
             <MapWithNoSSR activity={activity} />
           </div>

@@ -14,13 +14,14 @@ export const GeneralSettingsFormSchema = z.object({
 });
 
 export const RunSettingsFormSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z
     .string({
       required_error: "Name is required.",
     })
     .min(1),
-  start_latlng: z.array(z.number()),
+  start_date: z.coerce.date(),
+  start_latlng: z.array(z.number()).optional(),
   elapsed_time: z.coerce
     .number({
       required_error: "Elapsed time is required.",
@@ -41,7 +42,7 @@ export const RunSettingsFormSchema = z.object({
       required_error: "Elevation is required.",
     })
     .min(-1000),
-  summary_polyline: z.string(),
+  summary_polyline: z.string().optional(),
 });
 
 export const WeekSettingsFormSchema = z.object({

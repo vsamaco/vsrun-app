@@ -6,7 +6,9 @@ import CreateProfileModal from "~/components/settings/edit-profile-modal";
 import EditRaceModal, {
   AddRaceModal,
 } from "~/components/settings/edit-race-modal";
-import EditRunModal from "~/components/settings/edit-run-modal";
+import EditRunModal, {
+  AddRunModal,
+} from "~/components/settings/edit-run-modal";
 import EditShoeModal, {
   AddShoeModal,
 } from "~/components/settings/edit-shoe-modal";
@@ -122,21 +124,27 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 <CardDescription>Highlight recent activity.</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-4">
-                <div className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
-                  <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {highlightRun.name}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatDate(highlightRun.start_date)}
-                    </p>
+                {highlightRun && (
+                  <div className="grid-cols mb-4 grid items-start pb-4 last:mb-0 last:pb-0">
+                    <div className="flex items-center justify-between space-x-4">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {highlightRun.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {formatDate(highlightRun.start_date)}
+                        </p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {Math.ceil(metersToMiles(highlightRun.distance))} mi
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </CardContent>
               <CardFooter>
-                {!highlightRun && <Button className="w-full">Add Run</Button>}
                 {highlightRun && <EditRunModal profile={profile} />}
+                {!highlightRun && <AddRunModal profile={profile} />}
               </CardFooter>
             </Card>
           </DemoContainer>
