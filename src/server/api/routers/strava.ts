@@ -51,7 +51,7 @@ export const stravaRouter = createTRPCRouter({
     })) as StravaActivity[];
 
     // console.log({ activities });
-    return activities;
+    return activities.filter((activity) => activity.type === "Run");
   }),
   getShoes: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;

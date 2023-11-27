@@ -1,8 +1,6 @@
 import { RunProfile } from "@prisma/client";
-import { BellRing, Check } from "lucide-react";
-import GeneralSettingsForm from "~/components/settings/General";
+import { format } from "date-fns";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
-import CreateProfileModal from "~/components/settings/edit-profile-modal";
 import EditRaceModal, {
   AddRaceModal,
 } from "~/components/settings/edit-race-modal";
@@ -13,9 +11,7 @@ import EditShoeModal, {
   AddShoeModal,
 } from "~/components/settings/edit-shoe-modal";
 import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
-import SettingsLayout from "~/components/settings/layout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -30,7 +26,12 @@ import UserNavigation from "~/components/ui/layout/user-navigation";
 import { Separator } from "~/components/ui/separator";
 import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/utils";
-import { RaceEvent, type Activity, type Shoe, type WeekStat } from "~/types";
+import {
+  type RaceEvent,
+  type Activity,
+  type Shoe,
+  type WeekStat,
+} from "~/types";
 import {
   formatDate,
   formatSeconds,
@@ -154,34 +155,47 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 <CardTitle>Week Stats</CardTitle>
                 <CardDescription>Highlight weekly stats.</CardDescription>
               </CardHeader>
-              <CardContent className="grid gap-1">
-                <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">Distance</p>
-                    <p className="text-sm text-muted-foreground">
-                      {metersToMiles(weekStats.total_duration)}
-                    </p>
+              {weekStats && (
+                <CardContent className="grid gap-1">
+                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">Date</p>
+                      <p className="text-sm text-muted-foreground">
+                        {format(new Date(weekStats.start_date), "LL/dd")} -{" "}
+                        {format(new Date(weekStats.end_date), "LL/dd")}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">Time</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatSeconds(weekStats.total_duration)}
-                    </p>
+                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        Distance
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {metersToMiles(weekStats.total_distance)}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Elevation
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {metersToFeet(weekStats.total_elevation)}
-                    </p>
+                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">Time</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatSeconds(weekStats.total_duration)}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
+                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        Elevation
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {metersToFeet(weekStats.total_elevation)}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              )}
               <CardFooter>
                 {profile && <EditWeekStatsModal profile={profile} />}
               </CardFooter>

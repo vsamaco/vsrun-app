@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { api } from "~/utils/api";
-import { RunSettingsFormSchema, WeekSettingsFormSchema } from "~/utils/schemas";
+import { WeekSettingsFormSchema } from "~/utils/schemas";
 import {
   DialogFooter,
   Dialog,
@@ -31,40 +31,33 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { cn } from "~/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, setDay } from "date-fns";
+import { metersToMiles } from "~/utils/activity";
 
 type FormValues = {
-  weekStats: {
-    start_date: Date;
-    end_date: Date;
-    total_runs: number;
-    total_distance: number;
-    total_duration: number;
-    total_elevation: number;
-  };
+  weekStats: WeekStat;
 };
 
 function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
   const weekStat = profile.weekStats as WeekStat;
-
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ weekStats: WeekSettingsFormSchema })),
     defaultValues: {
       weekStats: {
-        start_date: new Date(weekStat.start_date),
-        end_date: new Date(weekStat.end_date),
-        total_runs: weekStat.total_runs,
-        total_distance: weekStat.total_distance,
-        total_duration: weekStat.total_duration,
-        total_elevation: weekStat.total_elevation,
+        start_date: weekStat?.start_date,
+        end_date: weekStat?.end_date,
+        total_runs: weekStat?.total_runs,
+        total_distance: weekStat?.total_distance,
+        total_duration: weekStat?.total_duration,
+        total_elevation: weekStat?.total_elevation,
       },
     },
   });
 
   const utils = api.useContext();
-  const updateRunProfile = api.runProfile.updateProfile.useMutation({
+  const updateWeekStatProfile = api.runProfile.updateProfile.useMutation({
     onSuccess: async (newEntry) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
@@ -86,12 +79,41 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
   const onSubmit = handleSubmit(
     (data) => {
       console.log("onsubmit:", data);
-      updateRunProfile.mutate(data);
+      updateWeekStatProfile.mutate(data);
     },
     (errors) => {
       console.log("errors:", errors);
     }
   );
+
+  const handleRemove = () => {
+    console.log("remove week stats");
+    updateWeekStatProfile.mutate({ weekStats: null });
+    methods.reset({
+      weekStats: {
+        start_date: "",
+        end_date: "",
+        total_runs: "",
+        total_distance: "",
+        total_duration: "",
+        total_elevation: "",
+      },
+    });
+  };
+
+  const [showImport, setShowImport] = useState(false);
+  const handleImportShoe = () => setShowImport(true);
+
+  const setSelectedWeekStats = (weekStats: WeekStat) => {
+    setShowImport(false);
+    console.log("import activity:", weekStats);
+    methods.setValue("weekStats.start_date", weekStats.start_date);
+    methods.setValue("weekStats.end_date", weekStats.end_date);
+    methods.setValue("weekStats.total_runs", weekStats.total_runs);
+    methods.setValue("weekStats.total_duration", weekStats.total_duration);
+    methods.setValue("weekStats.total_distance", weekStats.total_distance);
+    methods.setValue("weekStats.total_elevation", weekStats.total_elevation);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -107,17 +129,163 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
                 Make changes to your profile here. Click save when you're done.
               </DialogDescription>
             </DialogHeader>
-            <EditWeekStatsForm />
+            {!showImport && <EditWeekStatsForm />}
+            {showImport && (
+              <ImportRunForm setSelectedWeekStats={setSelectedWeekStats} />
+            )}
 
             <DialogFooter>
-              <Button type="submit" form="hook-form">
-                Save changes
-              </Button>
+              {weekStat && (
+                <Button type="button" onClick={handleRemove}>
+                  Remove
+                </Button>
+              )}
+              {!showImport && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleImportShoe}
+                >
+                  Import from Strava
+                </Button>
+              )}
+              {!showImport && (
+                <Button type="submit" form="hook-form">
+                  Save changes
+                </Button>
+              )}
+              {showImport && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setShowImport(false)}
+                >
+                  Cancel
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </FormProvider>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ImportRunForm({
+  setSelectedWeekStats,
+}: {
+  setSelectedWeekStats: (weekStats: WeekStat) => void;
+}) {
+  const { data: activities, isLoading } = api.strava.getActivities.useQuery();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!activities) {
+    return <div>No activities found</div>;
+  }
+
+  const handleImportSelect = (weekStats: WeekStat) => {
+    setSelectedWeekStats({
+      start_date: weekStats.start_date,
+      end_date: weekStats.end_date,
+      total_runs: weekStats.total_runs,
+      total_distance: weekStats.total_distance,
+      total_duration: weekStats.total_duration,
+      total_elevation: weekStats.total_elevation,
+    });
+  };
+
+  const weeklyActivities = {};
+  const groupActivitiesByWeek = () => {
+    console.log("called GA");
+    activities.forEach((activity) => {
+      const date = new Date(activity.start_date);
+      const key = format(date, "yyyy-I");
+      const startWeek = setDay(date, 1, { weekStartsOn: 1 });
+      const endWeek = setDay(date, 6);
+
+      if (!weeklyActivities[key]) {
+        weeklyActivities[key] = {
+          start_date: startWeek,
+          end_date: endWeek,
+          activities: [activity],
+          total_distance: activity.distance,
+          total_duration: activity.moving_time,
+          total_elevation: activity.total_elevation_gain,
+          total_runs: 1,
+        };
+      } else {
+        const currentWeek = weeklyActivities[key];
+        weeklyActivities[key] = {
+          start_date: currentWeek.start_date,
+          end_date: currentWeek.end_date,
+          activities: [...currentWeek.activities, activity],
+          total_distance: currentWeek.total_distance + activity.distance,
+          total_duration: currentWeek.total_duration + activity.moving_time,
+          total_elevation:
+            currentWeek.total_elevation + activity.total_elevation_gain,
+          total_runs: currentWeek.total_runs + 1,
+        };
+      }
+    });
+  };
+  groupActivitiesByWeek();
+
+  return (
+    <>
+      <p className="text-sm">Choose shoe to import:</p>
+      <div className="max-h-[300px] space-y-2 overflow-scroll">
+        {Object.keys(weeklyActivities).map((groupKey, index) => {
+          return (
+            <div
+              key={groupKey}
+              className="flex items-center justify-between space-x-2 space-y-1"
+            >
+              <div className="flex w-full justify-between text-sm">
+                <div className="flex flex-col">
+                  <div className="font-medium">
+                    {format(weeklyActivities[groupKey].start_date, "LL/dd")} -
+                    {format(weeklyActivities[groupKey].end_date, "LL/dd")}
+                  </div>
+                  <div className="font-light">
+                    {weeklyActivities[groupKey].activities.map((activity) => {
+                      return <div key={activity.id}>{activity.name}</div>;
+                    })}
+                  </div>
+                </div>
+                <div>
+                  {Math.ceil(
+                    metersToMiles(weeklyActivities[groupKey].total_distance)
+                  )}{" "}
+                  mi
+                </div>
+              </div>
+              <div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() =>
+                    handleImportSelect({
+                      start_date: weeklyActivities[groupKey].start_date,
+                      end_date: weeklyActivities[groupKey].end_date,
+                      total_runs: weeklyActivities[groupKey].total_runs,
+                      total_duration: weeklyActivities[groupKey].total_duration,
+                      total_distance: weeklyActivities[groupKey].total_distance,
+                      total_elevation:
+                        weeklyActivities[groupKey].total_elevation,
+                    })
+                  }
+                >
+                  Select
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -143,7 +311,7 @@ function EditWeekStatsForm() {
                     )}
                   >
                     {field.value ? (
-                      format(field.value, "PPP")
+                      format(new Date(field.value), "PPP")
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -187,7 +355,7 @@ function EditWeekStatsForm() {
                     )}
                   >
                     {field.value ? (
-                      format(field.value, "PPP")
+                      format(new Date(field.value), "PPP")
                     ) : (
                       <span>Pick a date</span>
                     )}
