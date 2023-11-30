@@ -1,5 +1,4 @@
 export type Activity = {
-  id: string;
   name: string;
   start_date: string;
   moving_time: number;

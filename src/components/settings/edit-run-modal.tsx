@@ -84,92 +84,6 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
     updateRunProfile.mutate({ highlightRun: null });
   };
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="w-full">Edit Run</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <FormProvider {...methods}>
-          <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
-            <DialogHeader>
-              <DialogTitle>Edit Run</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
-              </DialogDescription>
-            </DialogHeader>
-            <EditRunForm />
-
-            <DialogFooter>
-              <div className="flex w-full items-center justify-between">
-                <Button type="button" onClick={handleRemove}>
-                  Remove
-                </Button>
-                <Button type="submit" form="hook-form">
-                  Save changes
-                </Button>
-              </div>
-            </DialogFooter>
-          </form>
-        </FormProvider>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-const getActivityId = () => {
-  return Math.random().toString(16).slice(2);
-};
-
-export function AddRunModal({ profile }: { profile: RunProfile }) {
-  const [open, setOpen] = useState(false);
-
-  const methods = useForm<FormValues>({
-    resolver: zodResolver(z.object({ highlightRun: RunSettingsFormSchema })),
-    defaultValues: {
-      highlightRun: {
-        id: getActivityId(),
-        name: "",
-        start_date: "",
-        moving_time: 0,
-        elapsed_time: 0,
-        distance: 0,
-        total_elevation_gain: 0,
-      },
-    },
-  });
-
-  const utils = api.useContext();
-  const updateRunProfile = api.runProfile.updateProfile.useMutation({
-    onSuccess: async (newEntry) => {
-      await utils.runProfile.getUserProfile.invalidate();
-      reset();
-      setOpen(false);
-
-      toast({ title: "Success", description: "Successfully saved changes." });
-    },
-    onError: (error) => {
-      console.log({ error });
-      toast({
-        title: "Error",
-        description: error.message,
-        action: <ToastClose>Close</ToastClose>,
-      });
-    },
-  });
-
-  const { handleSubmit, reset } = methods;
-
-  const onSubmit = handleSubmit(
-    (data) => {
-      console.log("onsubmit:", data);
-      updateRunProfile.mutate(data);
-    },
-    (errors) => {
-      console.log("errors:", errors);
-    }
-  );
-
   const [showImport, setShowImport] = useState(false);
   const handleImportShoe = () => setShowImport(true);
 
@@ -195,31 +109,28 @@ export function AddRunModal({ profile }: { profile: RunProfile }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">Add Run</Button>
+        <Button className="w-full">Edit Run</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <FormProvider {...methods}>
           <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Add Run</DialogTitle>
+              <DialogTitle>Edit Run</DialogTitle>
               <DialogDescription>
                 Make changes to your profile here. Click save when you're done.
               </DialogDescription>
             </DialogHeader>
+            {!showImport && <EditRunForm />}
             {showImport && (
               <ImportRunForm setSelectedActivity={setSelectedActivity} />
             )}
-            {!showImport && <EditRunForm />}
+
             <DialogFooter>
-              {showImport && (
-                <>
-                  <Button type="button" onClick={() => setShowImport(false)}>
-                    Cancel
-                  </Button>
-                </>
-              )}
-              {!showImport && (
-                <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center justify-between">
+                <Button type="button" onClick={handleRemove}>
+                  Remove
+                </Button>
+                {!showImport && (
                   <>
                     <Button
                       type="button"
@@ -232,8 +143,8 @@ export function AddRunModal({ profile }: { profile: RunProfile }) {
                       Save changes
                     </Button>
                   </>
-                </div>
-              )}
+                )}
+              </div>
             </DialogFooter>
           </form>
         </FormProvider>

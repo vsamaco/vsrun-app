@@ -12,7 +12,6 @@ async function main() {
       slug: "milesperdonut",
       name: "milesperdonut",
       highlightRun: {
-        id: 123,
         name: "Sample Run",
         start_date: new Date(2023, 5, 30).toUTCString(),
         distance: 42560.4,

@@ -14,7 +14,6 @@ export const GeneralSettingsFormSchema = z.object({
 });
 
 export const RunSettingsFormSchema = z.object({
-  id: z.string(),
   name: z
     .string({
       required_error: "Name is required.",

@@ -1,12 +1,10 @@
-import { RunProfile } from "@prisma/client";
+import { type RunProfile } from "@prisma/client";
 import { format } from "date-fns";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import EditRaceModal, {
   AddRaceModal,
 } from "~/components/settings/edit-race-modal";
-import EditRunModal, {
-  AddRunModal,
-} from "~/components/settings/edit-run-modal";
+import EditRunModal from "~/components/settings/edit-run-modal";
 import EditShoeModal, {
   AddShoeModal,
 } from "~/components/settings/edit-shoe-modal";
@@ -144,8 +142,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 )}
               </CardContent>
               <CardFooter>
-                {highlightRun && <EditRunModal profile={profile} />}
-                {!highlightRun && <AddRunModal profile={profile} />}
+                <EditRunModal profile={profile} />
               </CardFooter>
             </Card>
           </DemoContainer>
