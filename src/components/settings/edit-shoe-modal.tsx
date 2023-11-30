@@ -34,24 +34,32 @@ import { Input } from "../ui/input";
 import { metersToMiles } from "~/utils/activity";
 
 type FormValues = {
-  shoes: Shoe[];
+  shoe: Shoe;
 };
 
 function EditShoeModal({
   profile,
   shoeIndex,
+  buttonType = "edit",
 }: {
   profile: RunProfile;
   shoeIndex: number;
+  buttonType?: "add" | "edit";
 }) {
   const shoes = profile.shoes as Shoe[];
 
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
-    resolver: zodResolver(z.object({ shoes: ShoeSettingsFormSchema })),
+    resolver: zodResolver(z.object({ shoe: ShoeSettingsFormSchema })),
     defaultValues: {
-      shoes: shoes.filter((shoe, index) => index === shoeIndex),
+      shoe: shoes[shoeIndex]
+        ? shoes[shoeIndex]
+        : {
+            brand_name: "",
+            model_name: "",
+            distance: 0,
+          },
     },
   });
 
@@ -60,6 +68,7 @@ function EditShoeModal({
     onSuccess: async (newEntry) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
+      methods.reset();
 
       toast({ title: "Success", description: "Successfully saved changes." });
     },
@@ -78,9 +87,17 @@ function EditShoeModal({
   const onSubmit = handleSubmit(
     (data) => {
       console.log("onsubmit:", data);
+
+      // update selected shoe from list
       const updatedShoes = shoes.map((shoe, index) => {
-        return index === shoeIndex ? data.shoes[0] : shoe;
+        return index === shoeIndex ? data.shoe : shoe;
       });
+
+      // append new shoe to list
+      if (shoeIndex === shoes.length) {
+        updatedShoes.push(data.shoe);
+      }
+
       updateShoesProfile.mutate({ shoes: updatedShoes });
     },
     (errors) => {
@@ -94,10 +111,25 @@ function EditShoeModal({
     updateShoesProfile.mutate({ shoes: updatedShoes });
   };
 
+  const [showImport, setShowImport] = useState(false);
+  const handleImportShoe = () => setShowImport(true);
+
+  const setSelectedShoe = (shoe: Shoe) => {
+    setShowImport(false);
+    console.log("import shoe:", shoe);
+    methods.setValue("shoe.model_name", shoe.model_name);
+    methods.setValue("shoe.brand_name", shoe.brand_name);
+    methods.setValue("shoe.distance", shoe.distance);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="">Edit</Button>
+        {buttonType === "add" ? (
+          <Button className="w-full">Add Shoe</Button>
+        ) : (
+          <Button>Edit</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <FormProvider {...methods}>
@@ -108,117 +140,14 @@ function EditShoeModal({
                 Make changes to your profile here. Click save when you're done.
               </DialogDescription>
             </DialogHeader>
-            <EditShoeForm />
+            {!showImport && <EditShoeForm />}
+            {showImport && <ImportShoeForm setSelectedShoe={setSelectedShoe} />}
             <DialogFooter>
               <div className="flex w-full items-center justify-between">
                 <Button type="button" onClick={handleRemove}>
                   Remove
                 </Button>
-                <Button type="submit" form="hook-form">
-                  Save changes
-                </Button>
-              </div>
-            </DialogFooter>
-          </form>
-        </FormProvider>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-const getShoeId = () => {
-  return Math.random().toString(16).slice(2);
-};
-
-export function AddShoeModal({ profile }: { profile: RunProfile }) {
-  const shoes = profile.shoes as Shoe[];
-
-  const [open, setOpen] = useState(false);
-
-  const methods = useForm<FormValues>({
-    resolver: zodResolver(z.object({ shoes: ShoeSettingsFormSchema })),
-    defaultValues: {
-      shoes: [
-        {
-          id: getShoeId(),
-          brand_name: "",
-          model_name: "",
-          distance: 0,
-        },
-      ],
-    },
-  });
-
-  const utils = api.useContext();
-  const updateShoesProfile = api.runProfile.updateProfile.useMutation({
-    onSuccess: async (newEntry) => {
-      await utils.runProfile.getUserProfile.invalidate();
-      reset();
-      setOpen(false);
-
-      toast({ title: "Success", description: "Successfully saved changes." });
-    },
-    onError: (error) => {
-      console.log({ error });
-      toast({
-        title: "Error",
-        description: error.message,
-        action: <ToastClose>Close</ToastClose>,
-      });
-    },
-  });
-
-  const { handleSubmit, reset } = methods;
-
-  const onSubmit = handleSubmit(
-    (data) => {
-      console.log("onsubmit:", data);
-      updateShoesProfile.mutate({
-        shoes: [...shoes, ...data.shoes],
-      });
-    },
-    (errors) => {
-      console.log("errors:", errors);
-    }
-  );
-
-  const [showImport, setShowImport] = useState(false);
-  const handleImportShoe = () => setShowImport(true);
-
-  const setSelectedShoe = (shoe: Shoe) => {
-    setShowImport(false);
-    console.log("import shoe:", shoe);
-    methods.setValue("shoes.0.model_name", shoe.model_name);
-    methods.setValue("shoes.0.brand_name", shoe.brand_name);
-    methods.setValue("shoes.0.distance", shoe.distance);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="w-full">Add Shoe</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <FormProvider {...methods}>
-          <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
-            <DialogHeader>
-              <DialogTitle>Add Shoe</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
-              </DialogDescription>
-            </DialogHeader>
-            {showImport && <ImportShoeForm setSelectedShoe={setSelectedShoe} />}
-            {!showImport && <EditShoeForm />}
-            <DialogFooter>
-              {showImport && (
-                <>
-                  <Button type="button" onClick={() => setShowImport(false)}>
-                    Cancel
-                  </Button>
-                </>
-              )}
-              {!showImport && (
-                <div className="flex w-full items-center justify-between">
+                {!showImport && (
                   <>
                     <Button
                       type="button"
@@ -231,8 +160,8 @@ export function AddShoeModal({ profile }: { profile: RunProfile }) {
                       Save changes
                     </Button>
                   </>
-                </div>
-              )}
+                )}
+              </div>
             </DialogFooter>
           </form>
         </FormProvider>
@@ -296,57 +225,49 @@ function ImportShoeForm({
 function EditShoeForm() {
   const { control } = useFormContext();
 
-  const { fields } = useFieldArray({
-    control,
-    name: "shoes",
-  });
   return (
     <div>
-      {fields.map((shoe, index) => {
-        return (
-          <FormItem className="" key={shoe.id}>
-            <FormField
-              control={control}
-              name={`shoes.${index}.brand_name`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Brand:</FormLabel>
-                  <FormControl>
-                    <Input placeholder="brand" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-            <FormField
-              control={control}
-              name={`shoes.${index}.model_name`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Model:</FormLabel>
-                  <FormControl>
-                    <Input placeholder="model" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-            <FormField
-              control={control}
-              name={`shoes.${index}.distance`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Distance:</FormLabel>
-                  <FormControl>
-                    <Input placeholder="distance" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-          </FormItem>
-        );
-      })}
+      <FormItem className="">
+        <FormField
+          control={control}
+          name={`shoe.brand_name`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Brand:</FormLabel>
+              <FormControl>
+                <Input placeholder="brand" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <FormField
+          control={control}
+          name={`shoe.model_name`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Model:</FormLabel>
+              <FormControl>
+                <Input placeholder="model" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <FormField
+          control={control}
+          name={`shoe.distance`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Distance:</FormLabel>
+              <FormControl>
+                <Input placeholder="distance" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+      </FormItem>
     </div>
   );
 }

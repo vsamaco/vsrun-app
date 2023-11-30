@@ -19,7 +19,6 @@ export type WeekStat = {
 };
 
 export type Shoe = {
-  id: string;
   brand_name: string;
   model_name: string;
   distance: number;

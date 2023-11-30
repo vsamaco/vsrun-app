@@ -69,22 +69,19 @@ export const WeekSettingsFormSchema = z.object({
   end_date: z.coerce.date(),
 });
 
-export const ShoeSettingsFormSchema = z.array(
-  z.object({
-    id: z.string(),
-    brand_name: z
-      .string({
-        required_error: "Brand is required",
-      })
-      .min(1),
-    model_name: z
-      .string({
-        required_error: "Model is required",
-      })
-      .min(1),
-    distance: z.coerce.number().min(1),
-  })
-);
+export const ShoeSettingsFormSchema = z.object({
+  brand_name: z
+    .string({
+      required_error: "Brand is required",
+    })
+    .min(1),
+  model_name: z
+    .string({
+      required_error: "Model is required",
+    })
+    .min(1),
+  distance: z.coerce.number().min(1),
+});
 
 export const EventSettingsFormSchema = z.array(
   z.object({

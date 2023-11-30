@@ -5,9 +5,7 @@ import EditRaceModal, {
   AddRaceModal,
 } from "~/components/settings/edit-race-modal";
 import EditRunModal from "~/components/settings/edit-run-modal";
-import EditShoeModal, {
-  AddShoeModal,
-} from "~/components/settings/edit-shoe-modal";
+import EditShoeModal from "~/components/settings/edit-shoe-modal";
 import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import {
@@ -211,7 +209,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                     <>
                       <div
                         className="flex items-center justify-between space-x-4"
-                        key={shoeObj.id}
+                        key={index}
                       >
                         <div className="flex items-center space-x-4">
                           <p className="w-[180px] truncate text-sm font-medium leading-none">
@@ -236,7 +234,11 @@ function ProfileDashboard({ profile }: DashboardProfile) {
               </CardContent>
 
               <CardFooter>
-                <AddShoeModal profile={profile} />
+                <EditShoeModal
+                  profile={profile}
+                  shoeIndex={profile.shoes.length}
+                  buttonType="add"
+                />
               </CardFooter>
             </Card>
           </DemoContainer>

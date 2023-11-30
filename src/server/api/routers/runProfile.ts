@@ -41,7 +41,7 @@ export const runProfileRouter = createTRPCRouter({
       z.object({
         highlightRun: RunSettingsFormSchema.nullable().optional(),
         weekStats: WeekSettingsFormSchema.nullable().optional(),
-        shoes: ShoeSettingsFormSchema.optional(),
+        shoes: z.array(ShoeSettingsFormSchema).optional(),
         events: EventSettingsFormSchema.optional(),
       })
     )
