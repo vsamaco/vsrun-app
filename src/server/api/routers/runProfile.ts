@@ -42,7 +42,7 @@ export const runProfileRouter = createTRPCRouter({
         highlightRun: RunSettingsFormSchema.nullable().optional(),
         weekStats: WeekSettingsFormSchema.nullable().optional(),
         shoes: z.array(ShoeSettingsFormSchema).optional(),
-        events: EventSettingsFormSchema.optional(),
+        events: z.array(EventSettingsFormSchema).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {

@@ -32,19 +32,16 @@ async function main() {
       },
       shoes: [
         {
-          id: "456",
           brand_name: "Saucony",
           model_name: "Ride 15",
           distance: 82803,
         },
         {
-          id: "123",
           brand_name: "New Balance",
           model_name: "Rebel v3",
           distance: 160934,
         },
         {
-          id: "234",
           brand_name: "Adidas",
           model_name: "Adizero Pro 3",
           distance: 80467,
@@ -52,19 +49,16 @@ async function main() {
       ],
       events: [
         {
-          id: "123",
           name: "Oakland Marathon",
           start_date: new Date(2023, 2, 19).toUTCString(),
           distance: 42195,
         },
         {
-          id: "234",
           name: "San Francisco Marathon",
           start_date: new Date(2023, 6, 23).toUTCString(),
           distance: 42195,
         },
         {
-          id: "345",
           name: "Chicago Marathon",
           start_date: new Date(2023, 9, 8).toUTCString(),
           distance: 42195,

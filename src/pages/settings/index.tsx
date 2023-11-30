@@ -1,9 +1,7 @@
 import { type RunProfile } from "@prisma/client";
 import { format } from "date-fns";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
-import EditRaceModal, {
-  AddRaceModal,
-} from "~/components/settings/edit-race-modal";
+import EditRaceModal from "~/components/settings/edit-race-modal";
 import EditRunModal from "~/components/settings/edit-run-modal";
 import EditShoeModal from "~/components/settings/edit-shoe-modal";
 import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
@@ -255,7 +253,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                     <>
                       <div
                         className="flex items-center justify-between space-x-4"
-                        key={raceEvent.id}
+                        key={index}
                       >
                         <div className="flex items-center space-x-4">
                           <p className="w-[180px] truncate text-sm font-medium leading-none">
@@ -279,7 +277,13 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 })}
               </CardContent>
               <CardFooter>
-                {profile && <AddRaceModal profile={profile} />}
+                {profile && (
+                  <EditRaceModal
+                    profile={profile}
+                    raceIndex={profile.events.length}
+                    buttonType="add"
+                  />
+                )}
               </CardFooter>
             </Card>
           </DemoContainer>
