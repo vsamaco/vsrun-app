@@ -23,7 +23,7 @@ import {
 import { Input } from "../ui/input";
 import { type RunProfile } from "@prisma/client";
 import { type Activity } from "~/types";
-import { useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RunSettingsFormSchema } from "~/utils/schemas";
 import { z } from "zod";
@@ -32,11 +32,22 @@ import { cn } from "~/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
-import { metersToMiles } from "~/utils/activity";
+import {
+  feetToMeters,
+  formatDurationHMS,
+  metersToFeet,
+  metersToMiles,
+  milesToMeters,
+  parseHmsToSeconds,
+} from "~/utils/activity";
 import { type StravaActivity } from "~/server/api/routers/strava";
 
 type FormValues = {
-  highlightRun: Activity;
+  highlightRun: Activity & {
+    moving_time_hms: string;
+    distance_mi: number;
+    total_elevation_gain_ft: number;
+  };
 };
 
 function EditRunModal({ profile }: { profile: RunProfile }) {
@@ -44,9 +55,24 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
-    resolver: zodResolver(z.object({ highlightRun: RunSettingsFormSchema })),
+    resolver: zodResolver(
+      z.object({
+        highlightRun: RunSettingsFormSchema,
+      })
+    ),
     defaultValues: {
-      highlightRun: highlightRun,
+      highlightRun: {
+        ...highlightRun,
+        moving_time_hms: highlightRun?.moving_time
+          ? formatDurationHMS(highlightRun.moving_time)
+          : "",
+        distance_mi: highlightRun?.distance
+          ? metersToMiles(highlightRun.distance)
+          : undefined,
+        total_elevation_gain_ft: highlightRun?.total_elevation_gain
+          ? metersToFeet(highlightRun.total_elevation_gain)
+          : undefined,
+      },
     },
   });
 
@@ -73,7 +99,13 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
   const onSubmit = handleSubmit(
     (data) => {
       console.log("onsubmit:", data);
-      updateRunProfile.mutate(data);
+      const updatedRun = {
+        ...data.highlightRun,
+        start_date: new Date(data.highlightRun.start_date),
+      };
+
+      console.log("updatedRun:", updatedRun);
+      updateRunProfile.mutate({ highlightRun: updatedRun });
     },
     (errors) => {
       console.log("errors:", errors);
@@ -82,6 +114,20 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
 
   const handleRemove = () => {
     updateRunProfile.mutate({ highlightRun: null });
+    methods.reset({
+      highlightRun: {
+        name: "",
+        start_date: undefined,
+        distance: 0,
+        distance_mi: 0,
+        moving_time: 0,
+        moving_time_hms: "",
+        total_elevation_gain: 0,
+        total_elevation_gain_ft: 0,
+        start_latlng: [],
+        summary_polyline: "",
+      },
+    });
   };
 
   const [showImport, setShowImport] = useState(false);
@@ -90,20 +136,18 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
   const setSelectedActivity = (activity: StravaActivity) => {
     setShowImport(false);
     console.log("import activity:", activity);
-    methods.setValue("highlightRun.name", activity.name);
-    methods.setValue("highlightRun.start_date", activity.start_date);
-    methods.setValue("highlightRun.moving_time", activity.moving_time);
-    methods.setValue("highlightRun.elapsed_time", activity.elapsed_time);
-    methods.setValue("highlightRun.distance", activity.distance);
-    methods.setValue("highlightRun.start_latlng", activity.start_latlng);
-    methods.setValue(
-      "highlightRun.summary_polyline",
-      activity.map.summary_polyline
-    );
-    methods.setValue(
-      "highlightRun.total_elevation_gain",
-      activity.total_elevation_gain
-    );
+    methods.setValue("highlightRun", {
+      name: activity.name,
+      start_date: activity.start_date,
+      moving_time: activity.moving_time,
+      moving_time_hms: formatDurationHMS(activity.moving_time),
+      distance: activity.distance,
+      distance_mi: metersToMiles(activity.distance),
+      start_latlng: activity.start_latlng,
+      summary_polyline: activity.map.summary_polyline,
+      total_elevation_gain: activity.total_elevation_gain,
+      total_elevation_gain_ft: feetToMeters(activity.total_elevation_gain),
+    });
   };
 
   return (
@@ -127,9 +171,16 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
 
             <DialogFooter>
               <div className="flex w-full items-center justify-between">
-                <Button type="button" onClick={handleRemove}>
-                  Remove
-                </Button>
+                {!showImport && (
+                  <Button type="button" onClick={handleRemove}>
+                    Remove
+                  </Button>
+                )}
+                {showImport && (
+                  <Button type="button" onClick={() => setShowImport(false)}>
+                    Back
+                  </Button>
+                )}
                 {!showImport && (
                   <>
                     <Button
@@ -206,7 +257,7 @@ function ImportRunForm({
 }
 
 function EditRunForm() {
-  const { control } = useFormContext();
+  const { control, getValues, setValue } = useFormContext();
   return (
     <>
       <FormField
@@ -265,12 +316,20 @@ function EditRunForm() {
       />
       <FormField
         control={control}
-        name="highlightRun.moving_time"
+        name="highlightRun.moving_time_hms"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Moving Time</FormLabel>
+            <FormLabel>Moving Time (hh:mm:ss)</FormLabel>
             <FormControl>
-              <Input placeholder="moving time" {...field} />
+              <Input
+                placeholder="moving time hms"
+                {...field}
+                onBlur={(e) => {
+                  const movingTimeSeconds = parseHmsToSeconds(e.target.value);
+                  movingTimeSeconds &&
+                    setValue("highlightRun.moving_time", movingTimeSeconds);
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -278,12 +337,21 @@ function EditRunForm() {
       ></FormField>
       <FormField
         control={control}
-        name="highlightRun.elapsed_time"
+        name="highlightRun.distance_mi"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Elapsed Time</FormLabel>
+            <FormLabel>Distance (mi)</FormLabel>
             <FormControl>
-              <Input placeholder="elapsed time" {...field} />
+              <Input
+                placeholder="distance"
+                {...field}
+                onBlur={(e) => {
+                  const distanceMeters = milesToMeters(
+                    getValues("highlightRun.distance_mi")
+                  );
+                  setValue("highlightRun.distance", distanceMeters);
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -291,25 +359,24 @@ function EditRunForm() {
       ></FormField>
       <FormField
         control={control}
-        name="highlightRun.distance"
+        name="highlightRun.total_elevation_gain_ft"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Distance</FormLabel>
+            <FormLabel>Elevation (ft)</FormLabel>
             <FormControl>
-              <Input placeholder="distance" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      ></FormField>
-      <FormField
-        control={control}
-        name="highlightRun.total_elevation_gain"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Elevation</FormLabel>
-            <FormControl>
-              <Input placeholder="elevation" {...field} />
+              <Input
+                placeholder="elevation"
+                {...field}
+                onBlur={(e) => {
+                  const elevationMeters = milesToMeters(
+                    getValues("highlightRun.total_elevation_gain_ft")
+                  );
+                  setValue(
+                    "highlightRun.total_elevation_gain",
+                    elevationMeters
+                  );
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
