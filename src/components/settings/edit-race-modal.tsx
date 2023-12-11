@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { type RunProfile } from "@prisma/client";
 import React, { useState } from "react";
 import {
@@ -32,6 +33,7 @@ import { cn } from "~/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
+import { milesToMeters } from "~/utils/activity";
 
 type FormValues = {
   event: RaceEvent;
@@ -47,25 +49,27 @@ function EditRaceModal({
   buttonType?: "add" | "edit";
 }) {
   const raceEvents = profile.events as RaceEvent[];
+  const currentEvent = raceEvents[raceIndex];
 
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ event: EventSettingsFormSchema })),
     defaultValues: {
-      event: raceEvents[raceIndex]
-        ? raceEvents[raceIndex]
+      event: currentEvent
+        ? currentEvent
         : {
             name: "",
             start_date: "",
             distance: 0,
+            distance_mi: 0,
           },
     },
   });
 
   const utils = api.useContext();
   const updateRacesProfile = api.runProfile.updateProfile.useMutation({
-    onSuccess: async (newEntry) => {
+    onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
       methods.reset();
@@ -87,12 +91,19 @@ function EditRaceModal({
     (data) => {
       const updatedRace = {
         ...data.event,
-        start_date: new Date(data.event.start_date).toUTCString(),
+        start_date: new Date(data.event.start_date),
       };
 
       // update existing event
       const updatedRaces = raceEvents.map((event, index) => {
-        return index === raceIndex ? updatedRace : event;
+        return index === raceIndex
+          ? updatedRace
+          : {
+              name: event.name,
+              start_date: new Date(event.start_date),
+              distance: event.distance,
+              distance_mi: event.distance_mi,
+            };
       });
 
       // add new event
@@ -109,9 +120,14 @@ function EditRaceModal({
   );
 
   const handleRemove = () => {
-    const updatedRaces = raceEvents.filter(
-      (race, index) => index !== raceIndex
-    );
+    const updatedRaces = raceEvents
+      .filter((race, index) => index !== raceIndex)
+      .map((event) => ({
+        name: event.name,
+        start_date: new Date(event.start_date),
+        distance: event.distance,
+        distance_mi: event.distance_mi,
+      }));
     updateRacesProfile.mutate({ events: updatedRaces });
   };
 
@@ -130,7 +146,8 @@ function EditRaceModal({
             <DialogHeader>
               <DialogTitle>Edit Race</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your profile here. Click save when you&apos;re
+                done.
               </DialogDescription>
             </DialogHeader>
             <EditRaceForm />
@@ -152,7 +169,7 @@ function EditRaceModal({
 }
 
 function EditRaceForm() {
-  const { control } = useFormContext();
+  const { control, setValue, getValues } = useFormContext();
 
   return (
     <div>
@@ -187,6 +204,7 @@ function EditRaceForm() {
                       )}
                     >
                       {field.value ? (
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                         format(new Date(field.value), "PPP")
                       ) : (
                         <span>Pick a date</span>
@@ -198,6 +216,7 @@ function EditRaceForm() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     selected={new Date(field.value)}
                     onSelect={field.onChange}
                     disabled={(date) => date < new Date("1900-01-01")}
@@ -212,12 +231,22 @@ function EditRaceForm() {
         />
         <FormField
           control={control}
-          name={`event.distance`}
+          name={`event.distance_mi`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Distance:</FormLabel>
+              <FormLabel>Distance (mi):</FormLabel>
               <FormControl>
-                <Input placeholder="distance" {...field} />
+                <Input
+                  placeholder="distance"
+                  {...field}
+                  onBlur={(e) => {
+                    const distanceMeters = milesToMeters(
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                      getValues("event.distance_mi")
+                    );
+                    setValue("event.distance", distanceMeters);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

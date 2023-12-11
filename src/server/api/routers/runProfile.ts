@@ -48,19 +48,40 @@ export const runProfileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
+      const updateHighlightRun = input.highlightRun !== undefined && {
+        highlightRun: input.highlightRun || {},
+      };
+
+      const updateWeekStats = input.weekStats !== undefined && {
+        weekStats: input.weekStats || {},
+      };
+
+      const updateShoes = input.shoes && { shoes: input.shoes || [] };
+
+      const updateEvents = input.events && {
+        events: input.events.map((e) => ({
+          ...e,
+          start_date: new Date(e.start_date).toUTCString(),
+        })),
+      };
+
+      const data = {
+        ...updateHighlightRun,
+        ...updateWeekStats,
+        ...updateShoes,
+        ...updateEvents,
+      };
+      console.log("==== DATA:", data);
+
       const result = await ctx.prisma.runProfile.update({
         where: {
           userId: userId,
         },
         data: {
-          ...(input.highlightRun !== undefined
-            ? { highlightRun: input.highlightRun }
-            : null),
-          ...(input.weekStats !== undefined
-            ? { weekStats: input.weekStats }
-            : null),
-          ...(input.shoes ? { shoes: input.shoes } : null),
-          ...(input.events ? { events: input.events } : null),
+          ...updateHighlightRun,
+          ...updateWeekStats,
+          ...updateShoes,
+          ...updateEvents,
         },
       });
 
@@ -97,8 +118,8 @@ export const runProfileRouter = createTRPCRouter({
       return {
         success: true,
         profile: {
-          slug: result.slug as string,
-          name: result.name as string,
+          slug: result.slug,
+          name: result.name,
         },
       };
     }),

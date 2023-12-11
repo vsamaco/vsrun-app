@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type RunProfile } from "@prisma/client";
 import React, { useState } from "react";
@@ -137,7 +138,8 @@ function EditShoeModal({
             <DialogHeader>
               <DialogTitle>Edit Shoe</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your profile here. Click save when you&apos;re
+                done.
               </DialogDescription>
             </DialogHeader>
             {!showImport && <EditShoeForm />}

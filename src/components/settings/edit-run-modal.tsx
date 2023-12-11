@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { api } from "~/utils/api";
 import { toast } from "../ui/use-toast";
@@ -78,7 +79,7 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
 
   const utils = api.useContext();
   const updateRunProfile = api.runProfile.updateProfile.useMutation({
-    onSuccess: async (newEntry) => {
+    onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
 
@@ -161,7 +162,8 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
             <DialogHeader>
               <DialogTitle>Edit Run</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your profile here. Click save when you&apos;re
+                done.
               </DialogDescription>
             </DialogHeader>
             {!showImport && <EditRunForm />}
@@ -291,6 +293,7 @@ function EditRunForm() {
                     )}
                   >
                     {field.value ? (
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                       format(new Date(field.value), "PPP")
                     ) : (
                       <span>Pick a date</span>
@@ -302,6 +305,7 @@ function EditRunForm() {
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                   selected={new Date(field.value)}
                   onSelect={field.onChange}
                   disabled={(date) => date < new Date("1900-01-01")}
@@ -347,6 +351,7 @@ function EditRunForm() {
                 {...field}
                 onBlur={(e) => {
                   const distanceMeters = milesToMeters(
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     getValues("highlightRun.distance_mi")
                   );
                   setValue("highlightRun.distance", distanceMeters);
@@ -369,6 +374,7 @@ function EditRunForm() {
                 {...field}
                 onBlur={(e) => {
                   const elevationMeters = milesToMeters(
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     getValues("highlightRun.total_elevation_gain_ft")
                   );
                   setValue(

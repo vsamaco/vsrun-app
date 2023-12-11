@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
@@ -33,6 +34,7 @@ import { cn } from "~/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { format, setDay } from "date-fns";
 import { metersToMiles } from "~/utils/activity";
+import { type StravaActivity } from "~/server/api/routers/strava";
 
 type FormValues = {
   weekStats: WeekStat;
@@ -58,7 +60,7 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
 
   const utils = api.useContext();
   const updateWeekStatProfile = api.runProfile.updateProfile.useMutation({
-    onSuccess: async (newEntry) => {
+    onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
 
@@ -79,7 +81,13 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
   const onSubmit = handleSubmit(
     (data) => {
       console.log("onsubmit:", data);
-      updateWeekStatProfile.mutate(data);
+      updateWeekStatProfile.mutate({
+        weekStats: {
+          ...data.weekStats,
+          start_date: new Date(data.weekStats.start_date),
+          end_date: new Date(data.weekStats.end_date),
+        },
+      });
     },
     (errors) => {
       console.log("errors:", errors);
@@ -93,10 +101,10 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
       weekStats: {
         start_date: "",
         end_date: "",
-        total_runs: "",
-        total_distance: "",
-        total_duration: "",
-        total_elevation: "",
+        total_runs: 0,
+        total_distance: 0,
+        total_duration: 0,
+        total_elevation: 0,
       },
     });
   };
@@ -126,7 +134,8 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
             <DialogHeader>
               <DialogTitle>Edit Week Stats</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your profile here. Click save when you&apos;re
+                done.
               </DialogDescription>
             </DialogHeader>
             {!showImport && <EditWeekStatsForm />}
@@ -171,6 +180,10 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
   );
 }
 
+type WeekGroupStats = {
+  [index: string]: WeekStat & { activities: StravaActivity[] };
+};
+
 function ImportRunForm({
   setSelectedWeekStats,
 }: {
@@ -197,7 +210,7 @@ function ImportRunForm({
     });
   };
 
-  const weeklyActivities = {};
+  const weeklyActivities: WeekGroupStats = {};
   const groupActivitiesByWeek = () => {
     console.log("called GA");
     activities.forEach((activity) => {
@@ -206,10 +219,11 @@ function ImportRunForm({
       const startWeek = setDay(date, 1, { weekStartsOn: 1 });
       const endWeek = setDay(date, 6);
 
+      // define new week group
       if (!weeklyActivities[key]) {
         weeklyActivities[key] = {
-          start_date: startWeek,
-          end_date: endWeek,
+          start_date: startWeek.toUTCString(),
+          end_date: endWeek.toUTCString(),
           activities: [activity],
           total_distance: activity.distance,
           total_duration: activity.moving_time,
@@ -217,17 +231,19 @@ function ImportRunForm({
           total_runs: 1,
         };
       } else {
+        // append to existing week group
         const currentWeek = weeklyActivities[key];
-        weeklyActivities[key] = {
-          start_date: currentWeek.start_date,
-          end_date: currentWeek.end_date,
-          activities: [...currentWeek.activities, activity],
-          total_distance: currentWeek.total_distance + activity.distance,
-          total_duration: currentWeek.total_duration + activity.moving_time,
-          total_elevation:
-            currentWeek.total_elevation + activity.total_elevation_gain,
-          total_runs: currentWeek.total_runs + 1,
-        };
+        if (currentWeek) {
+          weeklyActivities[key] = {
+            ...currentWeek,
+            activities: [...currentWeek.activities, activity],
+            total_distance: currentWeek.total_distance + activity.distance,
+            total_duration: currentWeek.total_duration + activity.moving_time,
+            total_elevation:
+              currentWeek.total_elevation + activity.total_elevation_gain,
+            total_runs: currentWeek.total_runs + 1,
+          };
+        }
       }
     });
   };
@@ -238,6 +254,14 @@ function ImportRunForm({
       <p className="text-sm">Choose shoe to import:</p>
       <div className="max-h-[300px] space-y-2 overflow-scroll">
         {Object.keys(weeklyActivities).map((groupKey, index) => {
+          const currentWeek = weeklyActivities[groupKey];
+          const weekStartFormatted =
+            currentWeek?.start_date &&
+            format(new Date(currentWeek?.start_date), "LL/dd");
+          const weekEndFormatted =
+            currentWeek?.start_date &&
+            format(new Date(currentWeek?.start_date), "LL/dd");
+
           return (
             <div
               key={groupKey}
@@ -246,40 +270,41 @@ function ImportRunForm({
               <div className="flex w-full justify-between text-sm">
                 <div className="flex flex-col">
                   <div className="font-medium">
-                    {format(weeklyActivities[groupKey].start_date, "LL/dd")} -
-                    {format(weeklyActivities[groupKey].end_date, "LL/dd")}
+                    {weekStartFormatted &&
+                      weekEndFormatted &&
+                      [weekStartFormatted, weekEndFormatted].join(" - ")}
                   </div>
                   <div className="font-light">
-                    {weeklyActivities[groupKey].activities.map((activity) => {
+                    {currentWeek?.activities.map((activity) => {
                       return <div key={activity.id}>{activity.name}</div>;
                     })}
                   </div>
                 </div>
                 <div>
-                  {Math.ceil(
-                    metersToMiles(weeklyActivities[groupKey].total_distance)
-                  )}{" "}
+                  {currentWeek &&
+                    Math.ceil(metersToMiles(currentWeek?.total_distance))}{" "}
                   mi
                 </div>
               </div>
               <div>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() =>
-                    handleImportSelect({
-                      start_date: weeklyActivities[groupKey].start_date,
-                      end_date: weeklyActivities[groupKey].end_date,
-                      total_runs: weeklyActivities[groupKey].total_runs,
-                      total_duration: weeklyActivities[groupKey].total_duration,
-                      total_distance: weeklyActivities[groupKey].total_distance,
-                      total_elevation:
-                        weeklyActivities[groupKey].total_elevation,
-                    })
-                  }
-                >
-                  Select
-                </Button>
+                {currentWeek && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() =>
+                      handleImportSelect({
+                        start_date: currentWeek.start_date,
+                        end_date: currentWeek.end_date,
+                        total_runs: currentWeek.total_runs,
+                        total_duration: currentWeek.total_duration,
+                        total_distance: currentWeek.total_distance,
+                        total_elevation: currentWeek.total_elevation,
+                      })
+                    }
+                  >
+                    Select
+                  </Button>
+                )}
               </div>
             </div>
           );
@@ -311,6 +336,7 @@ function EditWeekStatsForm() {
                     )}
                   >
                     {field.value ? (
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                       format(new Date(field.value), "PPP")
                     ) : (
                       <span>Pick a date</span>
@@ -322,6 +348,7 @@ function EditWeekStatsForm() {
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   selected={field.value}
                   onSelect={field.onChange}
                   disabled={(date) =>
@@ -355,6 +382,7 @@ function EditWeekStatsForm() {
                     )}
                   >
                     {field.value ? (
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                       format(new Date(field.value), "PPP")
                     ) : (
                       <span>Pick a date</span>
@@ -366,6 +394,7 @@ function EditWeekStatsForm() {
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   selected={field.value}
                   onSelect={field.onChange}
                   disabled={(date) =>

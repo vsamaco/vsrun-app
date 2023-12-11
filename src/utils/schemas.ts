@@ -110,18 +110,29 @@ export const ShoeSettingsFormSchema = z.object({
   distance: z.coerce.number().min(1),
 });
 
-export const EventSettingsFormSchema = z.object({
-  name: z
-    .string({
-      required_error: "Name is required.",
-    })
-    .min(1),
-  start_date: z.coerce.date({
-    required_error: "Start date is required.",
-  }),
-  distance: z.coerce
-    .number({
-      required_error: "Distance is required.",
-    })
-    .min(1),
-});
+export const EventSettingsFormSchema = z
+  .object({
+    name: z
+      .string({
+        required_error: "Name is required.",
+      })
+      .min(1),
+    start_date: z.coerce.date({
+      required_error: "Start date is required.",
+    }),
+    distance: z.coerce
+      .number({
+        required_error: "Distance is required.",
+      })
+      .min(1),
+    distance_mi: z.coerce.number(),
+  })
+  .superRefine((values, context) => {
+    if (!values.distance && !values.distance_mi) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["distance_mi"],
+        message: "Distance is required",
+      });
+    }
+  });
