@@ -27,4 +27,5 @@ export type RaceEvent = {
   name: string;
   start_date: string;
   distance: number;
+  distance_mi: number;
 };

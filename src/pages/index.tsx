@@ -1,16 +1,4 @@
 import Head from "next/head";
-import Run from "~/components/Run";
-import Shoes from "~/components/Shoes";
-import Week from "~/components/Week";
-import Events from "~/components/Events";
-import {
-  type Shoe,
-  type Activity,
-  type RaceEvent,
-  type WeekStat,
-} from "~/types";
-import { api } from "~/utils/api";
-import Hero from "~/components/Hero";
 import Layout from "~/components/layout";
 import { Button, buttonVariants } from "~/components/ui/button";
 import Link from "next/link";

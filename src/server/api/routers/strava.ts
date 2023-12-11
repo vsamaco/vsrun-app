@@ -1,11 +1,9 @@
-import { api } from "~/utils/api";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { default as strava, Strava } from "strava-v3";
-import { TRPCClientError } from "@trpc/client";
+import { default as strava } from "strava-v3";
 import { parseShoeBrandModel } from "~/utils/shoe";
 
 strava.config({
-  access_token: "5c1dc67092d63182e49ca1b70614c7f86767da1b",
+  access_token: "",
   redirect_uri: "http://localhost:3000/api/strava/callback",
   client_id: process.env.STRAVA_CLIENT_ID!,
   client_secret: process.env.STRAVA_CLIENT_SECRET!,

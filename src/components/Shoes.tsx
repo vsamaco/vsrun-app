@@ -17,8 +17,8 @@ export default function Shoes({ shoes }: Props) {
       </h3>
 
       <ul className=" mt-20 space-y-4">
-        {shoes.map((shoe) => (
-          <li key={shoe.id} className="flex">
+        {shoes.map((shoe, index) => (
+          <li key={index} className="flex">
             <div className="flex-grow border-l-4 border-green-300 bg-white py-4 pl-4">
               <div className="text-2xl font-light uppercase sm:text-4xl">
                 {shoe.brand_name}

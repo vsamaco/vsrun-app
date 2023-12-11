@@ -29,6 +29,7 @@ import {
 import {
   formatDate,
   formatSeconds,
+  isEmpty,
   metersToFeet,
   metersToMiles,
 } from "~/utils/activity";
@@ -74,10 +75,10 @@ type DashboardProfile = {
 };
 
 function ProfileDashboard({ profile }: DashboardProfile) {
-  const highlightRun = profile.highlightRun as Activity;
-  const weekStats = profile.weekStats as WeekStat;
-  const shoes = profile.shoes as Shoe[];
-  const events = profile.events as unknown as Event[];
+  const highlightRun =
+    !isEmpty(profile.highlightRun) && (profile.highlightRun as Activity);
+  const weekStats =
+    !isEmpty(profile.weekStats) && (profile.weekStats as WeekStat);
 
   return (
     <>
@@ -297,7 +298,7 @@ function NoProfilePlaceholder() {
   return (
     <div className="col-span-3 flex flex-col items-center justify-center rounded-md border border-gray-200 bg-white py-12">
       <h2 className="z-10 text-xl font-semibold text-gray-700">
-        You don't have a profile yet!
+        You don&apos;t have a profile yet!
       </h2>
       <EditProfileModal profile={null} />
     </div>

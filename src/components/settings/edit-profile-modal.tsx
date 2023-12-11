@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useState } from "react";
 import {
   FormControl,
@@ -49,7 +50,7 @@ function EditProfileModal({ profile }: { profile: RunProfile | null }) {
 
   const utils = api.useContext();
   const updateGeneralProfile = api.runProfile.updateGeneralProfile.useMutation({
-    onSuccess: async (newEntry) => {
+    onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
       toast({ title: "Success", description: "Successfully saved changes." });
@@ -87,7 +88,8 @@ function EditProfileModal({ profile }: { profile: RunProfile | null }) {
             <DialogHeader>
               <DialogTitle>{profile ? "Edit" : "Create"} profile</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your profile here. Click save when you&apos;re
+                done.
               </DialogDescription>
             </DialogHeader>
 

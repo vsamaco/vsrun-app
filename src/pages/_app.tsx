@@ -1,6 +1,5 @@
-import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { type AppProps, type AppType } from "next/app";
+import { type AppProps } from "next/app";
 import { api as tApi } from "~/utils/api";
 import "~/styles/globals.css";
 import { type NextPage } from "next";
@@ -23,6 +22,7 @@ function MyApp({
   const getLayout = Component.getLayout ?? ((page) => page);
   const layout = getLayout(<Component {...pageProps} />);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   return <SessionProvider session={session}>{layout}</SessionProvider>;
 }
 

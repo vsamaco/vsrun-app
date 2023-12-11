@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { type JSONValue } from "superjson/dist/types";
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
@@ -58,4 +59,8 @@ export const metersToFeet = (i: number) => {
 
 export const feetToMeters = (ft: number) => {
   return ft * 0.3048;
+};
+
+export const isEmpty = (obj: JSONValue | object) => {
+  return !obj || Object.keys(obj).length === 0;
 };

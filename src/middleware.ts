@@ -1,8 +1,4 @@
-import {
-  NextResponse,
-  type NextFetchEvent,
-  type NextRequest,
-} from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { parse } from "./lib/utils";
 import { getToken } from "next-auth/jwt";
 
@@ -11,7 +7,7 @@ export const config = {
 };
 
 export default async function middleware(req: NextRequest) {
-  const { domain, path, key } = parse(req);
+  const { path } = parse(req);
   const session = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,

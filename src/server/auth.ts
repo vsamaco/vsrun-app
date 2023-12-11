@@ -5,7 +5,7 @@ import {
   type NextAuthOptions,
   type DefaultSession,
   type Session,
-  TokenSet,
+  type TokenSet,
 } from "next-auth";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";

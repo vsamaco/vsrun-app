@@ -1,8 +1,6 @@
 import { cn } from "~/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Button } from "../button";
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../dropdown-menu";
 import Image from "next/image";
@@ -62,16 +59,15 @@ export function Avatar({
 }) {
   return (
     <span className="relative flex h-8 w-8 shrink-0 cursor-pointer overflow-hidden rounded-full">
-      <Image
-        width={8}
-        height={8}
-        className={cn("aspect-square h-full w-full", className)}
-        alt={`${user?.name || user?.email}`}
-        src={
-          user?.image ||
-          `https://api.dicebear.com/7.x/micah/svg?seed=${user?.email}`
-        }
-      />
+      {user?.image && (
+        <Image
+          width={8}
+          height={8}
+          className={cn("aspect-square h-full w-full", className)}
+          alt="user"
+          src={user?.image}
+        />
+      )}
     </span>
   );
 }

@@ -13,11 +13,11 @@ type WeekProps = {
 };
 
 function Week({ weekStats }: WeekProps) {
-  const startMonth = parseDateMonth(weekStats.start_date);
-  const startDay = parseDateDay(weekStats.start_date);
+  const startMonth = parseDateMonth(new Date(weekStats.start_date));
+  const startDay = parseDateDay(new Date(weekStats.start_date));
 
-  const endMonth = parseDateMonth(weekStats.end_date);
-  const endDay = parseDateDay(weekStats.end_date);
+  const endMonth = parseDateMonth(new Date(weekStats.end_date));
+  const endDay = parseDateDay(new Date(weekStats.end_date));
 
   const { total_distance, total_duration, total_elevation } = weekStats;
 

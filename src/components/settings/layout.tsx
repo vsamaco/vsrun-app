@@ -3,7 +3,6 @@ import { SidebarNav } from "./sidebar-nav";
 import { Toaster } from "../ui/toaster";
 import MainNavigation from "../ui/layout/main-navigation";
 import { MaxWidthWrapper } from "../ui/layout/max-width-wrapper";
-import UserDropdown from "../ui/layout/user-navigation";
 import UserNavigation from "../ui/layout/user-navigation";
 
 const sidebarNavItems = [

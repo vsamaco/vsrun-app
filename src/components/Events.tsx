@@ -14,14 +14,16 @@ function Events({ events }: EventsProps) {
     >
       <h2 className="text-8xl font-light uppercase text-red-400">Races</h2>
       <div className="mt-20 flex flex-col justify-end space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-        {events.map(({ name, start_date, distance, id }) => {
+        {events.map(({ name, start_date, distance }, index) => {
           return (
             <div
-              key={id}
+              key={index}
               className="relative h-96 w-full border-b-4 border-red-400 bg-white px-10 py-20 sm:w-72"
             >
               <div className="text-5xl">{name}</div>
-              <div className="mt-2 text-lg">{formatEventDate(start_date)}</div>
+              <div className="mt-2 text-lg">
+                {formatEventDate(new Date(start_date))}
+              </div>
               <div className="absolute bottom-10 mt-20 text-right text-6xl font-light">
                 {metersToMiles(distance).toLocaleString("en-US", {
                   maximumFractionDigits: 1,
