@@ -78,9 +78,11 @@ function EditProfileModal({ profile }: { profile: RunProfile | null }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">
-          {profile ? "Edit" : "Create"} Profile
-        </Button>
+        {profile ? (
+          <Button className="w-full">Edit Profile</Button>
+        ) : (
+          <Button className="">Create Profile</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <FormProvider {...methods}>

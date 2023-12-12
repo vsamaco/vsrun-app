@@ -42,15 +42,9 @@ function GeneralSettingsPage() {
     return <div>Loading...</div>;
   }
 
-  if (!data) {
-    return <div>Not Found</div>;
-  }
-
   return (
     <div className="space-y-6">
-      {/* <GeneralSettingsForm profile={data} /> */}
-      {data && <ProfileDashboard profile={data} />}
-      {!data && <NoProfilePlaceholder />}
+      {!data ? <NoProfilePlaceholder /> : <ProfileDashboard profile={data} />}
     </div>
   );
 }
@@ -79,6 +73,9 @@ function ProfileDashboard({ profile }: DashboardProfile) {
     !isEmpty(profile.highlightRun) && (profile.highlightRun as Activity);
   const weekStats =
     !isEmpty(profile.weekStats) && (profile.weekStats as WeekStat);
+  const shoes = (!isEmpty(profile.shoes) && (profile.shoes as Shoe[])) || [];
+  const events =
+    (!isEmpty(profile.events) && (profile.events as RaceEvent[])) || [];
 
   return (
     <>
@@ -202,8 +199,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 <CardDescription>Highlight shoe rotation.</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-4">
-                {profile.shoes.map((shoe, index) => {
-                  const shoeObj = shoe as Shoe;
+                {shoes.map((shoe, index) => {
                   return (
                     <>
                       <div
@@ -212,12 +208,12 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                       >
                         <div className="flex items-center space-x-4">
                           <p className="w-[180px] truncate text-sm font-medium leading-none">
-                            {shoeObj.brand_name} {shoeObj.model_name}
+                            {shoe.brand_name} {shoe.model_name}
                           </p>
                         </div>
                         <div className="flex items-center space-x-4">
                           <p className="text-sm text-muted-foreground">
-                            {Math.ceil(metersToMiles(shoeObj.distance))} mi
+                            {Math.ceil(metersToMiles(shoe.distance))} mi
                           </p>
                           {profile.shoes && (
                             <EditShoeModal
@@ -235,7 +231,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
               <CardFooter>
                 <EditShoeModal
                   profile={profile}
-                  shoeIndex={profile.shoes.length}
+                  shoeIndex={shoes.length}
                   buttonType="add"
                 />
               </CardFooter>
@@ -248,8 +244,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 <CardDescription>Highlight upcoming races.</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-4">
-                {profile.events.map((event, index) => {
-                  const raceEvent = event as RaceEvent;
+                {events.map((event, index) => {
                   return (
                     <>
                       <div
@@ -258,12 +253,12 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                       >
                         <div className="flex items-center space-x-4">
                           <p className="w-[180px] truncate text-sm font-medium leading-none">
-                            {raceEvent.name}
+                            {event.name}
                           </p>
                         </div>
                         <div className="flex items-center space-x-4">
                           <p className="text-sm text-muted-foreground">
-                            {Math.ceil(metersToMiles(raceEvent.distance))} mi
+                            {Math.ceil(metersToMiles(event.distance))} mi
                           </p>
                           {profile.shoes && (
                             <EditRaceModal
@@ -281,7 +276,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 {profile && (
                   <EditRaceModal
                     profile={profile}
-                    raceIndex={profile.events.length}
+                    raceIndex={events.length}
                     buttonType="add"
                   />
                 )}
@@ -296,8 +291,8 @@ function ProfileDashboard({ profile }: DashboardProfile) {
 
 function NoProfilePlaceholder() {
   return (
-    <div className="col-span-3 flex flex-col items-center justify-center rounded-md border border-gray-200 bg-white py-12">
-      <h2 className="z-10 text-xl font-semibold text-gray-700">
+    <div className="my-10 flex flex-col items-center justify-center rounded-md border border-gray-200 bg-white py-12">
+      <h2 className="z-10 mb-10 text-xl font-semibold text-gray-700">
         You don&apos;t have a profile yet!
       </h2>
       <EditProfileModal profile={null} />

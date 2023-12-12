@@ -2,13 +2,19 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+  const user = await prisma.user.findFirst();
+  console.log("user:", user?.id);
+  if (!user) return;
+
+  const { id: userId } = user;
+
   await prisma.runProfile.upsert({
     where: {
-      userId: "clo96eqp50000bo3jkclmjhwv",
+      userId: userId,
     },
     update: {},
     create: {
-      userId: "clo96eqp50000bo3jkclmjhwv",
+      userId: userId,
       slug: "milesperdonut",
       name: "milesperdonut",
       highlightRun: {
