@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type RunProfile } from "@prisma/client";
 import React, { useState } from "react";
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { type Shoe } from "~/types";
 import { api } from "~/utils/api";
@@ -39,22 +33,20 @@ type FormValues = {
 };
 
 function EditShoeModal({
-  profile,
+  shoes = [],
   shoeIndex,
   buttonType = "edit",
 }: {
-  profile: RunProfile;
+  shoes: Shoe[];
   shoeIndex: number;
   buttonType?: "add" | "edit";
 }) {
-  const shoes = profile.shoes as Shoe[];
-
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ shoe: ShoeSettingsFormSchema })),
     defaultValues: {
-      shoe: shoes[shoeIndex]
+      shoe: shoes?.at(shoeIndex)
         ? shoes[shoeIndex]
         : {
             brand_name: "",
@@ -66,7 +58,7 @@ function EditShoeModal({
 
   const utils = api.useContext();
   const updateShoesProfile = api.runProfile.updateProfile.useMutation({
-    onSuccess: async (newEntry) => {
+    onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
       methods.reset();
@@ -123,45 +115,60 @@ function EditShoeModal({
     methods.setValue("shoe.distance", shoe.distance);
   };
 
+  const dialogTitle = buttonType === "edit" ? "Edit Shoe" : "Add Shoe";
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {buttonType === "add" ? (
           <Button className="w-full">Add Shoe</Button>
         ) : (
-          <Button>Edit</Button>
+          <Button variant="outline">Edit</Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <FormProvider {...methods}>
           <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Edit Shoe</DialogTitle>
+              <DialogTitle>{dialogTitle}</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
+                Make changes to your shoe here. Click save when you&apos;re
                 done.
               </DialogDescription>
             </DialogHeader>
-            {!showImport && <EditShoeForm />}
+            {!showImport && (
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleImportShoe}
+                >
+                  Import from Strava
+                </Button>
+                <EditShoeForm />
+              </>
+            )}
             {showImport && <ImportShoeForm setSelectedShoe={setSelectedShoe} />}
             <DialogFooter>
               <div className="flex w-full items-center justify-between">
-                <Button type="button" onClick={handleRemove}>
-                  Remove
-                </Button>
+                {showImport && (
+                  <Button type="button" onClick={() => setShowImport(false)}>
+                    Back
+                  </Button>
+                )}
                 {!showImport && (
-                  <>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={handleImportShoe}
-                    >
-                      Import from Strava
-                    </Button>
-                    <Button type="submit" form="hook-form">
-                      Save changes
-                    </Button>
-                  </>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleRemove}
+                  >
+                    Remove
+                  </Button>
+                )}
+                {!showImport && (
+                  <Button type="submit" form="hook-form">
+                    Save changes
+                  </Button>
                 )}
               </div>
             </DialogFooter>

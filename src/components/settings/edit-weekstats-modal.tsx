@@ -27,7 +27,6 @@ import { type WeekStat } from "~/types";
 import { ToastClose } from "../ui/toast";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { type RunProfile } from "@prisma/client";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { cn } from "~/lib/utils";
@@ -40,20 +39,19 @@ type FormValues = {
   weekStats: WeekStat;
 };
 
-function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
-  const weekStat = profile.weekStats as WeekStat;
+function EditWeekStatsModal({ weekStats }: { weekStats: WeekStat | null }) {
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ weekStats: WeekSettingsFormSchema })),
     defaultValues: {
       weekStats: {
-        start_date: weekStat?.start_date,
-        end_date: weekStat?.end_date,
-        total_runs: weekStat?.total_runs,
-        total_distance: weekStat?.total_distance,
-        total_duration: weekStat?.total_duration,
-        total_elevation: weekStat?.total_elevation,
+        start_date: weekStats?.start_date,
+        end_date: weekStats?.end_date,
+        total_runs: weekStats?.total_runs,
+        total_distance: weekStats?.total_distance,
+        total_duration: weekStats?.total_duration,
+        total_elevation: weekStats?.total_elevation,
       },
     },
   });
@@ -123,33 +121,25 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
     methods.setValue("weekStats.total_elevation", weekStats.total_elevation);
   };
 
+  const dialogTitle = weekStats ? "Edit Week Stats" : "Add Week Stats";
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">Edit Week Stats</Button>
+        <Button className="w-full">{dialogTitle}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <FormProvider {...methods}>
           <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Edit Week Stats</DialogTitle>
+              <DialogTitle>{dialogTitle}</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
-                done.
+                Make changes to your week stats here. Click save when
+                you&apos;re done.
               </DialogDescription>
             </DialogHeader>
-            {!showImport && <EditWeekStatsForm />}
-            {showImport && (
-              <ImportRunForm setSelectedWeekStats={setSelectedWeekStats} />
-            )}
-
-            <DialogFooter>
-              {weekStat && (
-                <Button type="button" onClick={handleRemove}>
-                  Remove
-                </Button>
-              )}
-              {!showImport && (
+            {!showImport && (
+              <>
                 <Button
                   type="button"
                   variant="secondary"
@@ -157,21 +147,35 @@ function EditWeekStatsModal({ profile }: { profile: RunProfile }) {
                 >
                   Import from Strava
                 </Button>
-              )}
-              {!showImport && (
-                <Button type="submit" form="hook-form">
-                  Save changes
-                </Button>
-              )}
-              {showImport && (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setShowImport(false)}
-                >
-                  Cancel
-                </Button>
-              )}
+                <EditWeekStatsForm />
+              </>
+            )}
+            {showImport && (
+              <ImportRunForm setSelectedWeekStats={setSelectedWeekStats} />
+            )}
+
+            <DialogFooter>
+              <div className="flex w-full items-center justify-between">
+                {!showImport && (
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleRemove}
+                    >
+                      Remove
+                    </Button>
+                    <Button type="submit" form="hook-form">
+                      Save changes
+                    </Button>
+                  </>
+                )}
+                {showImport && (
+                  <Button type="button" onClick={() => setShowImport(false)}>
+                    Back
+                  </Button>
+                )}
+              </div>
             </DialogFooter>
           </form>
         </FormProvider>

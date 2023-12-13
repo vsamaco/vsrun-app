@@ -1,11 +1,13 @@
 import { type RunProfile } from "@prisma/client";
 import { format } from "date-fns";
+import Link from "next/link";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import EditRaceModal from "~/components/settings/edit-race-modal";
 import EditRunModal from "~/components/settings/edit-run-modal";
 import EditShoeModal from "~/components/settings/edit-shoe-modal";
 import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -69,46 +71,34 @@ type DashboardProfile = {
 };
 
 function ProfileDashboard({ profile }: DashboardProfile) {
-  const highlightRun =
-    !isEmpty(profile.highlightRun) && (profile.highlightRun as Activity);
-  const weekStats =
-    !isEmpty(profile.weekStats) && (profile.weekStats as WeekStat);
-  const shoes = (!isEmpty(profile.shoes) && (profile.shoes as Shoe[])) || [];
-  const events =
-    (!isEmpty(profile.events) && (profile.events as RaceEvent[])) || [];
+  const highlightRun = !isEmpty(profile.highlightRun)
+    ? (profile.highlightRun as Activity)
+    : null;
+  const weekStats = !isEmpty(profile.weekStats)
+    ? (profile.weekStats as WeekStat)
+    : null;
+  const shoes = !isEmpty(profile.shoes) ? (profile.shoes as Shoe[]) : [];
+  const events = !isEmpty(profile.events)
+    ? (profile.events as RaceEvent[])
+    : [];
 
   return (
     <>
-      <div className="hidden items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-2">
-        <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
-          <DemoContainer>
-            <Card className={cn("w-[380px]")}>
-              <CardHeader>
-                <CardTitle>Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                <div className="flex items-center space-x-4">
-                  <Avatar>
-                    <AvatarFallback>
-                      {profile.name[0]?.toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-medium leading-none">
-                      {profile.name}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {profile.slug}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <EditProfileModal profile={profile} />
-              </CardFooter>
-            </Card>
-          </DemoContainer>
+      <div className="mb-10 flex w-full items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Avatar>
+            <AvatarFallback>{profile.name[0]?.toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <h3 className=" text-lg">{profile.name}</h3>
         </div>
+        <div className="space-x-2">
+          <EditProfileModal profile={profile} />
+          <Link href={`/p/${profile.slug}`} target="_blank">
+            <Button>View Profile</Button>
+          </Link>
+        </div>
+      </div>
+      <div className="hidden items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-2">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
             <Card className={cn("w-[380px]")}>
@@ -136,7 +126,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 )}
               </CardContent>
               <CardFooter>
-                <EditRunModal profile={profile} />
+                <EditRunModal highlightRun={highlightRun} />
               </CardFooter>
             </Card>
           </DemoContainer>
@@ -188,10 +178,12 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                 </CardContent>
               )}
               <CardFooter>
-                {profile && <EditWeekStatsModal profile={profile} />}
+                {profile && <EditWeekStatsModal weekStats={weekStats} />}
               </CardFooter>
             </Card>
           </DemoContainer>
+        </div>
+        <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
             <Card className={cn("w-[380px]")}>
               <CardHeader>
@@ -215,11 +207,8 @@ function ProfileDashboard({ profile }: DashboardProfile) {
                           <p className="text-sm text-muted-foreground">
                             {Math.ceil(metersToMiles(shoe.distance))} mi
                           </p>
-                          {profile.shoes && (
-                            <EditShoeModal
-                              profile={profile}
-                              shoeIndex={index}
-                            />
+                          {shoes && (
+                            <EditShoeModal shoes={shoes} shoeIndex={index} />
                           )}
                         </div>
                       </div>
@@ -230,7 +219,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
 
               <CardFooter>
                 <EditShoeModal
-                  profile={profile}
+                  shoes={shoes}
                   shoeIndex={shoes.length}
                   buttonType="add"
                 />
@@ -246,36 +235,31 @@ function ProfileDashboard({ profile }: DashboardProfile) {
               <CardContent className="grid gap-4">
                 {events.map((event, index) => {
                   return (
-                    <>
-                      <div
-                        className="flex items-center justify-between space-x-4"
-                        key={index}
-                      >
-                        <div className="flex items-center space-x-4">
-                          <p className="w-[180px] truncate text-sm font-medium leading-none">
-                            {event.name}
-                          </p>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <p className="text-sm text-muted-foreground">
-                            {Math.ceil(metersToMiles(event.distance))} mi
-                          </p>
-                          {profile.shoes && (
-                            <EditRaceModal
-                              profile={profile}
-                              raceIndex={index}
-                            />
-                          )}
-                        </div>
+                    <div
+                      className="flex items-center justify-between space-x-4"
+                      key={index}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <p className="w-[180px] truncate text-sm font-medium leading-none">
+                          {event.name}
+                        </p>
                       </div>
-                    </>
+                      <div className="flex items-center space-x-4">
+                        <p className="text-sm text-muted-foreground">
+                          {Math.ceil(metersToMiles(event.distance))} mi
+                        </p>
+                        {profile.shoes && (
+                          <EditRaceModal events={events} raceIndex={index} />
+                        )}
+                      </div>
+                    </div>
                   );
                 })}
               </CardContent>
               <CardFooter>
                 {profile && (
                   <EditRaceModal
-                    profile={profile}
+                    events={events}
                     raceIndex={events.length}
                     buttonType="add"
                   />
@@ -299,7 +283,6 @@ function NoProfilePlaceholder() {
     </div>
   );
 }
-
 GeneralSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <>
@@ -318,7 +301,7 @@ GeneralSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
       <div className="hidden space-y-6 p-10 pb-16 md:block">
         <MaxWidthWrapper>
           <div className="space-y-0.5">
-            <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
           </div>
           <Separator className="my-6" />
           <div className="flex w-full flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">

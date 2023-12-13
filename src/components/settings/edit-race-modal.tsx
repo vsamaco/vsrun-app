@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { type RunProfile } from "@prisma/client";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -40,16 +39,15 @@ type FormValues = {
 };
 
 function EditRaceModal({
-  profile,
+  events = [],
   raceIndex,
   buttonType = "edit",
 }: {
-  profile: RunProfile;
+  events: RaceEvent[];
   raceIndex: number;
   buttonType?: "add" | "edit";
 }) {
-  const raceEvents = profile.events as RaceEvent[];
-  const currentEvent = raceEvents[raceIndex];
+  const currentEvent = events?.at(raceIndex) ? events[raceIndex] : null;
 
   const [open, setOpen] = useState(false);
 
@@ -95,7 +93,7 @@ function EditRaceModal({
       };
 
       // update existing event
-      const updatedRaces = raceEvents.map((event, index) => {
+      const updatedRaces = events.map((event, index) => {
         return index === raceIndex
           ? updatedRace
           : {
@@ -107,7 +105,7 @@ function EditRaceModal({
       });
 
       // add new event
-      if (raceIndex === raceEvents.length) {
+      if (raceIndex === events.length) {
         updatedRaces.push(updatedRace);
       }
 
@@ -120,7 +118,7 @@ function EditRaceModal({
   );
 
   const handleRemove = () => {
-    const updatedRaces = raceEvents
+    const updatedRaces = events
       .filter((race, index) => index !== raceIndex)
       .map((event) => ({
         name: event.name,
@@ -131,11 +129,15 @@ function EditRaceModal({
     updateRacesProfile.mutate({ events: updatedRaces });
   };
 
+  const diaglogTitle = buttonType === "edit" ? "Edit Race" : "Add Race";
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {buttonType === "edit" ? (
-          <Button className="">Edit</Button>
+          <Button variant="outline" className="">
+            Edit
+          </Button>
         ) : (
           <Button className="w-full">Add Race</Button>
         )}
@@ -144,16 +146,16 @@ function EditRaceModal({
         <FormProvider {...methods}>
           <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Edit Race</DialogTitle>
+              <DialogTitle>{diaglogTitle}</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
+                Make changes to your race here. Click save when you&apos;re
                 done.
               </DialogDescription>
             </DialogHeader>
             <EditRaceForm />
             <DialogFooter>
               <div className="flex w-full items-center justify-between">
-                <Button type="button" onClick={handleRemove}>
+                <Button type="button" variant="outline" onClick={handleRemove}>
                   Remove
                 </Button>
                 <Button type="submit" form="hook-form">

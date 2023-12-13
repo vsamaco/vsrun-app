@@ -22,7 +22,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { type RunProfile } from "@prisma/client";
 import { type Activity } from "~/types";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,8 +50,7 @@ type FormValues = {
   };
 };
 
-function EditRunModal({ profile }: { profile: RunProfile }) {
-  const highlightRun = profile.highlightRun as Activity;
+function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
   const [open, setOpen] = useState(false);
 
   const methods = useForm<FormValues>({
@@ -151,22 +149,35 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
     });
   };
 
+  const dialogTitle = highlightRun ? "Edit Run" : "Create Run";
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">Edit Run</Button>
+        <Button className="w-full">{dialogTitle}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <FormProvider {...methods}>
           <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Edit Run</DialogTitle>
+              <DialogTitle>{dialogTitle}</DialogTitle>
               <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
-                done.
+                Make changes to your run here. Click save when you&apos;re done.
               </DialogDescription>
             </DialogHeader>
-            {!showImport && <EditRunForm />}
+
+            {!showImport && (
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleImportShoe}
+                >
+                  Import from Strava
+                </Button>
+                <EditRunForm />
+              </>
+            )}
             {showImport && (
               <ImportRunForm setSelectedActivity={setSelectedActivity} />
             )}
@@ -174,7 +185,11 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
             <DialogFooter>
               <div className="flex w-full items-center justify-between">
                 {!showImport && (
-                  <Button type="button" onClick={handleRemove}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleRemove}
+                  >
                     Remove
                   </Button>
                 )}
@@ -185,13 +200,6 @@ function EditRunModal({ profile }: { profile: RunProfile }) {
                 )}
                 {!showImport && (
                   <>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={handleImportShoe}
-                    >
-                      Import from Strava
-                    </Button>
                     <Button type="submit" form="hook-form">
                       Save changes
                     </Button>

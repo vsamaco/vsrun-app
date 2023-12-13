@@ -79,7 +79,7 @@ function EditProfileModal({ profile }: { profile: RunProfile | null }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {profile ? (
-          <Button className="w-full">Edit Profile</Button>
+          <Button variant="secondary">Edit Profile</Button>
         ) : (
           <Button className="">Create Profile</Button>
         )}
