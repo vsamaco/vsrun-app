@@ -84,188 +84,22 @@ function ProfileDashboard({ profile }: DashboardProfile) {
 
   return (
     <>
-      <div className="mb-10 flex w-full items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Avatar>
-            <AvatarFallback>{profile.name[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <h3 className=" text-lg">{profile.name}</h3>
-        </div>
-        <div className="space-x-2">
-          <EditProfileModal profile={profile} />
-          <Link href={`/p/${profile.slug}`} target="_blank">
-            <Button>View Profile</Button>
-          </Link>
-        </div>
-      </div>
+      {profile && <ProfileSection profile={profile} />}
       <div className="hidden items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-2">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
-            <Card className={cn("w-[380px]")}>
-              <CardHeader>
-                <CardTitle>Run</CardTitle>
-                <CardDescription>Highlight recent activity.</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                {highlightRun && (
-                  <div className="grid-cols mb-4 grid items-start pb-4 last:mb-0 last:pb-0">
-                    <div className="flex items-center justify-between space-x-4">
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {highlightRun.name}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {formatDate(highlightRun.start_date)}
-                        </p>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {Math.ceil(metersToMiles(highlightRun.distance))} mi
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter>
-                <EditRunModal highlightRun={highlightRun} />
-              </CardFooter>
-            </Card>
+            <HighlightRunCard highlightRun={highlightRun} />
           </DemoContainer>
           <DemoContainer>
-            <Card className={cn("w-[380px]")}>
-              <CardHeader>
-                <CardTitle>Week Stats</CardTitle>
-                <CardDescription>Highlight weekly stats.</CardDescription>
-              </CardHeader>
-              {weekStats && (
-                <CardContent className="grid gap-1">
-                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">Date</p>
-                      <p className="text-sm text-muted-foreground">
-                        {format(new Date(weekStats.start_date), "LL/dd")} -{" "}
-                        {format(new Date(weekStats.end_date), "LL/dd")}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        Distance
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {metersToMiles(weekStats.total_distance)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">Time</p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatSeconds(weekStats.total_duration)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        Elevation
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {metersToFeet(weekStats.total_elevation)}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              )}
-              <CardFooter>
-                {profile && <EditWeekStatsModal weekStats={weekStats} />}
-              </CardFooter>
-            </Card>
+            <WeekStatsCard weekStats={weekStats} />
           </DemoContainer>
         </div>
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
-            <Card className={cn("w-[380px]")}>
-              <CardHeader>
-                <CardTitle>Shoes</CardTitle>
-                <CardDescription>Highlight shoe rotation.</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                {shoes.map((shoe, index) => {
-                  return (
-                    <>
-                      <div
-                        className="flex items-center justify-between space-x-4"
-                        key={index}
-                      >
-                        <div className="flex items-center space-x-4">
-                          <p className="w-[180px] truncate text-sm font-medium leading-none">
-                            {shoe.brand_name} {shoe.model_name}
-                          </p>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <p className="text-sm text-muted-foreground">
-                            {Math.ceil(metersToMiles(shoe.distance))} mi
-                          </p>
-                          {shoes && (
-                            <EditShoeModal shoes={shoes} shoeIndex={index} />
-                          )}
-                        </div>
-                      </div>
-                    </>
-                  );
-                })}
-              </CardContent>
-
-              <CardFooter>
-                <EditShoeModal
-                  shoes={shoes}
-                  shoeIndex={shoes.length}
-                  buttonType="add"
-                />
-              </CardFooter>
-            </Card>
+            <ShoesCard shoes={shoes} />
           </DemoContainer>
           <DemoContainer>
-            <Card className={cn("w-[380px]")}>
-              <CardHeader>
-                <CardTitle>Races</CardTitle>
-                <CardDescription>Highlight upcoming races.</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                {events.map((event, index) => {
-                  return (
-                    <div
-                      className="flex items-center justify-between space-x-4"
-                      key={index}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <p className="w-[180px] truncate text-sm font-medium leading-none">
-                          {event.name}
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <p className="text-sm text-muted-foreground">
-                          {Math.ceil(metersToMiles(event.distance))} mi
-                        </p>
-                        {profile.shoes && (
-                          <EditRaceModal events={events} raceIndex={index} />
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </CardContent>
-              <CardFooter>
-                {profile && (
-                  <EditRaceModal
-                    events={events}
-                    raceIndex={events.length}
-                    buttonType="add"
-                  />
-                )}
-              </CardFooter>
-            </Card>
+            <RaceEventsCard events={events} />
           </DemoContainer>
         </div>
       </div>
@@ -281,6 +115,190 @@ function NoProfilePlaceholder() {
       </h2>
       <EditProfileModal profile={null} />
     </div>
+  );
+}
+
+function ProfileSection({ profile }: { profile: RunProfile }) {
+  return (
+    <div className="mb-10 flex w-full items-center justify-between">
+      <div className="flex items-center space-x-4">
+        <Avatar>
+          <AvatarFallback>{profile.name[0]?.toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <h3 className=" text-lg">{profile.name}</h3>
+      </div>
+      <div className="space-x-2">
+        <EditProfileModal profile={profile} />
+        <Link href={`/p/${profile.slug}`} target="_blank">
+          <Button>View Profile</Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function HighlightRunCard({ highlightRun }: { highlightRun: Activity | null }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Run</CardTitle>
+        <CardDescription>Highlight your recent activity</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        {highlightRun && (
+          <div className="grid-cols mb-4 grid items-start pb-4 last:mb-0 last:pb-0">
+            <div className="flex items-center justify-between space-x-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none">
+                  {highlightRun.name}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {formatDate(highlightRun.start_date)}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {Math.ceil(metersToMiles(highlightRun.distance))} mi
+              </p>
+            </div>
+          </div>
+        )}
+      </CardContent>
+      <CardFooter>
+        <EditRunModal highlightRun={highlightRun} />
+      </CardFooter>
+    </Card>
+  );
+}
+
+function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Week Stats</CardTitle>
+        <CardDescription>Highlight your weekly stats</CardDescription>
+      </CardHeader>
+      {weekStats && (
+        <CardContent className="grid gap-1">
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div className="space-y-1">
+              <p className="text-sm font-medium leading-none">Date</p>
+              <p className="text-sm text-muted-foreground">
+                {format(new Date(weekStats.start_date), "LL/dd")} -{" "}
+                {format(new Date(weekStats.end_date), "LL/dd")}
+              </p>
+            </div>
+          </div>
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div className="space-y-1">
+              <p className="text-sm font-medium leading-none">Distance</p>
+              <p className="text-sm text-muted-foreground">
+                {metersToMiles(weekStats.total_distance)}
+              </p>
+            </div>
+          </div>
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div className="space-y-1">
+              <p className="text-sm font-medium leading-none">Time</p>
+              <p className="text-sm text-muted-foreground">
+                {formatSeconds(weekStats.total_duration)}
+              </p>
+            </div>
+          </div>
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div className="space-y-1">
+              <p className="text-sm font-medium leading-none">Elevation</p>
+              <p className="text-sm text-muted-foreground">
+                {metersToFeet(weekStats.total_elevation)}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      )}
+      <CardFooter>
+        <EditWeekStatsModal weekStats={weekStats} />
+      </CardFooter>
+    </Card>
+  );
+}
+
+function ShoesCard({ shoes }: { shoes: Shoe[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Shoes</CardTitle>
+        <CardDescription>Highlight your shoe rotation</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        {shoes.map((shoe, index) => {
+          return (
+            <div
+              className="flex items-center justify-between space-x-4"
+              key={index}
+            >
+              <div className="flex items-center space-x-4">
+                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                  {shoe.brand_name} {shoe.model_name}
+                </p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <p className="text-sm text-muted-foreground">
+                  {Math.ceil(metersToMiles(shoe.distance))} mi
+                </p>
+                {shoes && <EditShoeModal shoes={shoes} shoeIndex={index} />}
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+
+      <CardFooter>
+        <EditShoeModal
+          shoes={shoes}
+          shoeIndex={shoes.length}
+          buttonType="add"
+        />
+      </CardFooter>
+    </Card>
+  );
+}
+
+function RaceEventsCard({ events }: { events: RaceEvent[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Races</CardTitle>
+        <CardDescription>Highlight your upcoming races</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        {events.map((event, index) => {
+          return (
+            <div
+              className="flex items-center justify-between space-x-4"
+              key={index}
+            >
+              <div className="flex items-center space-x-4">
+                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                  {event.name}
+                </p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <p className="text-sm text-muted-foreground">
+                  {Math.ceil(metersToMiles(event.distance))} mi
+                </p>
+                {events && <EditRaceModal events={events} raceIndex={index} />}
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+      <CardFooter>
+        <EditRaceModal
+          events={events}
+          raceIndex={events.length}
+          buttonType="add"
+        />
+      </CardFooter>
+    </Card>
   );
 }
 GeneralSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
