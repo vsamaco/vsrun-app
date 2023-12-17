@@ -21,6 +21,7 @@ import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 import { isEmpty } from "~/utils/activity";
+import { MaxWidthWrapper } from "~/components/ui/layout/max-width-wrapper";
 
 function RunProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -52,19 +53,15 @@ function RunProfilePage(
         <meta name="description" content={`${name} Running profile`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="container space-y-5">
-        <Hero name={name} />
-        <div className="bg-gray-100">
+      <MaxWidthWrapper>
+        <div className="space-y-5 p-5">
+          <Hero name={name} />
           {highlightRun && <Run activity={highlightRun} />}
-        </div>
-        <div className="bg-gray-100">
           {weekStats && <Week weekStats={weekStats} />}
-        </div>
-        <div className="bg-gray-100">{shoes && <Shoes shoes={shoes} />}</div>
-        <div className="bg-gray-100">
+          {shoes && <Shoes shoes={shoes} />}
           {events && <Events events={events} />}
         </div>
-      </div>
+      </MaxWidthWrapper>
     </>
   );
 }

@@ -6,7 +6,7 @@ type HeroProps = {
 
 function Hero({ name }: HeroProps) {
   return (
-    <div className="flex flex-col justify-center px-5 py-10 sm:px-10 sm:py-20">
+    <div className="flex flex-col justify-center py-10  sm:py-20">
       <h1 className="mt-40 text-5xl sm:mt-40 sm:text-8xl">{name}</h1>
       <div className="flex flex-col pb-32 text-4xl opacity-50 sm:text-6xl">
         <a href="#run" className="uppercase text-yellow-400 hover:underline">

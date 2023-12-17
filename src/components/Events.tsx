@@ -1,6 +1,7 @@
 import React from "react";
 import { type RaceEvent } from "../types";
 import { formatEventDate, metersToMiles } from "~/utils/activity";
+import { format } from "date-fns";
 
 type EventsProps = {
   events: RaceEvent[];
@@ -8,31 +9,33 @@ type EventsProps = {
 
 function Events({ events }: EventsProps) {
   return (
-    <div
-      id="races"
-      className="flex flex-col justify-center border-t-4 border-red-400 px-5 py-10 sm:px-10 sm:py-20"
-    >
-      <h2 className="text-8xl font-light uppercase text-red-400">Races</h2>
-      <div className="mt-20 flex flex-col justify-end space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-        {events.map(({ name, start_date, distance }, index) => {
+    <div id="races" className="flex flex-col justify-center py-10 sm:py-20">
+      <div className="mb-5 border-b-4 border-red-400">
+        <h2 className="text-6xl uppercase text-red-400">Races</h2>
+      </div>
+      <ul className="space-y-10 divide-y divide-black">
+        {events.map((event, index) => {
           return (
-            <div
-              key={index}
-              className="relative h-96 w-full border-b-4 border-red-400 bg-white px-10 py-20 sm:w-72"
-            >
-              <div className="text-5xl">{name}</div>
-              <div className="mt-2 text-lg">
-                {formatEventDate(new Date(start_date))}
+            <li key={index} className="">
+              <div className="flex w-full items-center space-x-5 pt-10">
+                <div className="">
+                  <div className="text-2xl">
+                    <span className="uppercase">
+                      {format(new Date(event.start_date), "MMM")}
+                    </span>
+                    <span className=" font-thin">
+                      {format(new Date(event.start_date), "dd")}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-2xl font-thin uppercase md:text-4xl">
+                  {event.name}
+                </div>
               </div>
-              <div className="absolute bottom-10 mt-20 text-right text-6xl font-light">
-                {metersToMiles(distance).toLocaleString("en-US", {
-                  maximumFractionDigits: 1,
-                })}
-              </div>
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 }

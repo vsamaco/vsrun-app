@@ -25,18 +25,20 @@ export default function ActivityMap({ activity, zoom = 12 }: Props) {
 
   return (
     <MapContainer
+      zoom={zoom}
       boxZoom={false}
       bounds={bounds}
       dragging={false}
       zoomControl={false}
       scrollWheelZoom={false}
       className=" h-96 w-full opacity-100"
+      style={{ background: "none" }}
     >
-      <TileLayer
+      {/* <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Polyline positions={polyData} color="blue" />
+      /> */}
+      <Polyline positions={polyData} color="black" />
       <Marker position={start_latlng} icon={pointerIcon} />
     </MapContainer>
   );
