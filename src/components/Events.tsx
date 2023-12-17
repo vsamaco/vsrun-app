@@ -13,11 +13,11 @@ function Events({ events }: EventsProps) {
       <div className="mb-5 border-b-4 border-red-400">
         <h2 className="text-6xl uppercase text-red-400">Races</h2>
       </div>
-      <ul className="space-y-10 divide-y divide-black">
+      <ul className="space-y-5 divide-y divide-black">
         {events.map((event, index) => {
           return (
             <li key={index} className="">
-              <div className="flex w-full items-center space-x-5 pt-10">
+              <div className="flex w-full items-center space-x-5 pt-5">
                 <div className="">
                   <div className="text-2xl">
                     <span className="uppercase">
