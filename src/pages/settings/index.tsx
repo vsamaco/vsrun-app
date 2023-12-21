@@ -157,7 +157,7 @@ function HighlightRunCard({ highlightRun }: { highlightRun: Activity | null }) {
                 </p>
               </div>
               <p className="text-sm text-muted-foreground">
-                {Math.ceil(metersToMiles(highlightRun.distance))} mi
+                {metersToMiles(highlightRun.distance).toLocaleString()} mi
               </p>
             </div>
           </div>
@@ -192,7 +192,7 @@ function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
             <div className="space-y-1">
               <p className="text-sm font-medium leading-none">Distance</p>
               <p className="text-sm text-muted-foreground">
-                {metersToMiles(weekStats.total_distance)}
+                {metersToMiles(weekStats.total_distance).toLocaleString()} mi
               </p>
             </div>
           </div>
@@ -208,7 +208,7 @@ function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
             <div className="space-y-1">
               <p className="text-sm font-medium leading-none">Elevation</p>
               <p className="text-sm text-muted-foreground">
-                {metersToFeet(weekStats.total_elevation)}
+                {Math.ceil(metersToFeet(weekStats.total_elevation))} ft
               </p>
             </div>
           </div>
@@ -283,7 +283,7 @@ function RaceEventsCard({ events }: { events: RaceEvent[] }) {
               </div>
               <div className="flex items-center space-x-4">
                 <p className="text-sm text-muted-foreground">
-                  {Math.ceil(metersToMiles(event.distance))} mi
+                  {metersToMiles(event.distance).toLocaleString()} mi
                 </p>
                 {events && <EditRaceModal events={events} raceIndex={index} />}
               </div>
