@@ -205,7 +205,7 @@ function ImportShoeForm({
           return (
             <div
               key={shoe.id}
-              className="flex items-center justify-between space-x-2 space-y-1"
+              className="flex items-center justify-between space-x-5 space-y-1"
             >
               <div className="flex w-full justify-between text-sm">
                 <div className="w-[200px] truncate font-medium">
