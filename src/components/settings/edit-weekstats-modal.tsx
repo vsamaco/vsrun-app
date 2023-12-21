@@ -220,7 +220,7 @@ function ImportRunForm({
     activities.forEach((activity) => {
       const date = new Date(activity.start_date);
       const key = format(date, "yyyy-I");
-      const startWeek = startOfWeek(date, { weekStartsOn: 1 }); //setDay(date, 1, { weekStartsOn: 1 });
+      const startWeek = startOfWeek(date, { weekStartsOn: 1 });
       const endWeek = endOfWeek(date, { weekStartsOn: 1 });
 
       // define new week group
@@ -270,7 +270,7 @@ function ImportRunForm({
           return (
             <div
               key={groupKey}
-              className="flex items-center justify-between space-x-2 space-y-1"
+              className="flex items-center justify-between space-x-5 space-y-1"
             >
               <div className="flex w-full justify-between text-sm">
                 <div className="flex flex-col">

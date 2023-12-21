@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React from "react";
 import { type WeekStat } from "~/types";
 import {
@@ -13,13 +14,22 @@ type WeekProps = {
 };
 
 function Week({ weekStats }: WeekProps) {
-  const startMonth = parseDateMonth(new Date(weekStats.start_date));
-  const startDay = parseDateDay(new Date(weekStats.start_date));
-
-  const endMonth = parseDateMonth(new Date(weekStats.end_date));
-  const endDay = parseDateDay(new Date(weekStats.end_date));
-
   const { total_distance, total_duration, total_elevation } = weekStats;
+
+  const periodRef = React.useRef<HTMLDivElement | null>(null);
+  React.useEffect(() => {
+    const startMonth = format(new Date(weekStats.start_date), "MMM");
+    const startDay = format(new Date(weekStats.start_date), "dd");
+    const endMonth = format(new Date(weekStats.end_date), "MMM");
+    const endDay = format(new Date(weekStats.end_date), "dd");
+
+    if (periodRef.current) {
+      periodRef.current.textContent = `${startMonth} ${startDay} - ${
+        endMonth !== startMonth ? endMonth : ""
+      } ${endDay}`;
+      periodRef.current.style.display = "block";
+    }
+  }, [weekStats, periodRef]);
 
   return (
     <div id="week" className="flex flex-col justify-center py-10 sm:py-20">
@@ -30,9 +40,11 @@ function Week({ weekStats }: WeekProps) {
       <ul className="space-y-5 divide-y divide-gray-500">
         <li className="flex w-full items-center justify-between pt-5">
           <div className="text-xl uppercase md:text-2xl">period</div>
-          <div className="text-2xl font-thin uppercase md:text-4xl">
-            {startMonth} {startDay} - {endMonth !== startMonth ? endMonth : ""}{" "}
-            {endDay}
+          <div
+            className="hidden text-2xl font-thin uppercase md:text-4xl"
+            ref={periodRef}
+          >
+            {weekStats.start_date}
           </div>
         </li>
         <li className="flex w-full items-center justify-between pt-5">
