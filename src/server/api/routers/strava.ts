@@ -22,6 +22,7 @@ export type StravaActivity = {
     summary_polyline: string;
   };
   total_elevation_gain: number;
+  workout_type: number;
 };
 
 export type StravaAthlete = {
@@ -33,7 +34,7 @@ export type StravaAthlete = {
 };
 
 export const stravaRouter = createTRPCRouter({
-  getActivities: publicProcedure.query(async ({ ctx }) => {
+  getActivities: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const account = await ctx.prisma.account.findFirst({
       where: {
@@ -81,5 +82,24 @@ export const stravaRouter = createTRPCRouter({
         distance: shoe.distance,
       };
     });
+  }),
+  getRaceActivities: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    const account = await ctx.prisma.account.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (!account) {
+      return [];
+    }
+    const activities = (await strava.athlete.listActivities({
+      access_token: account.access_token,
+    })) as StravaActivity[];
+
+    return activities.filter(
+      (activity) => activity.type === "Run" && activity.workout_type === 1
+    );
   }),
 });

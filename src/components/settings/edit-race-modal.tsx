@@ -32,10 +32,19 @@ import { cn } from "~/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
-import { milesToMeters } from "~/utils/activity";
+import {
+  formatDurationHMS,
+  metersToMiles,
+  milesToMeters,
+  parseHmsToSeconds,
+} from "~/utils/activity";
+import { type StravaActivity } from "~/server/api/routers/strava";
 
 type FormValues = {
-  event: RaceEvent;
+  event: RaceEvent & {
+    moving_time_hms: string;
+    distance_mi: number;
+  };
 };
 
 function EditRaceModal({
@@ -59,6 +68,7 @@ function EditRaceModal({
         : {
             name: "",
             start_date: "",
+            moving_time: 0,
             distance: 0,
             distance_mi: 0,
           },
@@ -99,8 +109,12 @@ function EditRaceModal({
           : {
               name: event.name,
               start_date: new Date(event.start_date),
+              moving_time: event.moving_time || 0,
+              moving_time_hms: event?.moving_time
+                ? formatDurationHMS(event.moving_time)
+                : undefined,
               distance: event.distance,
-              distance_mi: event.distance_mi,
+              distance_mi: event?.distance ? metersToMiles(event.distance) : 0,
             };
       });
 
@@ -109,7 +123,7 @@ function EditRaceModal({
         updatedRaces.push(updatedRace);
       }
 
-      console.log("updatedRace:", updatedRace);
+      console.log("updatedRaces:", updatedRaces);
       updateRacesProfile.mutate({ events: updatedRaces });
     },
     (errors) => {
@@ -124,9 +138,27 @@ function EditRaceModal({
         name: event.name,
         start_date: new Date(event.start_date),
         distance: event.distance,
-        distance_mi: event.distance_mi,
+        distance_mi: metersToMiles(event.distance),
+        moving_time: event.moving_time,
+        moving_time_hms: formatDurationHMS(event.moving_time),
       }));
     updateRacesProfile.mutate({ events: updatedRaces });
+  };
+
+  const [showImport, setShowImport] = useState(false);
+  const handleImportRun = () => setShowImport(true);
+
+  const setSelectedActivity = (activity: StravaActivity) => {
+    setShowImport(false);
+    console.log("import activity:", activity);
+    methods.setValue("event", {
+      name: activity.name,
+      start_date: activity.start_date,
+      moving_time: activity.moving_time,
+      moving_time_hms: formatDurationHMS(activity.moving_time),
+      distance: activity.distance,
+      distance_mi: metersToMiles(activity.distance),
+    });
   };
 
   const diaglogTitle = buttonType === "edit" ? "Edit Race" : "Add Race";
@@ -152,21 +184,101 @@ function EditRaceModal({
                 done.
               </DialogDescription>
             </DialogHeader>
-            <EditRaceForm />
+            {!showImport && (
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleImportRun}
+                >
+                  Import from Strava
+                </Button>
+                <EditRaceForm />
+              </>
+            )}
+            {showImport && (
+              <ImportRunForm setSelectedActivity={setSelectedActivity} />
+            )}
             <DialogFooter>
               <div className="flex w-full items-center justify-between">
-                <Button type="button" variant="outline" onClick={handleRemove}>
-                  Remove
-                </Button>
-                <Button type="submit" form="hook-form">
-                  Save changes
-                </Button>
+                {!showImport && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleRemove}
+                  >
+                    Remove
+                  </Button>
+                )}
+                {showImport && (
+                  <Button type="button" onClick={() => setShowImport(false)}>
+                    Back
+                  </Button>
+                )}
+                {!showImport && (
+                  <Button type="submit" form="hook-form">
+                    Save changes
+                  </Button>
+                )}
               </div>
             </DialogFooter>
           </form>
         </FormProvider>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ImportRunForm({
+  setSelectedActivity,
+}: {
+  setSelectedActivity: (activity: StravaActivity) => void;
+}) {
+  const { data: activities, isLoading } =
+    api.strava.getRaceActivities.useQuery();
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!activities) {
+    return <div>No races found</div>;
+  }
+
+  const handleImportSelect = (activity: StravaActivity) => {
+    setSelectedActivity(activity);
+  };
+
+  return (
+    <>
+      <p className="text-sm">Choose race to import:</p>
+      <div className="max-h-[300px] overflow-scroll">
+        {activities.map((activity, index) => {
+          return (
+            <div
+              key={activity.id}
+              className="flex items-center justify-between space-x-2 space-y-1"
+            >
+              <div className="flex w-full justify-between pr-5 text-sm">
+                <div className="w-[200px] truncate font-medium">
+                  {activity.name}
+                </div>
+                <div className="font-light">
+                  {metersToMiles(activity.distance).toLocaleString()} mi
+                </div>
+              </div>
+              <div>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleImportSelect(activity)}
+                >
+                  Select
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -247,6 +359,29 @@ function EditRaceForm() {
                       getValues("event.distance_mi")
                     );
                     setValue("event.distance", distanceMeters);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <FormField
+          control={control}
+          name={`event.moving_time_hms`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Moving time (hh:mm:ss):</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="hh:mm:ss"
+                  {...field}
+                  onBlur={(e) => {
+                    const movingTimeHMS = parseHmsToSeconds(
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                      getValues("event.moving_time_hms")
+                    );
+                    setValue("event.moving_time", movingTimeHMS);
                   }}
                 />
               </FormControl>

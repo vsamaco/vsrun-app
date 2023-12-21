@@ -26,6 +26,6 @@ export type Shoe = {
 export type RaceEvent = {
   name: string;
   start_date: string;
+  moving_time: number;
   distance: number;
-  distance_mi: number;
 };

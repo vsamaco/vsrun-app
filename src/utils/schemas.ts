@@ -120,6 +120,14 @@ export const EventSettingsFormSchema = z
     start_date: z.coerce.date({
       required_error: "Start date is required.",
     }),
+    moving_time: z.coerce.number(),
+    moving_time_hms: z
+      .string()
+      .refine(
+        (value) => /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]:[0-5][0-9]$/.test(value),
+        "Format must be HH:mm:ss"
+      )
+      .optional(),
     distance: z.coerce
       .number({
         required_error: "Distance is required.",
