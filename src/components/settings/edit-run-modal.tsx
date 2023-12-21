@@ -130,7 +130,7 @@ function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
   };
 
   const [showImport, setShowImport] = useState(false);
-  const handleImportShoe = () => setShowImport(true);
+  const handleImportRun = () => setShowImport(true);
 
   const setSelectedActivity = (activity: StravaActivity) => {
     setShowImport(false);
@@ -171,7 +171,7 @@ function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={handleImportShoe}
+                  onClick={handleImportRun}
                 >
                   Import from Strava
                 </Button>
@@ -225,7 +225,7 @@ function ImportRunForm({
   }
 
   if (!activities) {
-    return <div>No shoes found</div>;
+    return <div>No activities found</div>;
   }
 
   const handleImportSelect = (activity: StravaActivity) => {
@@ -234,20 +234,20 @@ function ImportRunForm({
 
   return (
     <>
-      <p className="text-sm">Choose shoe to import:</p>
+      <p className="text-sm">Choose run to import:</p>
       <div className="max-h-[300px] overflow-scroll">
         {activities.map((activity, index) => {
           return (
             <div
               key={activity.id}
-              className="flex items-center justify-between space-x-2 space-y-1"
+              className="flex items-center justify-between space-x-5 space-y-2"
             >
               <div className="flex w-full justify-between text-sm">
                 <div className="w-[200px] truncate font-medium">
                   {activity.name}
                 </div>
                 <div className="font-light">
-                  {Math.ceil(metersToMiles(activity.distance))} mi
+                  {metersToMiles(activity.distance).toLocaleString()} mi
                 </div>
               </div>
               <div>
