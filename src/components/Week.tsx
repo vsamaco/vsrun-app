@@ -50,7 +50,7 @@ function Week({ weekStats }: WeekProps) {
         <li className="flex w-full items-center justify-between pt-5">
           <div className="text-xl uppercase md:text-2xl">elevation</div>
           <div className="text-2xl font-thin md:text-4xl">
-            {Math.ceil(metersToFeet(total_elevation)).toLocaleString()} ft
+            {Math.ceil(metersToFeet(total_elevation))} ft
           </div>
         </li>
       </ul>
