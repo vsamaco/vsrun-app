@@ -22,7 +22,7 @@ function Events({ events }: EventsProps) {
                   <div className="text-2xl">
                     <span className="uppercase">
                       {format(new Date(event.start_date), "MMM")}
-                    </span>
+                    </span>{" "}
                     <span className=" font-thin">
                       {format(new Date(event.start_date), "dd")}
                     </span>
