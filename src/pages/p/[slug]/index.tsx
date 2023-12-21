@@ -39,12 +39,16 @@ function RunProfilePage(
   }
 
   const name = profile?.name as string;
-  const highlightRun =
-    !isEmpty(profile?.highlightRun) && (profile?.highlightRun as Activity);
-  const weekStats =
-    !isEmpty(profile?.weekStats) && (profile?.weekStats as WeekStat);
-  const shoes = !isEmpty(profile?.shoes) && (profile?.shoes as Shoe[]);
-  const events = !isEmpty(profile?.events) && (profile?.events as RaceEvent[]);
+  const highlightRun = !isEmpty(profile?.highlightRun)
+    ? (profile?.highlightRun as Activity)
+    : null;
+  const weekStats = !isEmpty(profile?.weekStats)
+    ? (profile?.weekStats as WeekStat)
+    : null;
+  const shoes = !isEmpty(profile?.shoes) ? (profile?.shoes as Shoe[]) : null;
+  const events = !isEmpty(profile?.events)
+    ? (profile?.events as RaceEvent[])
+    : null;
 
   return (
     <>
