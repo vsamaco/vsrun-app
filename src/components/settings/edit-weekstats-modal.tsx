@@ -31,7 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { cn } from "~/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { format, setDay } from "date-fns";
+import { endOfWeek, format, startOfWeek } from "date-fns";
 import { metersToMiles } from "~/utils/activity";
 import { type StravaActivity } from "~/server/api/routers/strava";
 
@@ -108,7 +108,7 @@ function EditWeekStatsModal({ weekStats }: { weekStats: WeekStat | null }) {
   };
 
   const [showImport, setShowImport] = useState(false);
-  const handleImportShoe = () => setShowImport(true);
+  const handleImportWeek = () => setShowImport(true);
 
   const setSelectedWeekStats = (weekStats: WeekStat) => {
     setShowImport(false);
@@ -143,7 +143,7 @@ function EditWeekStatsModal({ weekStats }: { weekStats: WeekStat | null }) {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={handleImportShoe}
+                  onClick={handleImportWeek}
                 >
                   Import from Strava
                 </Button>
@@ -220,8 +220,8 @@ function ImportRunForm({
     activities.forEach((activity) => {
       const date = new Date(activity.start_date);
       const key = format(date, "yyyy-I");
-      const startWeek = setDay(date, 1, { weekStartsOn: 1 });
-      const endWeek = setDay(date, 6);
+      const startWeek = startOfWeek(date, { weekStartsOn: 1 }); //setDay(date, 1, { weekStartsOn: 1 });
+      const endWeek = endOfWeek(date, { weekStartsOn: 1 });
 
       // define new week group
       if (!weeklyActivities[key]) {
@@ -249,13 +249,14 @@ function ImportRunForm({
           };
         }
       }
+      console.log(weeklyActivities);
     });
   };
   groupActivitiesByWeek();
 
   return (
     <>
-      <p className="text-sm">Choose shoe to import:</p>
+      <p className="text-sm">Choose week to import:</p>
       <div className="max-h-[300px] space-y-2 overflow-scroll">
         {Object.keys(weeklyActivities).map((groupKey, index) => {
           const currentWeek = weeklyActivities[groupKey];
@@ -264,7 +265,7 @@ function ImportRunForm({
             format(new Date(currentWeek?.start_date), "LL/dd");
           const weekEndFormatted =
             currentWeek?.start_date &&
-            format(new Date(currentWeek?.start_date), "LL/dd");
+            format(new Date(currentWeek?.end_date), "LL/dd");
 
           return (
             <div
@@ -280,7 +281,11 @@ function ImportRunForm({
                   </div>
                   <div className="font-light">
                     {currentWeek?.activities.map((activity) => {
-                      return <div key={activity.id}>{activity.name}</div>;
+                      return (
+                        <div key={activity.id} className="truncate">
+                          {activity.name}
+                        </div>
+                      );
                     })}
                   </div>
                 </div>
