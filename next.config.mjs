@@ -30,6 +30,11 @@ const config = {
         hostname: "api.dicebear.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+      },
     ],
   },
 };
