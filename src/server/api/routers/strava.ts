@@ -48,6 +48,7 @@ export const stravaRouter = createTRPCRouter({
     }
     const activities = (await strava.athlete.listActivities({
       access_token: account.access_token,
+      per_page: 100,
     })) as StravaActivity[];
 
     // console.log({ activities });
