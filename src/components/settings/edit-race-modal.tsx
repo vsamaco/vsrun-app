@@ -234,13 +234,20 @@ function ImportRunForm({
 }: {
   setSelectedActivity: (activity: StravaActivity) => void;
 }) {
+  const [page, setPage] = useState(1);
   const { data: activities, isLoading } =
-    api.strava.getRaceActivities.useQuery();
+    api.strava.getRaceActivities.useInfiniteQuery(
+      { page },
+      {
+        getNextPageParam: (lastPage) => lastPage?.nextCursor,
+      }
+    );
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!activities) {
+  if (!activities || activities.pages.length === 0) {
     return <div>No races found</div>;
   }
 
@@ -248,17 +255,19 @@ function ImportRunForm({
     setSelectedActivity(activity);
   };
 
+  const races = activities.pages[0]?.activities || [];
+
   return (
     <>
       <p className="text-sm">Choose race to import:</p>
       <div className="max-h-[300px] overflow-scroll">
-        {activities.map((activity, index) => {
+        {races.map((activity, index) => {
           return (
             <div
               key={activity.id}
-              className="flex items-center justify-between space-x-2 space-y-1"
+              className="flex items-center justify-between space-x-5 space-y-1"
             >
-              <div className="flex w-full justify-between pr-5 text-sm">
+              <div className="flex w-full justify-between text-sm">
                 <div className="w-[200px] truncate font-medium">
                   {activity.name}
                 </div>
@@ -277,6 +286,24 @@ function ImportRunForm({
             </div>
           );
         })}
+        <div className="flex items-center justify-center gap-5">
+          {page > 1 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPage((prevPage) => prevPage - 1)}
+            >
+              Prev {page - 1}
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setPage((prevPage) => prevPage + 1)}
+          >
+            Next {page}
+          </Button>
+        </div>
       </div>
     </>
   );
