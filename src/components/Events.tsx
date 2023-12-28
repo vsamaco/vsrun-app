@@ -1,6 +1,6 @@
 import React from "react";
 import { type RaceEvent } from "../types";
-import { formatEventDate, metersToMiles } from "~/utils/activity";
+import { formatDurationHMS } from "~/utils/activity";
 import { format } from "date-fns";
 
 type EventsProps = {
@@ -17,7 +17,7 @@ function Events({ events }: EventsProps) {
         {events.map((event, index) => {
           return (
             <li key={index} className="">
-              <div className="flex w-full items-center space-x-5 pt-5">
+              <div className="flex w-full flex-row items-center justify-between pt-5">
                 <div className="">
                   <div className="text-2xl">
                     <span className="uppercase">
@@ -27,10 +27,15 @@ function Events({ events }: EventsProps) {
                       {format(new Date(event.start_date), "dd")}
                     </span>
                   </div>
+                  <div className="text-2xl font-thin uppercase md:text-4xl">
+                    {event.name}
+                  </div>
                 </div>
-                <div className="text-2xl font-thin uppercase md:text-4xl">
-                  {event.name}
-                </div>
+                {event.moving_time > 0 && (
+                  <div className="text-2xl font-thin md:text-4xl">
+                    {formatDurationHMS(event.moving_time)}
+                  </div>
+                )}
               </div>
             </li>
           );
