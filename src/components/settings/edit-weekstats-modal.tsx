@@ -121,7 +121,7 @@ function EditWeekStatsModal({ weekStats }: { weekStats: WeekStat | null }) {
     methods.setValue("weekStats.total_elevation", weekStats.total_elevation);
   };
 
-  const dialogTitle = weekStats ? "Edit Week Stats" : "Add Week Stats";
+  const dialogTitle = weekStats ? "Edit Weekly Stats" : "Add Weekly Stats";
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -134,7 +134,7 @@ function EditWeekStatsModal({ weekStats }: { weekStats: WeekStat | null }) {
             <DialogHeader>
               <DialogTitle>{dialogTitle}</DialogTitle>
               <DialogDescription>
-                Make changes to your week stats here. Click save when
+                Make changes to your weekly stats here. Click save when
                 you&apos;re done.
               </DialogDescription>
             </DialogHeader>
@@ -272,27 +272,25 @@ function ImportRunForm({
               key={groupKey}
               className="flex items-center justify-between space-x-5 space-y-1"
             >
-              <div className="flex w-full justify-between text-sm">
-                <div className="flex flex-col">
-                  <div className="font-medium">
+              <div className="w-full text-sm">
+                <div className="flex justify-between font-medium">
+                  <div>
                     {weekStartFormatted &&
                       weekEndFormatted &&
                       [weekStartFormatted, weekEndFormatted].join(" - ")}
                   </div>
-                  <div className="font-light">
-                    {currentWeek?.activities.map((activity) => {
-                      return (
-                        <div key={activity.id} className="truncate">
-                          {activity.name}
-                        </div>
-                      );
-                    })}
+                  <div>
+                    {currentWeek &&
+                      metersToMiles(
+                        currentWeek?.total_distance
+                      ).toLocaleString()}{" "}
+                    mi
                   </div>
                 </div>
-                <div>
-                  {currentWeek &&
-                    Math.ceil(metersToMiles(currentWeek?.total_distance))}{" "}
-                  mi
+                <div className="w-[250px] truncate font-light">
+                  {currentWeek?.activities.map((activity) => {
+                    return <div key={activity.id}>{activity.name}</div>;
+                  })}
                 </div>
               </div>
               <div>

@@ -174,7 +174,7 @@ function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Week Stats</CardTitle>
+        <CardTitle>Week</CardTitle>
         <CardDescription>Highlight your weekly stats</CardDescription>
       </CardHeader>
       {weekStats && (
