@@ -3,7 +3,12 @@
 
 generator client {
     provider = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+    previewFeatures = []
+}
+
+/// Always after the prisma-client-js generator
+generator json {
+  provider = "prisma-json-types-generator"
 }
 
 datasource db {
@@ -72,10 +77,16 @@ model RunProfile {
     slug String @unique
     name String
     userId String
+    /// [ProfileHighlightRunType]
     highlightRun Json
+    /// [ProfileWeekStatsType]
     weekStats Json
+    /// [ProfileShoesType]
     shoes Json
+    /// [ProfileEventsType]
     events Json
+
+    shoeRotations ShoeRotation[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -83,4 +94,20 @@ model RunProfile {
     user    User @relation(fields:[userId], references: [id], onDelete: Cascade)
 
     @@unique([userId])
+}
+
+model ShoeRotation {
+    id String @id @default(cuid())
+    slug String @unique
+    startDate DateTime
+    name String
+    description String
+    profileId String
+    /// [ShoeRotationShoeType]
+    shoes Json[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    runProfile RunProfile @relation(fields:[profileId], references: [id], onDelete: Cascade)
 }

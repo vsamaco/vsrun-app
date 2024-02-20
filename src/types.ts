@@ -1,3 +1,14 @@
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "./server/api/root";
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace PrismaJson {
+    // Insert your types here!
+    type ShoeRotationShoeType = Shoe;
+  }
+}
+
 export type Activity = {
   name: string;
   start_date: string;
@@ -21,6 +32,8 @@ export type Shoe = {
   brand_name: string;
   model_name: string;
   distance: number;
+  distance_mi?: number;
+  categories: ShoeCategories[];
 };
 
 export type RaceEvent = {
@@ -29,3 +42,24 @@ export type RaceEvent = {
   moving_time: number;
   distance: number;
 };
+
+export const SHOE_CATEGORIES = [
+  "daily_trainer",
+  "tempo",
+  "race",
+  "long_run",
+] as const;
+type ShoeCategories = (typeof SHOE_CATEGORIES)[number];
+
+export type ShoeRotation = {
+  id: string;
+  slug: string;
+  start_date: Date;
+  name: string;
+  description: string;
+  shoes: Shoe[];
+};
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
+export type ShoeRotationType =
+  RouterOutput["shoeRotation"]["getUserShoeRotations"][0];

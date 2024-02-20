@@ -2,6 +2,7 @@ import { exampleRouter } from "~/server/api/routers/example";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { runProfileRouter } from "./routers/runProfile";
 import { stravaRouter } from "./routers/strava";
+import { shoeRotationRouter } from "./routers/shoeRotation";
 
 /**
  * This is the primary router for your server.
@@ -12,6 +13,7 @@ export const appRouter = createTRPCRouter({
   example: exampleRouter,
   runProfile: runProfileRouter,
   strava: stravaRouter,
+  shoeRotation: shoeRotationRouter,
 });
 
 // export type definition of API
