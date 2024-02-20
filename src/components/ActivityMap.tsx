@@ -6,7 +6,7 @@ import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
 import { type Activity } from "~/types";
 
 type Props = {
-  activity: Activity;
+  activity: Activity | Record<string, never>;
   zoom?: number;
 };
 

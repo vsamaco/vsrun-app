@@ -6,6 +6,10 @@ declare global {
   namespace PrismaJson {
     // Insert your types here!
     type ShoeRotationShoeType = Shoe;
+    type ProfileHighlightRunType = Activity | Record<string, never>;
+    type ProfileWeekStatsType = WeekStat | Record<string, never>;
+    type ProfileShoesType = Shoe[] | undefined;
+    type ProfileEventsType = RaceEvent[] | undefined;
   }
 }
 

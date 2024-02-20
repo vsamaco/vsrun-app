@@ -7,7 +7,7 @@ import {
 } from "~/utils/activity";
 
 type RunProps = {
-  activity: Activity;
+  activity: Activity | Record<string, never>;
 };
 
 const MapWithNoSSR = dynamic(() => import("./ActivityMap"), {

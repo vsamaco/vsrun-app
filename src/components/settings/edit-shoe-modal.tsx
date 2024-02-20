@@ -218,7 +218,9 @@ function ImportShoeForm({
               <div>
                 <Button
                   variant="secondary"
-                  onClick={() => handleImportSelect(shoe)}
+                  onClick={() =>
+                    handleImportSelect({ ...shoe, categories: [] })
+                  }
                 >
                   Select
                 </Button>

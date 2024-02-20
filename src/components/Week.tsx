@@ -10,7 +10,7 @@ import {
 } from "~/utils/activity";
 
 type WeekProps = {
-  weekStats: WeekStat;
+  weekStats: WeekStat | Record<string, never>;
 };
 
 function Week({ weekStats }: WeekProps) {

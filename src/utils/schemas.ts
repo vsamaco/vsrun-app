@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SHOE_CATEGORIES } from "~/types";
 
 export const GeneralSettingsFormSchema = z.object({
   slug: z
@@ -108,6 +109,7 @@ export const ShoeSettingsFormSchema = z.object({
     })
     .min(1),
   distance: z.coerce.number().min(1),
+  categories: z.array(z.enum(SHOE_CATEGORIES)),
 });
 
 export const EventSettingsFormSchema = z
