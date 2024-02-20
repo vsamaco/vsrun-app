@@ -22,7 +22,6 @@ async function main() {
         start_date: new Date(2023, 5, 30).toUTCString(),
         distance: 42560.4,
         moving_time: 13614,
-        elapsed_time: 13922,
         total_elevation_gain: 173,
         start_latlng: [37.81, -122.26],
         summary_polyline:
@@ -41,16 +40,19 @@ async function main() {
           brand_name: "Saucony",
           model_name: "Ride 15",
           distance: 82803,
+          categories: ["daily_trainer"],
         },
         {
           brand_name: "New Balance",
           model_name: "Rebel v3",
           distance: 160934,
+          categories: ["tempo"],
         },
         {
           brand_name: "Adidas",
           model_name: "Adizero Pro 3",
           distance: 80467,
+          categories: ["race"],
         },
       ],
       events: [
@@ -58,16 +60,19 @@ async function main() {
           name: "Oakland Marathon",
           start_date: new Date(2023, 2, 19).toUTCString(),
           distance: 42195,
+          moving_time: 13057,
         },
         {
           name: "San Francisco Marathon",
           start_date: new Date(2023, 6, 23).toUTCString(),
           distance: 42195,
+          moving_time: 13057,
         },
         {
           name: "Chicago Marathon",
           start_date: new Date(2023, 9, 8).toUTCString(),
           distance: 42195,
+          moving_time: 13057,
         },
       ],
     },
