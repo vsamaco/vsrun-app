@@ -67,6 +67,7 @@ export const shoeRotationRouter = createTRPCRouter({
               model_name: z.string(),
               distance: z.number(),
               categories: z.array(z.enum(SHOE_CATEGORIES)),
+              description: z.string(),
             })
           ),
         }),
@@ -109,6 +110,7 @@ export const shoeRotationRouter = createTRPCRouter({
               model_name: z.string(),
               distance: z.number(),
               categories: z.array(z.enum(SHOE_CATEGORIES)),
+              description: z.string(),
             })
           ),
         }),

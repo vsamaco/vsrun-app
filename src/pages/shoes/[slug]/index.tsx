@@ -14,6 +14,10 @@ import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { metersToMiles } from "~/utils/activity";
 import { Badge } from "~/components/ui/badge";
 import { formatDate } from "~/utils/date";
+import { type Shoe } from "~/types";
+import { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { cn } from "~/lib/utils";
 
 export default function ShoesPage({
   slug,
@@ -37,7 +41,7 @@ export default function ShoesPage({
     <MaxWidthWrapper>
       <div className="space-y-5 p-5">
         <div className="mx-auto items-center">
-          <div className="flex h-full flex-col items-center justify-center space-y-5">
+          <div className="border-bottom flex h-full flex-col items-center justify-center space-y-5 border-black">
             <h1 className="mt-20 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl">
               {name}
             </h1>
@@ -57,41 +61,67 @@ export default function ShoesPage({
               </div>
             )}
           </div>
-          <p className="leading-7 [&:not(:first-child)]:mt-6">{description}</p>
+          <p className="text-2xl [&:not(:first-child)]:mt-6">{description}</p>
           <div className="mt-10 space-y-5">
             {shoes.map((shoe, index) => (
-              <div
-                key={index}
-                className="border-gray group rounded-lg border p-5 hover:border-black"
-              >
-                <div className="flex flex-row items-center justify-between">
-                  <div className="space-y-1 text-2xl">
-                    <div className="uppercase">{shoe.brand_name}</div>
-                    <div className="font-thin uppercase">{shoe.model_name}</div>
-                    <div className="space-x-2 uppercase">
-                      {shoe.categories.map((category, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="text-sm group-hover:bg-yellow-400"
-                        >
-                          {category}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  {shoe.distance > 0 && (
-                    <div className="text-6xl font-thin text-gray-100 group-hover:text-gray-500">
-                      {Math.ceil(metersToMiles(shoe.distance))} mi
-                    </div>
-                  )}
-                </div>
-              </div>
+              <ShoeCard shoe={shoe} key={index} />
             ))}
           </div>
         </div>
       </div>
     </MaxWidthWrapper>
+  );
+}
+
+function ShoeCard({ shoe }: { shoe: Shoe }) {
+  const [showDescription, setShowDescription] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        "border-gray group rounded-lg border p-5 hover:border-black",
+        shoe.description && "cursor-pointer"
+      )}
+      onClick={() => setShowDescription((value) => !value)}
+    >
+      <div className="flex flex-row items-center justify-between">
+        <div className="space-y-1 text-2xl uppercase">
+          <div className="flex items-center uppercase">
+            <div className="truncate">
+              <span className="mr-2">{shoe.brand_name}</span>
+              <span className="font-thin uppercase">{shoe.model_name}</span>
+            </div>
+            {shoe.description && !showDescription && (
+              <ChevronRight className="w-10" />
+            )}
+            {shoe.description && showDescription && (
+              <ChevronDown className="w-10" />
+            )}
+          </div>
+          <div className="space-x-2 uppercase">
+            {shoe.categories.map((category, index) => (
+              <Badge
+                key={index}
+                variant="secondary"
+                className="text-sm group-hover:bg-yellow-400"
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
+        </div>
+        {shoe.distance > 0 && (
+          <div>
+            <div className="text-6xl font-thin text-gray-100 group-hover:text-gray-500">
+              {Math.ceil(metersToMiles(shoe.distance))} mi
+            </div>
+          </div>
+        )}
+      </div>
+      {showDescription && shoe.description && (
+        <div className="mt-10 text-2xl">{shoe.description}</div>
+      )}
+    </div>
   );
 }
 

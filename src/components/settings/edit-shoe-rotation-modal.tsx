@@ -108,6 +108,7 @@ function ShoeRotationForm({
             distance: z.coerce.number(),
             distance_mi: z.coerce.number(),
             categories: z.array(z.enum(SHOE_CATEGORIES)),
+            description: z.string(),
           })
         ),
       })
@@ -218,6 +219,7 @@ function ShoeRotationForm({
     model_name: "default model",
     distance: 0,
     categories: [],
+    description: "",
   };
 
   const [shoeIndex, setShoeIndex] = useState(() => {
@@ -586,6 +588,19 @@ function EditShoeForm({
         </FormControl>
         <FormMessage />
       </FormItem>
+      <FormField
+        control={control}
+        name={`shoes.${index}.description`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Description:</FormLabel>
+            <FormControl>
+              <Textarea rows={3} placeholder="description" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      ></FormField>
       <div className="my-10 flex justify-between">
         <Button type="button" onClick={handleCancel}>
           Cancel
@@ -634,7 +649,11 @@ function ImportShoeForm({
                 <Button
                   variant="secondary"
                   onClick={() =>
-                    handleImportSelect({ ...shoe, categories: [] })
+                    handleImportSelect({
+                      ...shoe,
+                      categories: [],
+                      description: "",
+                    })
                   }
                 >
                   Select

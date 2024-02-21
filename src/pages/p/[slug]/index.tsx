@@ -16,6 +16,9 @@ import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 import { isEmpty } from "~/utils/activity";
 import { MaxWidthWrapper } from "~/components/ui/layout/max-width-wrapper";
+import { type ShoeRotationType } from "~/types";
+import Link from "next/link";
+import { formatDate } from "~/utils/date";
 
 function RunProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -28,7 +31,10 @@ function RunProfilePage(
     }
   );
 
-  if (isLoading) {
+  const { data: shoeRotations, isLoading: isShoeRotationLoading } =
+    api.shoeRotation.getUserShoeRotations.useQuery();
+
+  if (isLoading || isShoeRotationLoading) {
     return <div>Loading...</div>;
   }
 
@@ -52,11 +58,50 @@ function RunProfilePage(
           <Hero name={name} />
           {highlightRun && <Run activity={highlightRun} />}
           {weekStats && <Week weekStats={weekStats} />}
+          {shoeRotations && shoeRotations.length > 0 && (
+            <ShoeRotations shoeRotations={shoeRotations} />
+          )}
           {shoes && <Shoes shoes={shoes} />}
           {events && <Events events={events} />}
         </div>
       </MaxWidthWrapper>
     </>
+  );
+}
+
+function ShoeRotations({
+  shoeRotations,
+}: {
+  shoeRotations: ShoeRotationType[];
+}) {
+  return (
+    <div>
+      <div className=" mb-10 w-full border-b-4 border-green-300">
+        <h3 className="text-6xl uppercase text-green-300">Shoe Rotation</h3>
+      </div>
+
+      <div className="space-y-4 ">
+        {shoeRotations.map((sr) => (
+          <Link
+            href={`/shoes/${sr.slug}`}
+            key={sr.id}
+            className="border-gray group flex items-center justify-between rounded-lg border p-4 hover:cursor-pointer hover:border-black"
+          >
+            <div>
+              <div className="text-2xl font-thin uppercase">{sr.name}</div>
+              <div className="text-md font-thin uppercase">
+                {formatDate(sr.startDate, {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+            </div>
+            <div className="text-2xl font-thin">{sr.shoes.length} shoes</div>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
 
