@@ -7,7 +7,7 @@ import UserNavigation from "../ui/layout/user-navigation";
 
 const sidebarNavItems = [
   {
-    title: "General",
+    title: "Account",
     href: "/settings",
   },
   {
@@ -19,8 +19,8 @@ const sidebarNavItems = [
     href: "/settings/week",
   },
   {
-    title: "Shoes",
-    href: "/settings/shoes",
+    title: "Shoe Rotations",
+    href: "/settings/shoe_rotations",
   },
   {
     title: "Events",
@@ -32,7 +32,7 @@ interface SettingsLayoutProps {
   children: React.ReactNode;
 }
 
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+export default function Settings2Layout({ children }: SettingsLayoutProps) {
   return (
     <>
       <div className="hidden flex-col md:flex">
