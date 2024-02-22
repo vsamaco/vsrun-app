@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { type Shoe } from "~/types";
+import { SHOE_CATEGORIES, type Shoe } from "~/types";
 import { api } from "~/utils/api";
 import { ShoeSettingsFormSchema } from "~/utils/schemas";
 import { toast } from "../ui/use-toast";
@@ -27,6 +27,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { metersToMiles } from "~/utils/activity";
+import { Checkbox } from "../ui/checkbox";
 
 type FormValues = {
   shoe: Shoe;
@@ -52,6 +53,7 @@ function EditShoeModal({
             brand_name: "",
             model_name: "",
             distance: 0,
+            categories: [],
           },
     },
   });
@@ -278,6 +280,47 @@ function EditShoeForm() {
             </FormItem>
           )}
         ></FormField>
+      </FormItem>
+      <FormItem>
+        <FormLabel className="text-base">Shoe Categories:</FormLabel>
+        <FormControl>
+          <div className="space-y-2">
+            {SHOE_CATEGORIES.map((category) => (
+              <FormField
+                key={category}
+                control={control}
+                name={`shoe.categories`}
+                render={({ field }) => {
+                  return (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+                          checked={field.value?.includes(category)}
+                          onCheckedChange={(checked) => {
+                            return checked
+                              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                                field.onChange([...field.value, category])
+                              : field.onChange(
+                                  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+                                  field.value?.filter(
+                                    (value: string) => value !== category
+                                  )
+                                );
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="front-normal text-sm">
+                        {category}
+                      </FormLabel>
+                    </FormItem>
+                  );
+                }}
+              />
+            ))}
+          </div>
+        </FormControl>
+        <FormMessage />
       </FormItem>
     </div>
   );

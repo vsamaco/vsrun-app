@@ -61,7 +61,9 @@ export default function ShoesPage({
               </div>
             )}
           </div>
-          <p className="text-2xl [&:not(:first-child)]:mt-6">{description}</p>
+          <div className="mt-5 text-center">
+            <p className="text-xl  [&:not(:first-child)]:mt-6">{description}</p>
+          </div>
           <div className="mt-10 space-y-5">
             {shoes.map((shoe, index) => (
               <ShoeCard shoe={shoe} key={index} />
@@ -85,11 +87,15 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
       onClick={() => setShowDescription((value) => !value)}
     >
       <div className="flex flex-row items-center justify-between">
-        <div className="space-y-1 text-2xl uppercase">
-          <div className="flex items-center uppercase">
-            <div className="truncate">
-              <span className="mr-2">{shoe.brand_name}</span>
-              <span className="font-thin uppercase">{shoe.model_name}</span>
+        <div className="space-y-1">
+          <div className="flex items-center">
+            <div className="flex flex-col truncate md:flex-row md:whitespace-normal">
+              <div className="mr-2 text-lg uppercase md:text-2xl">
+                {shoe.brand_name}
+              </div>
+              <div className="text-lg font-thin uppercase md:text-2xl">
+                {shoe.model_name}
+              </div>
             </div>
             {shoe.description && !showDescription && (
               <ChevronRight className="w-10" />
@@ -112,14 +118,14 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
         </div>
         {shoe.distance > 0 && (
           <div>
-            <div className="text-6xl font-thin text-gray-100 group-hover:text-gray-500">
+            <div className="text-xl font-thin text-gray-100 group-hover:text-gray-500 md:text-6xl">
               {Math.ceil(metersToMiles(shoe.distance))} mi
             </div>
           </div>
         )}
       </div>
       {showDescription && shoe.description && (
-        <div className="mt-10 text-2xl">{shoe.description}</div>
+        <div className="mt-10 text-xl">{shoe.description}</div>
       )}
     </div>
   );

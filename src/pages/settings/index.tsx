@@ -6,6 +6,7 @@ import EditRaceModal from "~/components/settings/edit-race-modal";
 import EditRunModal from "~/components/settings/edit-run-modal";
 import EditShoeModal from "~/components/settings/edit-shoe-modal";
 import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
+import Layout from "~/components/settings/layout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
@@ -16,11 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import MainNavigation from "~/components/ui/layout/main-navigation";
-import { MaxWidthWrapper } from "~/components/ui/layout/max-width-wrapper";
-import UserNavigation from "~/components/ui/layout/user-navigation";
 import { Separator } from "~/components/ui/separator";
-import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/utils";
 import {
   type RaceEvent,
@@ -85,6 +82,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
   return (
     <>
       {profile && <ProfileSection profile={profile} />}
+      <Separator />
       <div className="hidden items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-2">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
@@ -302,34 +300,7 @@ function RaceEventsCard({ events }: { events: RaceEvent[] }) {
   );
 }
 GeneralSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <>
-      <div className="hidden flex-col md:flex">
-        <div className="border-b">
-          <MaxWidthWrapper>
-            <div className="flex h-16 items-center px-4">
-              <MainNavigation className="mx-6" />
-              <div className="ml-auto flex items-center space-x-4">
-                <UserNavigation />
-              </div>
-            </div>
-          </MaxWidthWrapper>
-        </div>
-      </div>
-      <div className="hidden space-y-6 p-10 pb-16 md:block">
-        <MaxWidthWrapper>
-          <div className="space-y-0.5">
-            <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-          </div>
-          <Separator className="my-6" />
-          <div className="flex w-full flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-            <div className="flex-1">{page}</div>
-          </div>
-          <Toaster />
-        </MaxWidthWrapper>
-      </div>
-    </>
-  );
+  return <Layout>{page}</Layout>;
 };
 
 export default GeneralSettingsPage;

@@ -31,10 +31,7 @@ function RunProfilePage(
     }
   );
 
-  const { data: shoeRotations, isLoading: isShoeRotationLoading } =
-    api.shoeRotation.getUserShoeRotations.useQuery();
-
-  if (isLoading || isShoeRotationLoading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -44,6 +41,7 @@ function RunProfilePage(
     : null;
   const weekStats = !isEmpty(profile?.weekStats) ? profile?.weekStats : null;
   const shoes = !isEmpty(profile?.shoes) ? profile?.shoes : null;
+  const shoeRotations = profile?.shoeRotations;
   const events = !isEmpty(profile?.events) ? profile?.events : null;
 
   return (
@@ -77,7 +75,7 @@ function ShoeRotations({
   return (
     <div>
       <div className=" mb-10 w-full border-b-4 border-green-300">
-        <h3 className="text-6xl uppercase text-green-300">Shoe Rotation</h3>
+        <h3 className="text-6xl uppercase text-green-300">Shoes</h3>
       </div>
 
       <div className="space-y-4 ">
@@ -97,7 +95,9 @@ function ShoeRotations({
                 })}
               </div>
             </div>
-            <div className="text-2xl font-thin">{sr.shoes.length} shoes</div>
+            <div className="text-lg font-thin md:text-2xl">
+              {sr.shoes.length} shoes
+            </div>
           </Link>
         ))}
       </div>

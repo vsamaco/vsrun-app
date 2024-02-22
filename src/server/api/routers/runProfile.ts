@@ -24,6 +24,13 @@ export const runProfileRouter = createTRPCRouter({
         where: {
           slug: input.slug,
         },
+        include: {
+          shoeRotations: {
+            orderBy: {
+              startDate: "desc",
+            },
+          },
+        },
       });
       return profile;
     }),

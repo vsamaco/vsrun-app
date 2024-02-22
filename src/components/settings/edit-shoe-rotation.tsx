@@ -532,7 +532,7 @@ function EditShoeForm({
         )}
       ></FormField>
       <FormItem>
-        <FormLabel className="text-base">Shoe Categories:</FormLabel>
+        <FormLabel>Shoe Categories:</FormLabel>
         <FormControl>
           <div className="space-y-2">
             {SHOE_CATEGORIES.map((category) => (

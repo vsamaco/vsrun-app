@@ -7,25 +7,25 @@ import UserNavigation from "../ui/layout/user-navigation";
 
 const sidebarNavItems = [
   {
-    title: "Account",
+    title: "Profile",
     href: "/settings",
   },
-  {
-    title: "Run",
-    href: "/settings/run",
-  },
-  {
-    title: "Week",
-    href: "/settings/week",
-  },
+  // {
+  //   title: "Run",
+  //   href: "/settings/run",
+  // },
+  // {
+  //   title: "Week",
+  //   href: "/settings/week",
+  // },
   {
     title: "Shoe Rotations",
     href: "/settings/shoe_rotations",
   },
-  {
-    title: "Events",
-    href: "/settings/events",
-  },
+  // {
+  //   title: "Events",
+  //   href: "/settings/events",
+  // },
 ];
 
 interface SettingsLayoutProps {

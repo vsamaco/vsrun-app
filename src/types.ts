@@ -38,7 +38,7 @@ export type Shoe = {
   distance: number;
   distance_mi?: number;
   categories: ShoeCategories[];
-  description: string;
+  description?: string;
 };
 
 export type RaceEvent = {
