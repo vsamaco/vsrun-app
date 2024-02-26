@@ -114,7 +114,7 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
                 variant="secondary"
                 className="text-sm group-hover:bg-yellow-400"
               >
-                {category}
+                {category.replace("_", " ")}
               </Badge>
             ))}
           </div>

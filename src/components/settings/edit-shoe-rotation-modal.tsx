@@ -347,7 +347,7 @@ function ShoeRotationForm({
                               variant="secondary"
                               className="group-hover:bg-yellow-400"
                             >
-                              {category}
+                              {category.replace("_", " ")}
                             </Badge>
                           ))}
                         </div>
