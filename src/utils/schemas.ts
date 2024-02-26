@@ -108,7 +108,7 @@ export const ShoeSettingsFormSchema = z.object({
       required_error: "Model is required",
     })
     .min(1),
-  distance: z.coerce.number().min(1),
+  distance: z.coerce.number(),
   categories: z.array(z.enum(SHOE_CATEGORIES)),
   description: z.string().optional(),
 });
