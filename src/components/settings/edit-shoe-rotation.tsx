@@ -344,7 +344,7 @@ function ShoeRow({
                   variant="secondary"
                   className="group-hover:bg-yellow-400"
                 >
-                  {category}
+                  {category.replace("_", " ")}
                 </Badge>
               ))}
             </div>
@@ -546,7 +546,7 @@ function EditShoeForm({
                         />
                       </FormControl>
                       <FormLabel className="front-normal text-sm">
-                        {category}
+                        {category.replace("_", " ")}
                       </FormLabel>
                     </FormItem>
                   );
