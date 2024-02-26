@@ -75,7 +75,7 @@ function ShoeRotations({
   return (
     <div>
       <div className=" mb-10 w-full border-b-4 border-green-300">
-        <h3 className="text-6xl uppercase text-green-300">Shoes</h3>
+        <h3 className="text-6xl uppercase text-green-300">Shoe Rotation</h3>
       </div>
 
       <div className="space-y-4 ">

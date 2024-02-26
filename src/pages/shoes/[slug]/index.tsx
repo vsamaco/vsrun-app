@@ -18,6 +18,7 @@ import { type Shoe } from "~/types";
 import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils";
+import Link from "next/link";
 
 export default function ShoesPage({
   slug,
@@ -57,7 +58,9 @@ export default function ShoesPage({
                 <Avatar>
                   <AvatarFallback>{runProfile.name[0]}</AvatarFallback>
                 </Avatar>
-                <span className="">{runProfile.name}</span>
+                <Link href={`/p/${runProfile.slug}`} className="">
+                  {runProfile.name}
+                </Link>
               </div>
             )}
           </div>
