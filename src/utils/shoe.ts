@@ -17,8 +17,8 @@ export const parseShoeBrandModel = (shoeName: string) => {
   const regex = new RegExp(`^(${SHOE_BRANDS.join("|")})\\s(.+)$`);
   const match = shoeName.match(regex);
 
-  if (match) {
+  if (match && match[1] && match[2]) {
     return { brand: match[1], model: match[2] };
   }
-  return { brand: null, model: shoeName };
+  return { brand: "", model: shoeName };
 };

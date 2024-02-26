@@ -3,14 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Trash2, Pencil } from "lucide-react";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   FormProvider,
   useFieldArray,
   useForm,
   useFormContext,
 } from "react-hook-form";
-import { z } from "zod";
 import { cn } from "~/lib/utils";
 import { SHOE_CATEGORIES, type Shoe, type ShoeRotationType } from "~/types";
 import { metersToMiles, milesToMeters } from "~/utils/activity";

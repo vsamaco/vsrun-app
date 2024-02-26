@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { nanoid } from "nanoid";
-import { SHOE_CATEGORIES } from "~/types";
 import { ShoeRotationFormSchema } from "~/utils/schemas";
 
 // function filter<T extends object>(

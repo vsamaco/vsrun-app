@@ -203,7 +203,7 @@ function ImportShoeForm({
     <>
       <p className="text-sm">Choose shoe to import:</p>
       <div className="max-h-[300px] overflow-scroll">
-        {shoes.map((shoe, index) => {
+        {shoes.map((shoe) => {
           return (
             <div
               key={shoe.id}
