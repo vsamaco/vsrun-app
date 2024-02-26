@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { nanoid } from "nanoid";
 import { SHOE_CATEGORIES } from "~/types";
+import { ShoeRotationFormSchema } from "~/utils/schemas";
 
 // function filter<T extends object>(
 //   obj: T,
@@ -57,20 +58,7 @@ export const shoeRotationRouter = createTRPCRouter({
   createShoeRotation: protectedProcedure
     .input(
       z.object({
-        body: z.object({
-          name: z.string(),
-          description: z.string(),
-          startDate: z.coerce.date(),
-          shoes: z.array(
-            z.object({
-              brand_name: z.string(),
-              model_name: z.string(),
-              distance: z.number(),
-              categories: z.array(z.enum(SHOE_CATEGORIES)),
-              description: z.string(),
-            })
-          ),
-        }),
+        body: ShoeRotationFormSchema,
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -85,7 +73,7 @@ export const shoeRotationRouter = createTRPCRouter({
           slug: nanoid(8),
           name: input.body.name,
           startDate: input.body.startDate,
-          description: input.body.description,
+          description: input.body.description || "",
           shoes: input.body.shoes,
           profileId: runProfile.id,
         },
@@ -100,20 +88,7 @@ export const shoeRotationRouter = createTRPCRouter({
         params: z.object({
           slug: z.string(),
         }),
-        body: z.object({
-          name: z.string(),
-          description: z.string(),
-          startDate: z.coerce.date(),
-          shoes: z.array(
-            z.object({
-              brand_name: z.string(),
-              model_name: z.string(),
-              distance: z.number(),
-              categories: z.array(z.enum(SHOE_CATEGORIES)),
-              description: z.string(),
-            })
-          ),
-        }),
+        body: ShoeRotationFormSchema,
       })
     )
     .mutation(async ({ ctx, input }) => {

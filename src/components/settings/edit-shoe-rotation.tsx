@@ -31,6 +31,7 @@ import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 import { Checkbox } from "../ui/checkbox";
+import { ShoeRotationFormSchema } from "~/utils/schemas";
 
 type ShoeRotationFormValues = Omit<ShoeRotationType, "id" | "slug">;
 
@@ -43,23 +44,7 @@ export function EditShoeRotationForm({
   const router = useRouter();
 
   const methods = useForm<ShoeRotationFormValues>({
-    resolver: zodResolver(
-      z.object({
-        name: z.string(),
-        startDate: z.coerce.date(),
-        description: z.string(),
-        shoes: z.array(
-          z.object({
-            brand_name: z.string().min(1),
-            model_name: z.string().min(1),
-            distance: z.coerce.number().min(1),
-            distance_mi: z.coerce.number(),
-            categories: z.array(z.enum(SHOE_CATEGORIES)),
-            description: z.string(),
-          })
-        ),
-      })
-    ),
+    resolver: zodResolver(ShoeRotationFormSchema),
     defaultValues: {
       name: shoeRotation?.name || "",
       startDate: shoeRotation?.startDate,
@@ -68,6 +53,7 @@ export function EditShoeRotationForm({
         shoeRotation?.shoes?.map((s) => ({
           ...s,
           distance_mi: metersToMiles(s.distance),
+          description: "",
         })) || [],
     },
   });
@@ -81,7 +67,6 @@ export function EditShoeRotationForm({
   const utils = api.useContext();
   const createShoeRotation = api.shoeRotation.createShoeRotation.useMutation({
     onSuccess: async (_) => {
-      await utils.shoeRotation.getShoeRotationBySlug.invalidate();
       await utils.shoeRotation.getUserShoeRotations.invalidate();
       await router.push(`/settings/shoe_rotations`);
 
@@ -116,7 +101,6 @@ export function EditShoeRotationForm({
 
   const deleteShoeRotation = api.shoeRotation.deleteShoeRotation.useMutation({
     onSuccess: async (_) => {
-      await utils.shoeRotation.getShoeRotationBySlug.invalidate();
       await utils.shoeRotation.getUserShoeRotations.invalidate();
 
       await router.push("/settings/shoe_rotations");
@@ -164,6 +148,7 @@ export function EditShoeRotationForm({
     brand_name: "default brand",
     model_name: "default model",
     distance: 0,
+    distance_mi: 0,
     categories: [],
     description: "",
   };
@@ -415,12 +400,12 @@ function EditShoeForm({
     name: "shoes",
   });
 
-  const distanceWatch = watch(`shoes.${index}.distance`);
-  useEffect(() => {
-    if (distanceWatch && distanceWatch > 0) {
-      setValue(`shoes.${index}.distance_mi`, metersToMiles(distanceWatch));
-    }
-  }, [distanceWatch, getValues, index, setValue]);
+  // const distanceWatch = watch(`shoes.${index}.distance`);
+  // useEffect(() => {
+  //   if (distanceWatch && distanceWatch > 0) {
+  //     setValue(`shoes.${index}.distance_mi`, metersToMiles(distanceWatch));
+  //   }
+  // }, [distanceWatch, getValues, index, setValue]);
 
   if (shoeOp == null) return;
 
@@ -446,6 +431,7 @@ function EditShoeForm({
     setValue(`shoes.${index}.brand_name`, shoe.brand_name);
     setValue(`shoes.${index}.model_name`, shoe.model_name);
     setValue(`shoes.${index}.distance`, shoe.distance);
+    setValue(`shoes.${index}.distance_mi`, metersToMiles(shoe.distance));
     setShowImportShoeForm(false);
   };
 

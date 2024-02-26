@@ -41,18 +41,21 @@ async function main() {
           model_name: "Ride 15",
           distance: 82803,
           categories: ["daily_trainer"],
+          description: "",
         },
         {
           brand_name: "New Balance",
           model_name: "Rebel v3",
           distance: 160934,
           categories: ["tempo"],
+          description: "",
         },
         {
           brand_name: "Adidas",
           model_name: "Adizero Pro 3",
           distance: 80467,
           categories: ["race"],
+          description: "",
         },
       ],
       events: [

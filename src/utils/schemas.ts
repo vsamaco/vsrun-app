@@ -110,6 +110,7 @@ export const ShoeSettingsFormSchema = z.object({
     .min(1),
   distance: z.coerce.number().min(1),
   categories: z.array(z.enum(SHOE_CATEGORIES)),
+  description: z.string().optional(),
 });
 
 export const EventSettingsFormSchema = z
@@ -146,3 +147,10 @@ export const EventSettingsFormSchema = z
       });
     }
   });
+
+export const ShoeRotationFormSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  startDate: z.coerce.date(),
+  shoes: z.array(ShoeSettingsFormSchema),
+});

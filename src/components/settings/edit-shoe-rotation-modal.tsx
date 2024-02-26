@@ -100,7 +100,7 @@ function ShoeRotationForm({
       z.object({
         name: z.string(),
         startDate: z.coerce.date(),
-        description: z.string(),
+        description: z.string().optional(),
         shoes: z.array(
           z.object({
             brand_name: z.string(),
@@ -108,7 +108,7 @@ function ShoeRotationForm({
             distance: z.coerce.number(),
             distance_mi: z.coerce.number(),
             categories: z.array(z.enum(SHOE_CATEGORIES)),
-            description: z.string(),
+            description: z.string().optional(),
           })
         ),
       })
