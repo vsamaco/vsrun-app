@@ -145,8 +145,8 @@ export function EditShoeRotationForm({
   });
 
   const defaultValues = {
-    brand_name: "default brand",
-    model_name: "default model",
+    brand_name: "",
+    model_name: "",
     distance: 0,
     distance_mi: 0,
     categories: [],
@@ -488,7 +488,7 @@ function EditShoeForm({
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <Input placeholder="distance" {...field} />
+              <Input placeholder="distance" type="hidden" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
