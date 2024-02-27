@@ -17,8 +17,11 @@ export type Activity = {
   name: string;
   start_date: string;
   moving_time: number;
+  moving_time_hms?: string;
   distance: number;
+  distance_mi?: number;
   total_elevation_gain: number;
+  total_elevation_gain_ft?: number;
   start_latlng: [number, number];
   summary_polyline: string;
 };

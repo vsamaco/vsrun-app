@@ -27,7 +27,7 @@ export const RunSettingsFormSchema = z
       .number({
         required_error: "Moving time is required.",
       })
-      .min(1),
+      .min(1, { message: "Moving time must be greater than 0" }),
     moving_time_hms: z
       .string()
       .refine(
@@ -38,38 +38,36 @@ export const RunSettingsFormSchema = z
       .number({
         required_error: "Distance is required.",
       })
-      .min(1),
+      .min(1, { message: "Distance must be greater than 0" }),
     distance_mi: z.coerce.number(),
-    total_elevation_gain: z.coerce
-      .number({
-        required_error: "Elevation is required.",
-      })
-      .min(-1000),
-    total_elevation_gain_ft: z.coerce.number(),
+    total_elevation_gain: z.coerce.number({
+      required_error: "Elevation is required.",
+    }),
+    total_elevation_gain_ft: z.coerce.number().optional(),
     summary_polyline: z.string().optional(),
   })
   .superRefine((values, context) => {
-    if (!values.moving_time && !values.moving_time_hms) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["moving_time_hms"],
-        message: "Moving time is required",
-      });
-    }
-    if (!values.distance && !values.distance_mi) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["distance_mi"],
-        message: "Distance is required",
-      });
-    }
-    if (!values.total_elevation_gain && !values.total_elevation_gain_ft) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["total_elevation_gain_ft"],
-        message: "Elevation is required",
-      });
-    }
+    // if (!values.moving_time && !values.moving_time_hms) {
+    //   context.addIssue({
+    //     code: z.ZodIssueCode.custom,
+    //     path: ["moving_time_hms"],
+    //     message: "Moving time is required",
+    //   });
+    // }
+    // if (!values.distance && !values.distance_mi) {
+    //   context.addIssue({
+    //     code: z.ZodIssueCode.custom,
+    //     path: ["distance_mi"],
+    //     message: "Distance is required",
+    //   });
+    // }
+    // if (!values.total_elevation_gain && !values.total_elevation_gain_ft) {
+    //   context.addIssue({
+    //     code: z.ZodIssueCode.custom,
+    //     path: ["total_elevation_gain_ft"],
+    //     message: "Elevation is required",
+    //   });
+    // }
   });
 
 export const WeekSettingsFormSchema = z.object({
