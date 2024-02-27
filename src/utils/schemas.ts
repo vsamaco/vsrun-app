@@ -45,6 +45,8 @@ export const RunSettingsFormSchema = z
     }),
     total_elevation_gain_ft: z.coerce.number().optional(),
     summary_polyline: z.string().optional(),
+    external_id: z.string().optional(),
+    external_source: z.string().optional(),
   })
   .superRefine((values, context) => {
     // if (!values.moving_time && !values.moving_time_hms) {

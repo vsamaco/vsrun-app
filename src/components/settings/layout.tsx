@@ -4,6 +4,7 @@ import { Toaster } from "../ui/toaster";
 import MainNavigation from "../ui/layout/main-navigation";
 import { MaxWidthWrapper } from "../ui/layout/max-width-wrapper";
 import UserNavigation from "../ui/layout/user-navigation";
+import Footer from "../ui/layout/footer";
 
 const sidebarNavItems = [
   {
@@ -32,7 +33,7 @@ interface SettingsLayoutProps {
   children: React.ReactNode;
 }
 
-export default function Settings2Layout({ children }: SettingsLayoutProps) {
+export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -63,6 +64,7 @@ export default function Settings2Layout({ children }: SettingsLayoutProps) {
             <div className="flex-1 lg:max-w-2xl">{children}</div>
           </div>
           <Toaster />
+          <Footer />
         </MaxWidthWrapper>
       </div>
     </>

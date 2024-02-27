@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { type Activity } from "~/types";
 import {
   formatHumanizeSeconds,
@@ -51,6 +52,17 @@ function Run({ activity }: RunProps) {
       <div className="border-gray border ">
         {activity?.summary_polyline && <MapWithNoSSR activity={activity} />}
       </div>
+      {activity.metadata && (
+        <div>
+          <Link
+            href={`https://www.strava.com/activities/${activity.metadata.external_id}`}
+            target="_blank"
+            className=" text-[#FC4C02]"
+          >
+            View on {activity.metadata?.external_source}
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

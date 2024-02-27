@@ -1,5 +1,5 @@
 import { ThemeProvider } from "~/components/theme-provider";
-import { Toaster } from "./ui/toaster";
+import Footer from "./ui/layout/footer";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -10,6 +10,7 @@ export default function RootLayout({ children }: LayoutProps) {
     <main>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
+        <Footer />
       </ThemeProvider>
     </main>
   );

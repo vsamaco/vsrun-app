@@ -19,6 +19,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ShoesPage({
   slug,
@@ -72,6 +73,15 @@ export default function ShoesPage({
               <ShoeCard shoe={shoe} key={index} />
             ))}
           </div>
+        </div>
+        <div>
+          <Link
+            href={`https://www.strava.com/athlete/`}
+            target="_blank"
+            className=" text-[#FC4C02]"
+          >
+            View on Strava
+          </Link>
         </div>
       </div>
     </MaxWidthWrapper>

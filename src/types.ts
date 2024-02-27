@@ -24,6 +24,10 @@ export type Activity = {
   total_elevation_gain_ft?: number;
   start_latlng: [number, number];
   summary_polyline: string;
+  metadata: {
+    external_id: string;
+    external_source: string;
+  } | null;
 };
 
 export type WeekStat = {

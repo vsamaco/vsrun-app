@@ -68,6 +68,7 @@ function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
         distance_mi: 0,
         total_elevation_gain: 0,
         total_elevation_gain_ft: 0,
+        metadata: null,
       },
     },
   });
@@ -122,6 +123,7 @@ function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
         total_elevation_gain_ft: 0,
         start_latlng: [],
         summary_polyline: "",
+        metadata: null,
       },
     });
   };
@@ -145,6 +147,10 @@ function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
       total_elevation_gain_ft: activity.total_elevation_gain
         ? feetToMeters(activity.total_elevation_gain)
         : 0,
+      metadata: {
+        external_id: activity.id.toString(),
+        external_source: "Strava",
+      },
     });
   };
 
