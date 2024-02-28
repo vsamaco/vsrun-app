@@ -11,10 +11,10 @@ const sidebarNavItems = [
     title: "Profile",
     href: "/settings",
   },
-  {
-    title: "Run",
-    href: "/settings/run",
-  },
+  // {
+  //   title: "Run",
+  //   href: "/settings/run",
+  // },
   // {
   //   title: "Week",
   //   href: "/settings/week",
@@ -35,8 +35,8 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
-    <>
-      <div className="hidden flex-col md:flex">
+    <div className="relative">
+      <div className="sticky top-0 z-20 hidden w-full flex-col bg-white md:flex">
         <div className="border-b">
           <MaxWidthWrapper>
             <div className="flex h-16 items-center px-4">
@@ -67,6 +67,6 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           <Footer />
         </MaxWidthWrapper>
       </div>
-    </>
+    </div>
   );
 }

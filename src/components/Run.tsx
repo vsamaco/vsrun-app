@@ -49,9 +49,11 @@ function Run({ activity }: RunProps) {
           ))}
         </div>
       </div>
-      <div className="border-gray border ">
-        {activity?.summary_polyline && <MapWithNoSSR activity={activity} />}
-      </div>
+      {activity?.summary_polyline && (
+        <div className="border-gray border ">
+          <MapWithNoSSR activity={activity} />
+        </div>
+      )}
       {activity.metadata && (
         <div>
           <Link

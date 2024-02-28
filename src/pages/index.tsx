@@ -22,7 +22,7 @@ const Home = () => {
           Showcase runs, stats, shoes, and races
         </p>
         {session.status !== "loading" && (
-          <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0">
+          <div className="flex flex-col items-center space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0">
             {!session?.data?.user && (
               <Image
                 src="/images/btn_strava_orange.png"
