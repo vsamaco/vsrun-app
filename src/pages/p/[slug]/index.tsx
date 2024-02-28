@@ -19,6 +19,7 @@ import { MaxWidthWrapper } from "~/components/ui/layout/max-width-wrapper";
 import { type ShoeRotationType } from "~/types";
 import Link from "next/link";
 import { formatDate } from "~/utils/date";
+import { notFound } from "next/navigation";
 
 function RunProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -35,14 +36,18 @@ function RunProfilePage(
     return <div>Loading...</div>;
   }
 
-  const name = profile?.name as string;
-  const highlightRun = !isEmpty(profile?.highlightRun)
-    ? profile?.highlightRun
+  if (!profile) {
+    return notFound();
+  }
+
+  const name = profile.name;
+  const highlightRun = !isEmpty(profile.highlightRun)
+    ? profile.highlightRun
     : null;
-  const weekStats = !isEmpty(profile?.weekStats) ? profile?.weekStats : null;
-  const shoes = !isEmpty(profile?.shoes) ? profile?.shoes : null;
-  const shoeRotations = profile?.shoeRotations;
-  const events = !isEmpty(profile?.events) ? profile?.events : null;
+  const weekStats = !isEmpty(profile.weekStats) ? profile.weekStats : null;
+  const shoes = !isEmpty(profile.shoes) ? profile.shoes : null;
+  const shoeRotations = profile.shoeRotations;
+  const events = !isEmpty(profile.events) ? profile.events : null;
 
   return (
     <>
@@ -53,13 +58,20 @@ function RunProfilePage(
       </Head>
       <MaxWidthWrapper>
         <div className="space-y-5 p-5">
-          <Hero name={name} />
+          <Hero
+            name={name}
+            showHighlightRun={!!highlightRun}
+            showWeekStats={!!weekStats}
+            showShoes={!!shoes}
+            showShoeRotations={!!shoeRotations}
+            showEvents={!!events}
+          />
           {highlightRun && <Run activity={highlightRun} />}
           {weekStats && <Week weekStats={weekStats} />}
-          {shoeRotations && shoeRotations.length > 0 && (
+          {shoes && <Shoes shoes={shoes} />}
+          {shoeRotations.length > 0 && (
             <ShoeRotations shoeRotations={shoeRotations} />
           )}
-          {shoes && <Shoes shoes={shoes} />}
           {events && <Events events={events} />}
         </div>
       </MaxWidthWrapper>
@@ -74,8 +86,8 @@ function ShoeRotations({
 }) {
   return (
     <div>
-      <div className=" mb-10 w-full border-b-4 border-green-300">
-        <h3 className="text-6xl uppercase text-green-300">Shoe Rotation</h3>
+      <div className=" mb-10 w-full border-b-4 border-orange-400">
+        <h3 className="text-6xl uppercase text-orange-400">Shoe Rotations</h3>
       </div>
 
       <div className="space-y-4 ">
