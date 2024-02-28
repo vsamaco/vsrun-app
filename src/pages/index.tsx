@@ -58,7 +58,7 @@ const Home = () => {
 };
 
 Home.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
+  return <Layout showNav={false}>{page}</Layout>;
 };
 
 export default Home;
