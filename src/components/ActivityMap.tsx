@@ -31,6 +31,8 @@ export default function ActivityMap({ activity, zoom = 12 }: Props) {
       dragging={false}
       zoomControl={false}
       scrollWheelZoom={false}
+      touchZoom={false}
+      doubleClickZoom={false}
       className=" h-96 w-full opacity-100"
       style={{ background: "none" }}
     >
