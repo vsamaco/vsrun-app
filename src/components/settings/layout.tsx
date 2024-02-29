@@ -36,7 +36,7 @@ interface SettingsLayoutProps {
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
     <div className="relative">
-      <div className="sticky top-0 z-20 hidden w-full flex-col bg-white md:flex">
+      <div className="sticky top-0 z-20 w-full flex-col bg-white md:flex">
         <div className="border-b">
           <MaxWidthWrapper>
             <div className="flex h-16 items-center px-4">
@@ -48,12 +48,12 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           </MaxWidthWrapper>
         </div>
       </div>
-      <div className="hidden space-y-6 p-10 pb-16 md:block">
+      <div className="space-y-6 p-4 pb-16 md:p-10">
         <MaxWidthWrapper>
           <div className="space-y-0.5">
             <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
             <p className="text-muted-foreground">
-              Manage your account settings and set e-mail preferences.
+              Manage your profile and shoe rotations.
             </p>
           </div>
           <Separator className="my-6" />

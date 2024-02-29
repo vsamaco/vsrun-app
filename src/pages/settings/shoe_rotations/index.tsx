@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
+import { cn } from "~/lib/utils";
 import { type ShoeRotationType } from "~/types";
 import { api } from "~/utils/api";
 import { formatDate } from "~/utils/date";
@@ -27,7 +28,10 @@ function ShoeRotationSettings() {
         <p className="text-sm text-muted-foreground">
           Show shoe rotations used for a given period.
         </p>
-        <Link href="/settings/shoe_rotations/new" className={buttonVariants()}>
+        <Link
+          href="/settings/shoe_rotations/new"
+          className={cn("mt-5", buttonVariants())}
+        >
           Create Shoe Rotation
         </Link>
       </div>

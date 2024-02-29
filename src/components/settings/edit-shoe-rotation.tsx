@@ -31,6 +31,7 @@ import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 import { Checkbox } from "../ui/checkbox";
 import { ShoeRotationFormSchema } from "~/utils/schemas";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 type ShoeRotationFormValues = Omit<ShoeRotationType, "id" | "slug">;
 
@@ -52,7 +53,6 @@ export function EditShoeRotationForm({
         shoeRotation?.shoes?.map((s) => ({
           ...s,
           distance_mi: metersToMiles(s.distance),
-          description: "",
         })) || [],
     },
   });
@@ -60,7 +60,7 @@ export function EditShoeRotationForm({
     control,
     handleSubmit,
     watch,
-    formState: { isDirty },
+    formState: { isDirty, dirtyFields },
   } = methods;
 
   const utils = api.useContext();
@@ -325,57 +325,77 @@ function ShoeRow({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const {
+    formState: { dirtyFields },
+  } = useFormContext<ShoeRotationFormValues>();
+
   return (
-    <div className="border-gray group border p-4">
-      {!isOpen && (
-        <div className="flex flex-row items-center justify-between">
-          <div className="space-y-2 rounded-sm ">
-            <div
-              onClick={() => setIsOpen(true)}
-              className="truncate group-hover:cursor-pointer"
-            >
-              <span>{shoe.brand_name}</span>&nbsp;
-              <span>{shoe.model_name}</span>
+    <Card
+      className={cn(
+        "border-gray group border",
+        dirtyFields && dirtyFields.shoes?.at(shoeIndex) && "border-red-400"
+      )}
+    >
+      <CardHeader>
+        <CardTitle className="text-lg font-normal">
+          <div className="flex flex-row items-center justify-between">
+            <div className="space-y-2 rounded-sm ">
+              <div
+                onClick={() => setIsOpen(true)}
+                className="text-balance uppercase group-hover:cursor-pointer"
+              >
+                <span>{shoe.brand_name}</span>&nbsp;
+                <span className="font-thin">{shoe.model_name}</span>
+              </div>
             </div>
-            <div className="space-x-2">
-              {shoe.categories.map((category, categoryIdx) => (
-                <Badge
-                  key={categoryIdx}
-                  variant="secondary"
-                  className="group-hover:bg-yellow-400"
+
+            <div className="flex flex-row space-x-2">
+              {isOpen && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => remove(shoeIndex)}
                 >
-                  {category.replace("_", " ")}
-                </Badge>
-              ))}
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+              {!isOpen && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </div>
-          <div className="flex flex-row space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => remove(shoeIndex)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsOpen(true)}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {!isOpen && (
+          <div className="space-x-2">
+            {shoe.categories.map((category, categoryIdx) => (
+              <Badge
+                key={categoryIdx}
+                variant="secondary"
+                className="group-hover:bg-yellow-400"
+              >
+                {category.replace("_", " ")}
+              </Badge>
+            ))}
           </div>
-        </div>
-      )}
-      {isOpen && (
-        <EditShoeForm
-          index={shoeIndex}
-          shoeOp="edit"
-          setShowShoeForm={setIsOpen}
-          handleUpdate={handleUpdate}
-        />
-      )}
-    </div>
+        )}
+        {isOpen && (
+          <EditShoeForm
+            index={shoeIndex}
+            shoeOp="edit"
+            setShowShoeForm={setIsOpen}
+            handleUpdate={handleUpdate}
+          />
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -436,12 +456,11 @@ function EditShoeForm({
 
   return (
     <div className="space-y-8">
-      <h3>{shoeOp === "add" ? "Add" : "Edit"} Shoe</h3>
       {!showImportShoeForm && (
         <Button
           type="button"
           variant="secondary"
-          className="float-right"
+          className=""
           onClick={() => setShowImportShoeForm(true)}
         >
           Import From Strava
