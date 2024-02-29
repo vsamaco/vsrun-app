@@ -103,7 +103,7 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
   return (
     <Card
       className={cn(
-        "group mt-10 hover:border-black",
+        "group hover:border-black",
         shoe.description && "cursor-pointer"
       )}
       onClick={() => setShowDescription((value) => !value)}
