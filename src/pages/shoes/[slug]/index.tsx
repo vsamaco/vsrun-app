@@ -20,6 +20,13 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 export default function ShoesPage({
   slug,
@@ -44,7 +51,7 @@ export default function ShoesPage({
       <div className="space-y-5 p-5">
         <div className="mx-auto items-center">
           <div className="border-bottom flex h-full flex-col items-center justify-center space-y-5 border-black">
-            <h1 className="mt-20 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl">
+            <h1 className="mt-20 scroll-m-20 text-center text-2xl font-extrabold tracking-tight md:text-4xl lg:text-5xl ">
               {name}
             </h1>
             <div className="">
@@ -70,7 +77,9 @@ export default function ShoesPage({
           </div>
           <div className="mt-10 space-y-5">
             {shoes.map((shoe, index) => (
-              <ShoeCard shoe={shoe} key={index} />
+              <div key={index}>
+                <ShoeCard shoe={shoe} />
+              </div>
             ))}
           </div>
         </div>
@@ -92,55 +101,51 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
   const [showDescription, setShowDescription] = useState(false);
 
   return (
-    <div
+    <Card
       className={cn(
-        "border-gray group rounded-lg border p-5 hover:border-black",
+        "group mt-10 hover:border-black",
         shoe.description && "cursor-pointer"
       )}
       onClick={() => setShowDescription((value) => !value)}
     >
-      <div className="flex flex-row items-center justify-between">
-        <div className="space-y-1">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="font-normal">
           <div className="flex items-center">
-            <div className="flex flex-col truncate md:flex-row md:whitespace-normal">
-              <div className="mr-2 text-lg uppercase md:text-2xl">
-                {shoe.brand_name}
-              </div>
-              <div className="text-lg font-thin uppercase md:text-2xl">
-                {shoe.model_name}
-              </div>
+            <div className="flex max-w-[200px] flex-col text-lg uppercase md:max-w-none md:flex-row md:text-2xl">
+              <span className="mr-2">{shoe.brand_name}</span>
+              <span className="text-balance font-thin">{shoe.model_name}</span>
             </div>
-            {shoe.description && !showDescription && (
-              <ChevronRight className="w-10" />
-            )}
-            {shoe.description && showDescription && (
-              <ChevronDown className="w-10" />
-            )}
+            <div>
+              {shoe.description && !showDescription && (
+                <ChevronRight className="w-10" />
+              )}
+              {shoe.description && showDescription && (
+                <ChevronDown className="w-10" />
+              )}
+            </div>
           </div>
-          <div className="space-x-2 uppercase">
-            {shoe.categories.map((category, index) => (
-              <Badge
-                key={index}
-                variant="secondary"
-                className="text-sm group-hover:bg-yellow-400"
-              >
-                {category.replace("_", " ")}
-              </Badge>
-            ))}
-          </div>
+        </CardTitle>
+        <div className="text-right text-xl font-thin text-gray-500 md:text-6xl">
+          {Math.ceil(metersToMiles(shoe.distance))} mi
         </div>
-        {shoe.distance > 0 && (
-          <div>
-            <div className="text-xl font-thin text-gray-100 group-hover:text-gray-500 md:text-6xl">
-              {Math.ceil(metersToMiles(shoe.distance))} mi
-            </div>
-          </div>
-        )}
-      </div>
+      </CardHeader>
       {showDescription && shoe.description && (
-        <div className="mt-10 text-xl">{shoe.description}</div>
+        <CardContent>{shoe.description}</CardContent>
       )}
-    </div>
+      <CardFooter>
+        <div className="space-x-2 uppercase">
+          {shoe.categories.map((category, index) => (
+            <Badge
+              key={index}
+              variant="secondary"
+              className="text-sm group-hover:bg-yellow-400"
+            >
+              {category.replace("_", " ")}
+            </Badge>
+          ))}
+        </div>
+      </CardFooter>
+    </Card>
   );
 }
 
