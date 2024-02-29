@@ -3,12 +3,11 @@ import { format } from "date-fns";
 import Link from "next/link";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import EditRaceModal from "~/components/settings/edit-race-modal";
-import EditRunModal from "~/components/settings/edit-run-modal";
 import EditShoeModal from "~/components/settings/edit-shoe-modal";
 import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
 import Layout from "~/components/settings/layout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -26,13 +25,13 @@ import {
   type WeekStat,
 } from "~/types";
 import {
-  formatDate,
   formatSeconds,
   isEmpty,
   metersToFeet,
   metersToMiles,
 } from "~/utils/activity";
 import { api } from "~/utils/api";
+import { formatDate } from "~/utils/date";
 
 function GeneralSettingsPage() {
   const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
@@ -83,7 +82,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
     <>
       {profile && <ProfileSection profile={profile} />}
       <Separator />
-      <div className="hidden items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-2">
+      <div className="grid items-start justify-center gap-6 rounded-lg lg:grid-cols-2">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
             <HighlightRunCard highlightRun={highlightRun} />
@@ -118,7 +117,7 @@ function NoProfilePlaceholder() {
 
 function ProfileSection({ profile }: { profile: RunProfile }) {
   return (
-    <div className="mb-10 flex w-full items-center justify-between">
+    <div className="mb-10 flex w-full flex-col items-center justify-between space-y-2 md:flex-row">
       <div className="flex items-center space-x-4">
         <Avatar>
           <AvatarFallback>{profile.name[0]?.toUpperCase()}</AvatarFallback>
@@ -151,7 +150,11 @@ function HighlightRunCard({ highlightRun }: { highlightRun: Activity | null }) {
                   {highlightRun.name}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {formatDate(highlightRun.start_date)}
+                  {formatDate(new Date(highlightRun.start_date), {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </p>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -162,7 +165,9 @@ function HighlightRunCard({ highlightRun }: { highlightRun: Activity | null }) {
         )}
       </CardContent>
       <CardFooter>
-        <EditRunModal highlightRun={highlightRun} />
+        <Link className={cn("w-full", buttonVariants())} href={`/settings/run`}>
+          {highlightRun ? "Edit Run" : "Add Run"}
+        </Link>
       </CardFooter>
     </Card>
   );

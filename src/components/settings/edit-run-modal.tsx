@@ -61,7 +61,7 @@ function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
     defaultValues: {
       highlightRun: highlightRun || {
         name: "",
-        start_date: "",
+        start_date: undefined,
         moving_time: 0,
         moving_time_hms: "",
         distance: 0,
@@ -136,7 +136,7 @@ function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {
     console.log("import activity:", activity);
     methods.setValue("highlightRun", {
       name: activity.name,
-      start_date: activity.start_date,
+      start_date: new Date(activity.start_date),
       moving_time: activity.moving_time,
       moving_time_hms: formatDurationHMS(activity.moving_time),
       distance: activity.distance,

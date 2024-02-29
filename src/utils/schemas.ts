@@ -33,13 +33,14 @@ export const RunSettingsFormSchema = z
       .refine(
         (value) => /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]:[0-5][0-9]$/.test(value),
         "Format must be HH:mm:ss"
-      ),
+      )
+      .optional(),
     distance: z.coerce
       .number({
         required_error: "Distance is required.",
       })
       .min(1, { message: "Distance must be greater than 0" }),
-    distance_mi: z.coerce.number(),
+    distance_mi: z.coerce.number().optional(),
     total_elevation_gain: z.coerce.number({
       required_error: "Elevation is required.",
     }),

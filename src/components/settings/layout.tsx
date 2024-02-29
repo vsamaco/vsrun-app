@@ -11,10 +11,10 @@ const sidebarNavItems = [
     title: "Profile",
     href: "/settings",
   },
-  // {
-  //   title: "Run",
-  //   href: "/settings/run",
-  // },
+  {
+    title: "Run",
+    href: "/settings/run",
+  },
   // {
   //   title: "Week",
   //   href: "/settings/week",

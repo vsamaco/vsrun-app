@@ -19,7 +19,7 @@ async function main() {
       name: "milesperdonut",
       highlightRun: {
         name: "Sample Run",
-        start_date: new Date(2023, 5, 30).toUTCString(),
+        start_date: new Date(2023, 5, 30),
         distance: 42560.4,
         moving_time: 13614,
         total_elevation_gain: 173,

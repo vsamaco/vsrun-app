@@ -15,7 +15,7 @@ declare global {
 
 export type Activity = {
   name: string;
-  start_date: string;
+  start_date: Date;
   moving_time: number;
   moving_time_hms?: string;
   distance: number;
@@ -57,9 +57,12 @@ export type RaceEvent = {
 
 export const SHOE_CATEGORIES = [
   "daily_trainer",
-  "tempo",
-  "race",
+  "easy",
   "long_run",
+  "tempo",
+  "track",
+  "trail",
+  "race",
 ] as const;
 type ShoeCategories = (typeof SHOE_CATEGORIES)[number];
 
