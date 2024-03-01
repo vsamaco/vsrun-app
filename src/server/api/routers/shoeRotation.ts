@@ -29,7 +29,22 @@ export const shoeRotationRouter = createTRPCRouter({
           slug: input.slug,
         },
         include: {
-          runProfile: true,
+          runProfile: {
+            select: {
+              name: true,
+              slug: true,
+              user: {
+                select: {
+                  accounts: {
+                    select: {
+                      provider: true,
+                      providerAccountId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
       return shoeRotation;

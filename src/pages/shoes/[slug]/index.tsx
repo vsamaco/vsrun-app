@@ -83,15 +83,17 @@ export default function ShoesPage({
             ))}
           </div>
         </div>
-        <div>
-          <Link
-            href={`https://www.strava.com/athlete/`}
-            target="_blank"
-            className=" text-[#FC4C02]"
-          >
-            View on Strava
-          </Link>
-        </div>
+        {shoeRotation.runProfile.user.accounts[0] && (
+          <div>
+            <Link
+              href={`https://www.strava.com/athletes/${shoeRotation.runProfile.user.accounts[0].providerAccountId}`}
+              target="_blank"
+              className=" text-[#FC4C02]"
+            >
+              View on Strava
+            </Link>
+          </div>
+        )}
       </div>
     </MaxWidthWrapper>
   );
