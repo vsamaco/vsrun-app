@@ -46,7 +46,7 @@ function Run({ activity }: RunProps) {
       </div>
       <div className="mb-10 space-y-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div className="text-2xl uppercase md:text-4xl">{activity.name}</div>
+          <div className="text-2xl md:text-4xl">{activity.name}</div>
         </div>
         <div className="flex flex-row items-center gap-2">
           <Calendar className="h-6 w-6 text-muted-foreground" />

@@ -342,7 +342,7 @@ function ShoeRow({
             <div className="space-y-2 rounded-sm ">
               <div
                 onClick={() => setIsOpen(true)}
-                className="text-balance uppercase group-hover:cursor-pointer"
+                className="text-balance group-hover:cursor-pointer"
               >
                 <span>{shoe.brand_name}</span>&nbsp;
                 <span className="font-thin">{shoe.model_name}</span>

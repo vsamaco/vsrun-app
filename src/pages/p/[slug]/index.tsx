@@ -98,7 +98,7 @@ function ShoeRotations({
             className="border-gray group flex items-center justify-between rounded-lg border p-4 hover:cursor-pointer hover:border-black"
           >
             <div>
-              <div className="text-balance max-w-[200px] break-words text-2xl font-thin uppercase md:max-w-none md:whitespace-normal">
+              <div className="text-balance max-w-[200px] break-words text-2xl font-thin md:max-w-none md:whitespace-normal">
                 {sr.name}
               </div>
               <div className="text-md font-thin uppercase">

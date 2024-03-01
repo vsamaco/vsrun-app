@@ -113,7 +113,7 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="font-normal">
           <div className="flex items-center">
-            <div className="flex max-w-[200px] flex-col text-lg uppercase md:max-w-none md:flex-row md:text-2xl">
+            <div className="flex max-w-[200px] flex-col text-lg md:max-w-none md:flex-row md:text-2xl">
               <span className="mr-2">{shoe.brand_name}</span>
               <span className="text-balance font-thin">{shoe.model_name}</span>
             </div>

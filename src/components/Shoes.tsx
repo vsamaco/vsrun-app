@@ -20,10 +20,8 @@ export default function Shoes({ shoes }: Props) {
             className="flex w-full items-center justify-between pt-5"
           >
             <div className="">
-              <div className="text-lg uppercase md:text-2xl">
-                {shoe.brand_name}
-              </div>
-              <div className=" text-lg font-thin uppercase md:text-2xl">
+              <div className="text-lg  md:text-2xl">{shoe.brand_name}</div>
+              <div className=" text-lg font-thin  md:text-2xl">
                 {shoe.model_name}
               </div>
             </div>
