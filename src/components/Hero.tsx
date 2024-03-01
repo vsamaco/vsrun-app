@@ -36,7 +36,7 @@ function Hero({
           </a>
         )}
         {showShoeRotations && (
-          <a href="#shoes" className="text-orange-400 hover:underline">
+          <a href="#shoe-rotations" className="text-orange-400 hover:underline">
             SHOE ROTATIONS
           </a>
         )}

@@ -85,7 +85,7 @@ function ShoeRotations({
   shoeRotations: ShoeRotationType[];
 }) {
   return (
-    <div>
+    <div id="shoe-rotations" className="py-10">
       <div className=" mb-10 w-full border-b-4 border-orange-400">
         <h3 className="text-6xl uppercase text-orange-400">Shoe Rotations</h3>
       </div>
