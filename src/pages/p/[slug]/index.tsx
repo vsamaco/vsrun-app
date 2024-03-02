@@ -52,29 +52,38 @@ function RunProfilePage(
   return (
     <>
       <Head>
-        <title>{profile?.name}</title>
-        <meta name="description" content={`${name} Running profile`} />
+        <title>vsrun | {name}</title>
+        <meta name="description" content={`vsrun | running showcase`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MaxWidthWrapper>
-        <div className="space-y-5 p-5">
-          <Hero
-            name={name}
-            showHighlightRun={!!highlightRun}
-            showWeekStats={!!weekStats}
-            showShoes={!!shoes}
-            showShoeRotations={!!shoeRotations}
-            showEvents={!!events}
-          />
-          {highlightRun && <Run activity={highlightRun} />}
-          {weekStats && <Week weekStats={weekStats} />}
-          {shoes && <Shoes shoes={shoes} />}
-          {shoeRotations.length > 0 && (
-            <ShoeRotations shoeRotations={shoeRotations} />
-          )}
-          {events && <Events events={events} />}
-        </div>
-      </MaxWidthWrapper>
+      <div className="space-y-5 p-4 md:p-10">
+        <Hero
+          name={name}
+          showHighlightRun={!!highlightRun}
+          showWeekStats={!!weekStats}
+          showShoes={!!shoes}
+          showShoeRotations={!!shoeRotations}
+          showEvents={!!events}
+        />
+        {highlightRun && <Run activity={highlightRun} />}
+        {weekStats && <Week weekStats={weekStats} />}
+        {shoes && <Shoes shoes={shoes} />}
+        {shoeRotations.length > 0 && (
+          <ShoeRotations shoeRotations={shoeRotations} />
+        )}
+        {events && <Events events={events} />}
+        {profile.user.accounts[0] && (
+          <div className="">
+            <Link
+              href={`https://www.strava.com/athletes/${profile.user.accounts[0].providerAccountId}`}
+              className="text-[#FC4C02]"
+              target="_blank"
+            >
+              View on Strava
+            </Link>
+          </div>
+        )}
+      </div>
     </>
   );
 }

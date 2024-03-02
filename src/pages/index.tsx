@@ -10,13 +10,13 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>mpdrun</title>
-        <meta name="description" content="mpdrun | Running profile" />
+        <title>vsrun</title>
+        <meta name="description" content="vsrun | running showcase" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="mx-auto max-w-screen-xl px-4 py-8 text-center lg:py-16">
-        <h1 className="mb-4 text-4xl font-bold leading-none tracking-tight md:text-5xl lg:text-6xl">
-          mpdrun
+        <h1 className="mb-4 text-4xl font-bold leading-none tracking-tight md:mt-40 md:text-5xl lg:text-6xl">
+          vsrun
         </h1>
         <p className="mb-8 text-lg font-normal text-gray-500 dark:text-gray-400 sm:px-16 lg:px-48 lg:text-xl">
           Showcase runs, stats, shoes, and races

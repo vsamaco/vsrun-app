@@ -9,7 +9,6 @@ import superjson from "superjson";
 import { api } from "~/utils/api";
 import { notFound } from "next/navigation";
 import Layout from "~/components/layout";
-import { MaxWidthWrapper } from "~/components/ui/layout/max-width-wrapper";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { metersToMiles } from "~/utils/activity";
 import { Badge } from "~/components/ui/badge";
@@ -19,7 +18,6 @@ import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -27,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import Head from "next/head";
 
 export default function ShoesPage({
   slug,
@@ -47,8 +46,13 @@ export default function ShoesPage({
   const { name, description, shoes, runProfile } = shoeRotation;
 
   return (
-    <MaxWidthWrapper>
-      <div className="space-y-5 p-5">
+    <>
+      <Head>
+        <title>vsrun | {name}</title>
+        <meta name="description" content="vsrun | running showcase" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="space-y-5 p-4 md:p-10">
         <div className="mx-auto items-center">
           <div className="border-bottom flex h-full flex-col items-center justify-center space-y-5 border-black">
             <h1 className="mt-20 scroll-m-20 text-center text-2xl font-extrabold tracking-tight md:text-4xl lg:text-5xl ">
@@ -95,7 +99,7 @@ export default function ShoesPage({
           </div>
         )}
       </div>
-    </MaxWidthWrapper>
+    </>
   );
 }
 

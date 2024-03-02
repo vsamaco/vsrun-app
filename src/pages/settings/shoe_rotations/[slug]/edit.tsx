@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { notFound } from "next/navigation";
 import { useRouter } from "next/router";
 import { EditShoeRotationForm } from "~/components/settings/edit-shoe-rotation";
@@ -16,16 +17,20 @@ function EditShoeRotationPage() {
   if (!shoeRotation) return notFound();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium">Shoe Rotations &gt; Edit</h3>
-        <p className="text-sm text-muted-foreground">
-          Show shoe rotations used for a given period.
-        </p>
+    <>
+      <Head>
+        <title>vsrun | Settings</title>
+        <meta name="description" content="vsrun | running showcase" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium">Edit Shoe Rotation</h3>
+        </div>
+        <Separator />
+        <EditShoeRotationForm shoeRotation={shoeRotation} />
       </div>
-      <Separator />
-      <EditShoeRotationForm shoeRotation={shoeRotation} />
-    </div>
+    </>
   );
 }
 

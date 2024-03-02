@@ -1,26 +1,26 @@
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { cn } from "~/lib/utils";
 
 function MainNavigation({
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
-  const router = useRouter();
-  const { pathname } = router.query;
+  const session = useSession();
 
   return (
     <nav
-      className={cn("flex items-center space-x-4 lg:space-x-6", className)}
+      className={cn("flex h-10 items-center space-x-4 lg:space-x-6", className)}
       {...props}
     >
       <Link
         href="/"
-        className="text-sm font-medium transition-colors hover:text-primary"
+        className="text-sm font-semibold transition-colors hover:text-primary"
       >
-        mpdrun
+        vsrun
       </Link>
-      {pathname && pathname.includes("/settings") && (
+
+      {session.status === "authenticated" && (
         <Link
           href="/settings"
           className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"

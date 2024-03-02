@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Link from "next/link";
 import Layout from "~/components/settings/layout";
 import { buttonVariants } from "~/components/ui/button";
@@ -22,30 +23,37 @@ function ShoeRotationSettings() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium">Shoe Rotations</h3>
-        <p className="text-sm text-muted-foreground">
-          Show shoe rotations used for a given period.
-        </p>
-        <Link
-          href="/settings/shoe_rotations/new"
-          className={cn("mt-5", buttonVariants())}
-        >
-          Create Shoe Rotation
-        </Link>
+    <>
+      <Head>
+        <title>vsrun | Settings</title>
+        <meta name="description" content="vsrun | running showcase" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium">Shoe Rotations</h3>
+          <p className="text-sm text-muted-foreground">
+            Show shoe rotations used for a given period.
+          </p>
+          <Link
+            href="/settings/shoe_rotations/new"
+            className={cn("mt-5", buttonVariants())}
+          >
+            Create Shoe Rotation
+          </Link>
+        </div>
+        <Separator />
+        <div className="grid gap-4 md:grid-cols-2">
+          {shoeRotations &&
+            shoeRotations.map((shoeRotation) => (
+              <ShoeRotationRow
+                key={shoeRotation.id}
+                shoeRotation={shoeRotation}
+              />
+            ))}
+        </div>
       </div>
-      <Separator />
-      <div className="grid gap-4 md:grid-cols-2">
-        {shoeRotations &&
-          shoeRotations.map((shoeRotation) => (
-            <ShoeRotationRow
-              key={shoeRotation.id}
-              shoeRotation={shoeRotation}
-            />
-          ))}
-      </div>
-    </div>
+    </>
   );
 }
 

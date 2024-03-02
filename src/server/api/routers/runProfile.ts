@@ -30,6 +30,16 @@ export const runProfileRouter = createTRPCRouter({
               startDate: "desc",
             },
           },
+          user: {
+            select: {
+              accounts: {
+                select: {
+                  provider: true,
+                  providerAccountId: true,
+                },
+              },
+            },
+          },
         },
       });
       return profile;

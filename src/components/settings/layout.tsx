@@ -36,10 +36,10 @@ interface SettingsLayoutProps {
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
     <div className="relative">
-      <div className="sticky top-0 z-20 w-full flex-col bg-white md:flex">
+      <header className="sticky top-0 z-20 w-full flex-col bg-white md:flex">
         <div className="border-b">
           <MaxWidthWrapper>
-            <div className="flex h-16 items-center px-4">
+            <div className="flex h-10 items-center px-4 md:h-16">
               <MainNavigation className="mx-6" />
               <div className="ml-auto flex items-center space-x-4">
                 <UserNavigation />
@@ -47,9 +47,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             </div>
           </MaxWidthWrapper>
         </div>
-      </div>
-      <div className="space-y-6 p-4 pb-16 md:p-10">
-        <MaxWidthWrapper>
+      </header>
+      <MaxWidthWrapper>
+        <main className="px-10 py-5">
           <div className="space-y-0.5">
             <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
             <p className="text-muted-foreground">
@@ -64,9 +64,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             <div className="flex-1 lg:max-w-2xl">{children}</div>
           </div>
           <Toaster />
-          <Footer />
-        </MaxWidthWrapper>
-      </div>
+        </main>
+        <Footer className="mx-6 px-4" />
+      </MaxWidthWrapper>
     </div>
   );
 }
