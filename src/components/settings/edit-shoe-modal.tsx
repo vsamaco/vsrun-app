@@ -48,7 +48,10 @@ function EditShoeModal({
     resolver: zodResolver(z.object({ shoe: ShoeSettingsFormSchema })),
     defaultValues: {
       shoe: shoes?.at(shoeIndex)
-        ? shoes[shoeIndex]
+        ? {
+            ...shoes[shoeIndex],
+            categories: shoes[shoeIndex]?.categories || [],
+          }
         : {
             brand_name: "",
             model_name: "",
@@ -63,7 +66,7 @@ function EditShoeModal({
     onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       setOpen(false);
-      methods.reset();
+      methods.reset({ shoe: methods.watch("shoe") });
 
       toast({ title: "Success", description: "Successfully saved changes." });
     },
@@ -85,7 +88,9 @@ function EditShoeModal({
 
       // update selected shoe from list
       const updatedShoes = shoes.map((shoe, index) => {
-        return index === shoeIndex ? data.shoe : shoe;
+        return index === shoeIndex
+          ? data.shoe
+          : { ...shoe, categories: shoe.categories || [] };
       });
 
       // append new shoe to list
@@ -236,7 +241,7 @@ function ImportShoeForm({
 }
 
 function EditShoeForm() {
-  const { control } = useFormContext();
+  const { control } = useFormContext<FormValues>();
 
   return (
     <div>
