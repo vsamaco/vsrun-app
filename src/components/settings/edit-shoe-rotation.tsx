@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarIcon, Trash2, Pencil } from "lucide-react";
+import { CalendarIcon, Pencil, XCircle, MoreVertical } from "lucide-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import {
@@ -32,6 +32,12 @@ import { Badge } from "../ui/badge";
 import { Checkbox } from "../ui/checkbox";
 import { ShoeRotationFormSchema } from "~/utils/schemas";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 type ShoeRotationFormValues = Omit<ShoeRotationType, "id" | "slug">;
 
@@ -60,6 +66,7 @@ export function EditShoeRotationForm({
     control,
     handleSubmit,
     watch,
+    reset,
     formState: { isDirty, dirtyFields },
   } = methods;
 
@@ -85,7 +92,11 @@ export function EditShoeRotationForm({
       await utils.shoeRotation.getShoeRotationBySlug.invalidate();
       await utils.shoeRotation.getUserShoeRotations.invalidate();
 
-      await router.push(`/settings/shoe_rotations`);
+      if (dirtyFields && dirtyFields?.shoes) {
+        reset({ shoes: watch("shoes") });
+      } else {
+        await router.push(`/settings/shoe_rotations`);
+      }
       toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
@@ -138,7 +149,7 @@ export function EditShoeRotationForm({
     }
   };
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: "shoes",
   });
@@ -158,8 +169,8 @@ export function EditShoeRotationForm({
   const [showAddShoeForm, setShowAddShoeForm] = useState(false);
   const [shoeOp, setShoeOp] = useState<"add" | "edit" | null>(null);
 
-  const handleUpdate = () => {
-    console.log("handle updater");
+  const handleShoesUpdate = async () => {
+    await onSubmit();
   };
 
   const shoes = watch("shoes", []);
@@ -257,16 +268,17 @@ export function EditShoeRotationForm({
                 <div className="space-y-5">
                   {shoes.map((shoe, shoeIndex) => (
                     <ShoeRow
+                      shoeRotation={shoeRotation}
                       key={shoeIndex}
                       shoe={shoe}
                       shoeIndex={shoeIndex}
-                      remove={remove}
-                      handleUpdate={handleUpdate}
+                      handleUpdate={handleShoesUpdate}
+                      handleRemove={handleShoesUpdate}
                     />
                   ))}
                 </div>
                 {!showAddShoeForm && (
-                  <>
+                  <div className="">
                     <Button
                       type="button"
                       onClick={() => {
@@ -275,11 +287,11 @@ export function EditShoeRotationForm({
                         setShoeIndex(shoes.length);
                         setShowAddShoeForm(true);
                       }}
-                      className="w-full"
+                      className="mt-5 w-full"
                     >
                       Add Shoe
                     </Button>
-                  </>
+                  </div>
                 )}
               </FormItem>
 
@@ -300,10 +312,11 @@ export function EditShoeRotationForm({
 
           {showAddShoeForm && (
             <EditShoeForm
+              shoeRotation={shoeRotation}
               shoeOp={shoeOp}
               setShowShoeForm={setShowAddShoeForm}
               index={shoeIndex}
-              handleUpdate={handleUpdate}
+              handleUpdate={handleShoesUpdate}
             />
           )}
         </form>
@@ -313,21 +326,48 @@ export function EditShoeRotationForm({
 }
 
 function ShoeRow({
+  shoeRotation,
   shoeIndex,
   shoe,
-  remove,
+  handleRemove,
   handleUpdate,
 }: {
+  shoeRotation: ShoeRotationType | null;
   shoeIndex: number;
   shoe: Shoe;
-  remove: (index: number) => void;
+  handleRemove: () => void;
   handleUpdate: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
+    control,
     formState: { dirtyFields },
+    resetField,
   } = useFormContext<ShoeRotationFormValues>();
+
+  const { remove } = useFieldArray({
+    control,
+    name: "shoes",
+  });
+
+  const onCancel = () => {
+    if (!shoeRotation) {
+      remove(shoeIndex);
+    }
+    if (shoeRotation) {
+      resetField(`shoes.${shoeIndex}`);
+    }
+    setIsOpen(false);
+  };
+
+  const onRemove = () => {
+    remove(shoeIndex);
+    if (shoeRotation) {
+      handleRemove();
+    }
+    setIsOpen(false);
+  };
 
   return (
     <Card
@@ -351,22 +391,33 @@ function ShoeRow({
 
             <div className="flex flex-row space-x-2">
               {isOpen && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => remove(shoeIndex)}
-                >
-                  <Trash2 className="h-4 w-4" />
+                <Button type="button" variant="outline" onClick={onCancel}>
+                  <XCircle className="h-4 w-4" />
                 </Button>
               )}
               {!isOpen && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsOpen(true)}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsOpen(true)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" disabled={false}>
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">More</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={onRemove}>
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
               )}
             </div>
           </div>
@@ -388,6 +439,7 @@ function ShoeRow({
         )}
         {isOpen && (
           <EditShoeForm
+            shoeRotation={shoeRotation}
             index={shoeIndex}
             shoeOp="edit"
             setShowShoeForm={setIsOpen}
@@ -399,25 +451,24 @@ function ShoeRow({
   );
 }
 
+type EditShoeFormParams = {
+  shoeOp: "edit" | "add" | null;
+  setShowShoeForm: (value: boolean) => void;
+  index: number;
+  shoeRotation: ShoeRotationType | null;
+  handleUpdate: () => void;
+};
+
 function EditShoeForm({
+  shoeRotation,
   shoeOp,
   setShowShoeForm,
   index,
   handleUpdate,
-}: {
-  shoeOp: "edit" | "add" | null;
-  setShowShoeForm: (value: boolean) => void;
-  index: number;
-  handleUpdate: () => void;
-}) {
+}: EditShoeFormParams) {
   const [showImportShoeForm, setShowImportShoeForm] = useState(false);
-  const { control, resetField, setValue, watch, getValues, trigger } =
+  const { control, setValue, trigger } =
     useFormContext<ShoeRotationFormValues>();
-
-  const { remove } = useFieldArray({
-    control,
-    name: "shoes",
-  });
 
   // const distanceWatch = watch(`shoes.${index}.distance`);
   // useEffect(() => {
@@ -428,22 +479,26 @@ function EditShoeForm({
 
   if (shoeOp == null) return;
 
-  const handleCancel = () => {
-    if (shoeOp === "add") {
-      remove(index);
-      setShowShoeForm(false);
-    }
-    if (shoeOp === "edit") {
-      resetField(`shoes.${index}`);
-      setShowShoeForm(false);
-    }
-  };
+  // const handleCancel = () => {
+  //   if (shoeOp === "add") {
+  //     remove(index);
+  //     setShowShoeForm(false);
+  //   }
+  //   if (shoeOp === "edit") {
+  //     resetField(`shoes.${index}`);
+  //     setShowShoeForm(false);
+  //   }
+  // };
 
   const handleEdit = async () => {
     const result = await trigger(`shoes.${index}`);
-    if (result) {
-      setShowShoeForm(false);
+    if (!result) return;
+
+    // inline update shoes for existing shoe rotation
+    if (shoeRotation?.slug) {
+      handleUpdate();
     }
+    setShowShoeForm(false);
   };
 
   const handleImportSelect = (shoe: Shoe) => {
@@ -564,7 +619,7 @@ function EditShoeForm({
                           }}
                         />
                       </FormControl>
-                      <FormLabel className="front-normal text-sm">
+                      <FormLabel className="text-sm font-normal">
                         {category.replace("_", " ")}
                       </FormLabel>
                     </FormItem>
@@ -589,10 +644,7 @@ function EditShoeForm({
           </FormItem>
         )}
       ></FormField>
-      <div className="my-10 flex justify-between">
-        <Button type="button" onClick={handleCancel}>
-          Cancel
-        </Button>
+      <div className="my-10 flex justify-end">
         <Button type="button" onClick={handleEdit}>
           {shoeOp === "edit" ? "Update" : "Add"} Shoe
         </Button>
