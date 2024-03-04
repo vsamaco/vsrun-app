@@ -15,7 +15,6 @@ import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 import { isEmpty } from "~/utils/activity";
-import { MaxWidthWrapper } from "~/components/ui/layout/max-width-wrapper";
 import { type ShoeRotationType } from "~/types";
 import Link from "next/link";
 import { formatDate } from "~/utils/date";

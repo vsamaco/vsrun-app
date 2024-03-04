@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../dropdown-menu";
 import Image from "next/image";
+import Link from "next/link";
 
 function UserNavigation() {
   const session = useSession();
@@ -35,8 +36,13 @@ function UserNavigation() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/settings" className="">
+              Settings
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
+
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => void signOut({ callbackUrl: "/" })}>
           Logout

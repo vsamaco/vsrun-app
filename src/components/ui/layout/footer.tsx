@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "~/lib/utils";
 
 export default function Footer({
@@ -13,11 +14,19 @@ export default function Footer({
       )}
       {...props}
     >
-      <div className="text-md font-normal">
+      <div className="text-md text-muted-foreground">
         vsrun by{" "}
-        <a href="https://www.strava.com/athletes/45458214" target="_blank">
+        <a
+          href="https://www.strava.com/athletes/45458214"
+          target="_blank"
+          className="underline"
+        >
           vincent
-        </a>
+        </a>{" "}
+        |{" "}
+        <Link href="/contact" className="underline">
+          Contact
+        </Link>
       </div>
       <Image
         src="/images/api_logo_pwrdBy_strava_light.png"
