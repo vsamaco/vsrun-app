@@ -97,8 +97,8 @@ function EditWeekStatsModal({ weekStats }: { weekStats: WeekStat | null }) {
     updateWeekStatProfile.mutate({ weekStats: null });
     methods.reset({
       weekStats: {
-        start_date: "",
-        end_date: "",
+        start_date: undefined,
+        end_date: undefined,
         total_runs: 0,
         total_distance: 0,
         total_duration: 0,
@@ -211,6 +211,9 @@ function ImportRunForm({
       total_distance: weekStats.total_distance,
       total_duration: weekStats.total_duration,
       total_elevation: weekStats.total_elevation,
+      metadata: {
+        external_source: "Strava",
+      },
     });
   };
 
@@ -226,13 +229,16 @@ function ImportRunForm({
       // define new week group
       if (!weeklyActivities[key]) {
         weeklyActivities[key] = {
-          start_date: startWeek.toUTCString(),
-          end_date: endWeek.toUTCString(),
+          start_date: startWeek,
+          end_date: endWeek,
           activities: [activity],
           total_distance: activity.distance,
           total_duration: activity.moving_time,
           total_elevation: activity.total_elevation_gain,
           total_runs: 1,
+          metadata: {
+            external_source: "Strava",
+          },
         };
       } else {
         // append to existing week group
@@ -306,6 +312,9 @@ function ImportRunForm({
                         total_duration: currentWeek.total_duration,
                         total_distance: currentWeek.total_distance,
                         total_elevation: currentWeek.total_elevation,
+                        metadata: {
+                          external_source: "Strava",
+                        },
                       })
                     }
                   >

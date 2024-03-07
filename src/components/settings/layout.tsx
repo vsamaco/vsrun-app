@@ -15,10 +15,10 @@ const sidebarNavItems = [
     title: "Run",
     href: "/settings/run",
   },
-  // {
-  //   title: "Week",
-  //   href: "/settings/week",
-  // },
+  {
+    title: "Week",
+    href: "/settings/week",
+  },
   {
     title: "Shoe Rotations",
     href: "/settings/shoe_rotations",

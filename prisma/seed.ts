@@ -29,12 +29,13 @@ async function main() {
         metadata: null,
       },
       weekStats: {
-        start_date: new Date(2023, 5, 29).toUTCString(),
-        end_date: new Date(2023, 6, 4).toUTCString(),
+        start_date: new Date(2023, 5, 29),
+        end_date: new Date(2023, 6, 4),
         total_runs: 5,
         total_distance: 64373,
         total_duration: 18000,
         total_elevation: 1000,
+        metadata: null,
       },
       shoes: [
         {

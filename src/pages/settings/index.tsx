@@ -4,7 +4,6 @@ import Link from "next/link";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import EditRaceModal from "~/components/settings/edit-race-modal";
 import EditShoeModal from "~/components/settings/edit-shoe-modal";
-import EditWeekStatsModal from "~/components/settings/edit-weekstats-modal";
 import Layout from "~/components/settings/layout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -25,7 +24,7 @@ import {
   type WeekStat,
 } from "~/types";
 import {
-  formatSeconds,
+  formatHumanizeSeconds,
   isEmpty,
   metersToFeet,
   metersToMiles,
@@ -35,7 +34,6 @@ import { formatDate } from "~/utils/date";
 
 function GeneralSettingsPage() {
   const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -203,7 +201,7 @@ function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
             <div className="space-y-1">
               <p className="text-sm font-medium leading-none">Time</p>
               <p className="text-sm text-muted-foreground">
-                {formatSeconds(weekStats.total_duration)}
+                {formatHumanizeSeconds(weekStats.total_duration)}
               </p>
             </div>
           </div>
@@ -218,7 +216,10 @@ function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
         </CardContent>
       )}
       <CardFooter>
-        <EditWeekStatsModal weekStats={weekStats} />
+        {/* <EditWeekStatsModal weekStats={weekStats} /> */}
+        <Link href="/settings/week" className={cn("w-full", buttonVariants())}>
+          {weekStats ? "Edit" : "Add"} Week
+        </Link>
       </CardFooter>
     </Card>
   );

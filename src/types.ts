@@ -31,12 +31,18 @@ export type Activity = {
 };
 
 export type WeekStat = {
-  start_date: string;
-  end_date: string;
+  start_date: Date;
+  end_date: Date;
   total_runs: number;
   total_duration: number;
+  total_duration_hms?: string;
   total_distance: number;
+  total_distance_mi?: number;
   total_elevation: number;
+  total_elevation_ft?: number;
+  metadata: {
+    external_source: string;
+  } | null;
 };
 
 export type Shoe = {

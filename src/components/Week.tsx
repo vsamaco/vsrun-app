@@ -8,6 +8,7 @@ import {
   parseDateDay,
   parseDateMonth,
 } from "~/utils/activity";
+import { formatDate } from "~/utils/date";
 
 type WeekProps = {
   weekStats: WeekStat | Record<string, never>;
@@ -44,7 +45,11 @@ function Week({ weekStats }: WeekProps) {
             className="hidden text-2xl font-thin uppercase md:text-4xl"
             ref={periodRef}
           >
-            {weekStats.start_date}
+            {formatDate(new Date(weekStats.start_date), {
+              year: "numeric",
+              month: "2-digit",
+              day: "numeric",
+            })}
           </div>
         </li>
         <li className="flex w-full items-center justify-between pt-5">
