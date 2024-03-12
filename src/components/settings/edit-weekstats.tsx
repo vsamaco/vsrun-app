@@ -41,6 +41,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { API_CACHE_DURATION } from "~/utils/constants";
 
 type FormValues = {
   weekStats: WeekStat;
@@ -413,7 +414,10 @@ function ImportRunForm({
 }: {
   setSelectedWeekStats: (weekStats: WeekStat) => void;
 }) {
-  const { data: activities, isLoading } = api.strava.getActivities.useQuery();
+  const { data: activities, isLoading } = api.strava.getActivities.useQuery(
+    undefined,
+    { staleTime: API_CACHE_DURATION.stravaGetActivities }
+  );
 
   if (isLoading) {
     return <div>Loading...</div>;

@@ -38,6 +38,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { API_CACHE_DURATION } from "~/utils/constants";
 
 type ShoeRotationFormValues = Omit<ShoeRotationType, "id" | "slug">;
 
@@ -658,7 +659,9 @@ function ImportShoeForm({
 }: {
   handleImportSelect: (shoe: Shoe) => void;
 }) {
-  const { data: shoes, isLoading } = api.strava.getShoes.useQuery();
+  const { data: shoes, isLoading } = api.strava.getShoes.useQuery(undefined, {
+    staleTime: API_CACHE_DURATION.stravaGetShoes,
+  });
   if (isLoading) {
     return <div>Loading...</div>;
   }

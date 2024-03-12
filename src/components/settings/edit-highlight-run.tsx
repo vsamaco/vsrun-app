@@ -42,6 +42,7 @@ import {
 import { type StravaActivity } from "~/server/api/routers/strava";
 import { z } from "zod";
 import { Calendar } from "../ui/calendar";
+import { API_CACHE_DURATION } from "~/utils/constants";
 
 type FormValues = {
   highlightRun: Omit<Activity, "id">;
@@ -353,7 +354,11 @@ function ImportRunForm({
 }: {
   setSelectedActivity: (activity: StravaActivity) => void;
 }) {
-  const { data: activities, isLoading } = api.strava.getActivities.useQuery();
+  const { data: activities, isLoading } = api.strava.getActivities.useQuery(
+    undefined,
+    { staleTime: API_CACHE_DURATION.stravaGetActivities }
+  );
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -368,7 +373,7 @@ function ImportRunForm({
 
   return (
     <>
-      <div className="max-h-[300px] overflow-scroll">
+      <div className="max-h-[300px] overflow-y-scroll">
         {activities.map((activity) => {
           return (
             <div

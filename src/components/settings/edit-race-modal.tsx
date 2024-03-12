@@ -39,6 +39,7 @@ import {
   parseHmsToSeconds,
 } from "~/utils/activity";
 import { type StravaActivity } from "~/server/api/routers/strava";
+import { API_CACHE_DURATION } from "~/utils/constants";
 
 type FormValues = {
   event: RaceEvent & {
@@ -240,6 +241,7 @@ function ImportRunForm({
       { page },
       {
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
+        staleTime: API_CACHE_DURATION.stravaGetRaces,
       }
     );
 
