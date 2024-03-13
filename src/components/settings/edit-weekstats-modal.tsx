@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { toast } from "../ui/use-toast";
-import { type WeekStat } from "~/types";
+import { type Activity, type WeekStat } from "~/types";
 import { ToastClose } from "../ui/toast";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -33,7 +33,6 @@ import { cn } from "~/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { endOfWeek, format, startOfWeek } from "date-fns";
 import { metersToMiles } from "~/utils/activity";
-import { type StravaActivity } from "~/server/api/routers/strava";
 
 type FormValues = {
   weekStats: WeekStat;
@@ -185,7 +184,7 @@ function EditWeekStatsModal({ weekStats }: { weekStats: WeekStat | null }) {
 }
 
 type WeekGroupStats = {
-  [index: string]: WeekStat & { activities: StravaActivity[] };
+  [index: string]: WeekStat & { activities: Activity[] };
 };
 
 function ImportRunForm({
@@ -212,8 +211,9 @@ function ImportRunForm({
       total_duration: weekStats.total_duration,
       total_elevation: weekStats.total_elevation,
       metadata: {
-        external_source: "Strava",
+        external_source: "strava",
       },
+      activities: [],
     });
   };
 
@@ -226,12 +226,26 @@ function ImportRunForm({
       const startWeek = startOfWeek(date, { weekStartsOn: 1 });
       const endWeek = endOfWeek(date, { weekStartsOn: 1 });
 
+      const currentActivity: Activity = {
+        name: activity.name,
+        start_date: new Date(activity.start_date),
+        start_latlng: activity.start_latlng,
+        distance: activity.distance,
+        moving_time: activity.moving_time,
+        total_elevation_gain: activity.total_elevation_gain,
+        summary_polyline: activity.map.summary_polyline,
+        metadata: {
+          external_id: activity.id.toString(),
+          external_source: "strava",
+        },
+      };
+
       // define new week group
       if (!weeklyActivities[key]) {
         weeklyActivities[key] = {
           start_date: startWeek,
           end_date: endWeek,
-          activities: [activity],
+          activities: [currentActivity],
           total_distance: activity.distance,
           total_duration: activity.moving_time,
           total_elevation: activity.total_elevation_gain,
@@ -246,7 +260,7 @@ function ImportRunForm({
         if (currentWeek) {
           weeklyActivities[key] = {
             ...currentWeek,
-            activities: [...currentWeek.activities, activity],
+            activities: [...currentWeek.activities, currentActivity],
             total_distance: currentWeek.total_distance + activity.distance,
             total_duration: currentWeek.total_duration + activity.moving_time,
             total_elevation:
@@ -294,8 +308,8 @@ function ImportRunForm({
                   </div>
                 </div>
                 <div className="w-[250px] truncate font-light">
-                  {currentWeek?.activities.map((activity) => {
-                    return <div key={activity.id}>{activity.name}</div>;
+                  {currentWeek?.activities.map((activity, index) => {
+                    return <div key={index}>{activity.name}</div>;
                   })}
                 </div>
               </div>
@@ -315,6 +329,7 @@ function ImportRunForm({
                         metadata: {
                           external_source: "Strava",
                         },
+                        activities: currentWeek.activities,
                       })
                     }
                   >

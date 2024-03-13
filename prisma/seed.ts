@@ -36,6 +36,7 @@ async function main() {
         total_duration: 18000,
         total_elevation: 1000,
         metadata: null,
+        activities: [],
       },
       shoes: [
         {
