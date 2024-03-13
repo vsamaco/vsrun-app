@@ -70,7 +70,7 @@ function Week({ weekStats }: WeekProps) {
           </div>
         </li>
       </ul>
-      {weekStats?.activities.length > 0 && (
+      {weekStats.activities && weekStats.activities.length > 0 && (
         <MyResponsiveBar activities={weekStats.activities} />
       )}
     </div>
