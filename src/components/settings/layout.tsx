@@ -23,10 +23,10 @@ const sidebarNavItems = [
     title: "Shoe Rotations",
     href: "/settings/shoe_rotations",
   },
-  // {
-  //   title: "Events",
-  //   href: "/settings/events",
-  // },
+  {
+    title: "Races",
+    href: "/settings/races",
+  },
 ];
 
 interface SettingsLayoutProps {

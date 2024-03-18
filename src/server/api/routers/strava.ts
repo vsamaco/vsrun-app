@@ -1,6 +1,7 @@
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { default as strava } from "strava-v3";
 import { z } from "zod";
+import { type ActivityWorkoutKeys } from "~/types";
 import { parseShoeBrandModel } from "~/utils/shoe";
 
 strava.config({
@@ -10,7 +11,7 @@ strava.config({
   client_secret: process.env.STRAVA_CLIENT_SECRET!,
 });
 
-export type StravaActivity = {
+export type BaseActivity = {
   id: number;
   name: string;
   moving_time: number;
@@ -18,12 +19,24 @@ export type StravaActivity = {
   type: string;
   distance: number;
   start_date: string;
+  total_elevation_gain: number;
+};
+
+type BaseActivityLap = BaseActivity & {
+  split_index: number;
+  lap_index: number;
+};
+
+export type StravaActivity = BaseActivity & {
   start_latlng: [number, number];
+  end_latlng: [number, number];
   map: {
+    polyline: string;
     summary_polyline: string;
   };
-  total_elevation_gain: number;
-  workout_type: number;
+  workout_type?: ActivityWorkoutKeys;
+  laps: BaseActivityLap[];
+  gear_id: string;
 };
 
 export type StravaAthlete = {
@@ -36,6 +49,7 @@ export type StravaAthlete = {
 
 export const stravaRouter = createTRPCRouter({
   getActivities: protectedProcedure.query(async ({ ctx }) => {
+    console.log("========== GET STRAVA ACTIVITIES ============");
     const userId = ctx.session?.user.id;
     const account = await ctx.prisma.account.findFirst({
       where: {
@@ -54,7 +68,33 @@ export const stravaRouter = createTRPCRouter({
     // console.log({ activities });
     return activities.filter((activity) => activity.type === "Run");
   }),
+  // getActivityById: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       id: z.string(),
+  //     })
+  //   )
+  //   .query(async ({ ctx, input }) => {
+  //     console.log("========== GET STRAVA SINGLE ACTIVITY ============");
+  //     const userId = ctx.session?.user.id;
+  //     const account = await ctx.prisma.account.findFirst({
+  //       where: {
+  //         userId,
+  //       },
+  //     });
+
+  //     if (!account) {
+  //       return null;
+  //     }
+  //     const activity = (await strava.athlete.get({
+  //       id: input.id,
+  //       access_token: account.access_token,
+  //     })) as StravaActivity;
+
+  //     return activity;
+  //   }),
   getShoes: protectedProcedure.query(async ({ ctx }) => {
+    console.log("======== GET STRAVA SHOES =========");
     const userId = ctx.session?.user.id;
     const account = await ctx.prisma.account.findFirst({
       where: { userId },
@@ -93,6 +133,7 @@ export const stravaRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      console.log("======== GET STRAVA RACES =========");
       const page = input.page ?? 1;
       const userId = ctx.session?.user.id;
       const account = await ctx.prisma.account.findFirst({
@@ -109,6 +150,8 @@ export const stravaRouter = createTRPCRouter({
         page: page,
         per_page: 100,
       })) as StravaActivity[];
+
+      console.log("query:", activities.length);
       const races = activities.filter(
         (activity) => activity.type === "Run" && activity.workout_type === 1
       );

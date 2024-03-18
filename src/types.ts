@@ -10,6 +10,7 @@ declare global {
     type ProfileWeekStatsType = WeekStat | Record<string, never>;
     type ProfileShoesType = Shoe[] | undefined;
     type ProfileEventsType = RaceEvent[] | undefined;
+    type RaceLapType = RaceActivity["laps"][0];
   }
 }
 
@@ -18,16 +19,24 @@ export type Activity = {
   start_date: Date;
   moving_time: number;
   moving_time_hms?: string;
+  elapsed_time: number;
+  elapsed_time_hms?: string;
   distance: number;
   distance_mi?: number;
   total_elevation_gain: number;
   total_elevation_gain_ft?: number;
-  start_latlng: [number, number];
-  summary_polyline: string;
-  metadata: {
+  start_latlng?: string;
+  end_latlng?: string;
+  summary_polyline?: string;
+  metadata?: {
     external_id: string;
     external_source: string;
-  } | null;
+  };
+};
+
+export type ActivityLap = Activity & {
+  lap_index: number;
+  split_index: number;
 };
 
 export type WeekStat = {
@@ -59,6 +68,28 @@ export type RaceEvent = {
   start_date: string;
   moving_time: number;
   distance: number;
+};
+
+export const ActivityWorkoutType = {
+  1: "race",
+  2: "long_run",
+  3: "workout",
+} as const;
+
+export type ActivityWorkoutKeys = keyof typeof ActivityWorkoutType;
+export type ActivityWorkoutTypes =
+  (typeof ActivityWorkoutType)[keyof typeof ActivityWorkoutType];
+
+export type RaceActivity = Activity & {
+  id: string;
+  slug: string;
+  description: string;
+  workout_type?: ActivityWorkoutTypes;
+  laps: ActivityLap[];
+  metadata?: {
+    external_id: string;
+    external_source: string;
+  };
 };
 
 export const SHOE_CATEGORIES = [
