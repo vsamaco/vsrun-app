@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { type StravaActivity } from "~/server/api/routers/strava";
@@ -42,6 +42,8 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { API_CACHE_DURATION } from "~/utils/constants";
+import { useRouter } from "next/router";
+import { Textarea } from "../ui/textarea";
 
 type FormValues = {
   race: Omit<RaceActivity, "id" | "slug">;
@@ -52,14 +54,15 @@ function EditRaceForm({
 }: {
   race: RaceActivity | Record<string, never>;
 }) {
+  const router = useRouter();
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ race: RaceFormSchema })),
     defaultValues: {
       race: {
         name: race?.name || "",
         description: race?.description || "",
-        workout_type: race?.workout_type || "race",
-        start_date: race?.start_date ? race.start_date : undefined,
+        workout_type: race?.workout_type,
+        start_date: race?.start_date,
         moving_time: race?.moving_time || 0,
         moving_time_hms: race?.moving_time
           ? formatDurationHMS(race.moving_time)
@@ -75,7 +78,7 @@ function EditRaceForm({
           ? metersToFeet(race?.total_elevation_gain)
           : 0,
         laps: race?.laps || [],
-        metadata: race?.metadata ? race.metadata : undefined,
+        metadata: race?.metadata,
       },
     },
   });
@@ -83,7 +86,8 @@ function EditRaceForm({
   const utils = api.useContext();
   const createRaceProfile = api.races.createProfileRace.useMutation({
     onSuccess: async (_) => {
-      await utils.runProfile.getUserProfile.invalidate();
+      await utils.races.getProfileRaceBySlug.invalidate();
+      await router.push("/settings/races");
       toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
@@ -98,7 +102,8 @@ function EditRaceForm({
 
   const updateRaceProfile = api.races.updateProfileRace.useMutation({
     onSuccess: async (_) => {
-      await utils.runProfile.getUserProfile.invalidate();
+      await utils.races.getProfileRaceBySlug.invalidate();
+      await router.push("/settings/races");
       toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
@@ -111,21 +116,28 @@ function EditRaceForm({
     },
   });
 
-  const { handleSubmit, control, setValue, watch } = methods;
+  const deleteRaceProfile = api.races.deleteProfileRace.useMutation({
+    onSuccess: async (_) => {
+      await utils.races.getProfileRaceBySlug.invalidate();
+      await router.push("/settings/races");
+      toast({ title: "Success", description: "Successfully saved changes." });
+    },
+    onError: (error) => {
+      console.log({ error });
+      toast({
+        title: "Error",
+        description: error.message,
+        action: <ToastClose>Close</ToastClose>,
+      });
+    },
+  });
+
+  const { handleSubmit, control, setValue } = methods;
 
   const onSubmit = handleSubmit(
     (data) => {
       console.log("updatedRaces:", data);
-      const updatedRace = {
-        ...race,
-        ...data.race,
-        start_date: new Date(data.race.start_date),
-        // laps: data.race.laps.map((lap) => ({
-        //   ...lap,
-        //   start_date: new Date(lap.start_date),
-        // })),
-        laps: [],
-      };
+      const updatedRace = data.race;
       if (!race) {
         console.log("create race");
         createRaceProfile.mutate({ body: updatedRace });
@@ -143,51 +155,8 @@ function EditRaceForm({
   );
 
   const handleRemove = () => {
-    // const updatedRaces = events
-    //   .filter((race, index) => index !== raceIndex)
-    //   .map((event) => ({
-    //     name: event.name,
-    //     start_date: new Date(event.start_date),
-    //     distance: event.distance,
-    //     distance_mi: metersToMiles(event.distance),
-    //     moving_time: event.moving_time,
-    //     moving_time_hms: formatDurationHMS(event.moving_time),
-    //   }));
-    // updateRacesProfile.mutate({ events: updatedRaces });
+    deleteRaceProfile.mutate({ params: { slug: race.slug } });
   };
-
-  const [showImport, setShowImport] = useState(false);
-  const handleImportRun = () => setShowImport(true);
-
-  const watchDistanceMi = watch("race.distance_mi");
-  const watchElapsedTimeHMS = watch("race.elapsed_time_hms");
-  const watchMovingTimeHMS = watch("race.moving_time_hms");
-  const watchTotalElevationFt = watch("race.total_elevation_gain_ft");
-
-  useEffect(() => {
-    if (watchDistanceMi !== undefined) {
-      setValue("race.distance", milesToMeters(watchDistanceMi));
-    }
-
-    if (watchElapsedTimeHMS !== undefined) {
-      setValue("race.elapsed_time", parseHmsToSeconds(watchElapsedTimeHMS));
-    }
-    if (watchMovingTimeHMS !== undefined) {
-      setValue("race.moving_time", parseHmsToSeconds(watchMovingTimeHMS));
-    }
-    if (watchTotalElevationFt !== undefined) {
-      setValue(
-        "race.total_elevation_gain",
-        feetToMeters(watchTotalElevationFt)
-      );
-    }
-  }, [
-    watchDistanceMi,
-    watchElapsedTimeHMS,
-    watchMovingTimeHMS,
-    watchTotalElevationFt,
-    setValue,
-  ]);
 
   return (
     <FormProvider {...methods}>
@@ -208,6 +177,22 @@ function EditRaceForm({
             </FormItem>
           )}
         ></FormField>
+
+        <FormField
+          control={control}
+          name="race.description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="description" {...field} />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+
         <FormField
           control={control}
           name={`race.start_date`}
@@ -255,7 +240,14 @@ function EditRaceForm({
             <FormItem>
               <FormLabel>Moving Time (hh:mm:ss)</FormLabel>
               <FormControl>
-                <Input placeholder="moving time hms" {...field} />
+                <Input
+                  placeholder="moving time hms"
+                  {...field}
+                  onBlur={(e) => {
+                    const movingTimeSeconds = parseHmsToSeconds(e.target.value);
+                    setValue("race.moving_time", movingTimeSeconds);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -281,7 +273,16 @@ function EditRaceForm({
             <FormItem>
               <FormLabel>Elapsed Time (hh:mm:ss)</FormLabel>
               <FormControl>
-                <Input placeholder="elapsed time hms" {...field} />
+                <Input
+                  placeholder="elapsed time hms"
+                  {...field}
+                  onBlur={(e) => {
+                    const elapsedTimeSeconds = parseHmsToSeconds(
+                      e.target.value
+                    );
+                    setValue("race.elapsed_time", elapsedTimeSeconds);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -294,7 +295,7 @@ function EditRaceForm({
             <FormItem>
               <FormMessage />
               <FormControl>
-                <Input placeholder="elapsed time" type="text" {...field} />
+                <Input placeholder="elapsed time" type="hidden" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -307,7 +308,14 @@ function EditRaceForm({
             <FormItem>
               <FormLabel>Distance (mi)</FormLabel>
               <FormControl>
-                <Input placeholder="distance" {...field} />
+                <Input
+                  placeholder="distance"
+                  {...field}
+                  onBlur={(e) => {
+                    const distanceMeters = milesToMeters(+e.target.value);
+                    setValue("race.distance", distanceMeters);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -320,7 +328,7 @@ function EditRaceForm({
             <FormItem>
               <FormMessage />
               <FormControl>
-                <Input placeholder="distance" type="text" {...field} />
+                <Input placeholder="distance" type="hidden" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -333,7 +341,14 @@ function EditRaceForm({
             <FormItem>
               <FormLabel>Elevation (ft)</FormLabel>
               <FormControl>
-                <Input placeholder="elevation" {...field} />
+                <Input
+                  placeholder="elevation"
+                  {...field}
+                  onBlur={(e) => {
+                    const elevationMeters = feetToMeters(+e.target.value);
+                    setValue("race.total_elevation_gain", elevationMeters);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -347,7 +362,7 @@ function EditRaceForm({
               <FormControl>
                 <Input
                   placeholder="total elevation gain"
-                  type="text"
+                  type="hidden"
                   {...field}
                 />
               </FormControl>
@@ -356,7 +371,10 @@ function EditRaceForm({
           )}
         ></FormField>
 
-        <div className="flex w-full items-center justify-end">
+        <div className="flex w-full items-center justify-between">
+          <Button type="button" onClick={handleRemove}>
+            Remove
+          </Button>
           <Button type="submit" form="hook-form">
             Save changes
           </Button>
@@ -375,6 +393,7 @@ function ImportRunModal() {
 
     methods.setValue("race", {
       name: activity.name,
+      description: methods.getValues("race.description"),
       start_date: new Date(activity.start_date),
       moving_time: activity.moving_time,
       moving_time_hms: formatDurationHMS(activity.moving_time),
@@ -385,7 +404,7 @@ function ImportRunModal() {
       summary_polyline: activity.map.summary_polyline,
       total_elevation_gain: activity.total_elevation_gain,
       total_elevation_gain_ft: activity.total_elevation_gain
-        ? feetToMeters(activity.total_elevation_gain)
+        ? metersToFeet(activity.total_elevation_gain)
         : 0,
       metadata: {
         external_id: activity.id.toString(),
@@ -396,12 +415,7 @@ function ImportRunModal() {
         : undefined,
       elapsed_time: activity.elapsed_time,
       elapsed_time_hms: formatDurationHMS(activity.elapsed_time),
-      laps:
-        activity.laps.map((lap) => ({
-          ...lap,
-          start_date: new Date(lap.start_date),
-        })) || [],
-      description: "",
+      laps: [],
     });
     setOpen(false);
   };

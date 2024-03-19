@@ -98,9 +98,7 @@ export const raceProfileRouter = createTRPCRouter({
             end_latlng: input.body.end_latlng,
             summary_polyline: input.body.summary_polyline,
             laps: input.body.laps,
-            metadata: input.body.metadata
-              ? JSON.stringify(input.body.metadata)
-              : null,
+            metadata: input.body.metadata,
             profileId: runProfile.id,
           },
         });
@@ -145,9 +143,7 @@ export const raceProfileRouter = createTRPCRouter({
           end_latlng: input.body.end_latlng,
           summary_polyline: input.body.summary_polyline,
           laps: input.body.laps,
-          metadata: input.body.metadata
-            ? JSON.stringify(input.body.metadata)
-            : null,
+          metadata: input.body.metadata,
           profileId: runProfile.id,
         },
       });

@@ -130,7 +130,7 @@ model Race {
     summary_polyline String?
     /// [RaceLapType]
     laps Json[]
-    metadata String?
+    metadata Json?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
