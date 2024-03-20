@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { type Activity } from "~/types";
+import { type Activity, ActivityWorkoutType } from "~/types";
 import {
   feetToMeters,
   formatDurationHMS,
@@ -61,13 +61,16 @@ export function EditHighlightRun({
       highlightRun: {
         name: highlightRun?.name || "",
         start_date: highlightRun?.start_date,
+        start_latlng: highlightRun?.start_latlng,
+        end_latlng: highlightRun?.end_latlng,
         moving_time: highlightRun?.moving_time || 0,
         moving_time_hms: highlightRun?.moving_time_hms || "00:00:00",
         distance: highlightRun?.distance || 0,
         distance_mi: highlightRun?.distance_mi || 0,
         total_elevation_gain: highlightRun?.total_elevation_gain || 0,
         total_elevation_gain_ft: highlightRun?.total_elevation_gain_ft || 0,
-        metadata: highlightRun?.metadata || null,
+        workout_type: highlightRun?.workout_type || undefined,
+        metadata: highlightRun?.metadata,
       },
     },
   });
@@ -94,13 +97,10 @@ export function EditHighlightRun({
   const onSubmit = handleSubmit(
     (data) => {
       console.log("onsubmit:", data);
-      const updatedRun = {
-        ...data,
-        start_date: new Date(data.highlightRun.start_date),
-      };
+      const { highlightRun } = data;
 
-      console.log("updatedRun:", updatedRun);
-      updateRunProfile.mutate(updatedRun);
+      console.log("updatedRun:", highlightRun);
+      updateRunProfile.mutate({ highlightRun });
     },
     (errors) => {
       console.log("errors:", errors);
@@ -308,11 +308,15 @@ function ImportRunModal() {
     methods.setValue("highlightRun", {
       name: activity.name,
       start_date: new Date(activity.start_date),
+      workout_type: activity.workout_type
+        ? ActivityWorkoutType[activity.workout_type]
+        : undefined,
       moving_time: activity.moving_time,
       moving_time_hms: formatDurationHMS(activity.moving_time),
       distance: activity.distance,
       distance_mi: metersToMiles(activity.distance),
       start_latlng: activity.start_latlng,
+      end_latlng: activity.end_latlng,
       summary_polyline: activity.map.summary_polyline,
       total_elevation_gain: activity.total_elevation_gain,
       total_elevation_gain_ft: activity.total_elevation_gain
@@ -320,7 +324,7 @@ function ImportRunModal() {
         : 0,
       metadata: {
         external_id: activity.id.toString(),
-        external_source: "Strava",
+        external_source: "strava",
       },
     });
     setOpen(false);

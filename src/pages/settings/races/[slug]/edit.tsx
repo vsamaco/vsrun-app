@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { notFound } from "next/navigation";
 import { useRouter } from "next/router";
 import EditRaceForm from "~/components/settings/edit-race";
 import Layout from "~/components/settings/layout";
@@ -15,6 +16,8 @@ function EditRaceSettingsPage() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  if (!race) return notFound();
 
   return (
     <>

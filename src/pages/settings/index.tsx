@@ -1,4 +1,5 @@
 import { type RunProfile } from "@prisma/client";
+import { inferRouterOutputs } from "@trpc/server";
 import { format } from "date-fns";
 import Link from "next/link";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
@@ -22,6 +23,8 @@ import {
   type Activity,
   type Shoe,
   type WeekStat,
+  type RunProfileType,
+  type RaceActivity,
 } from "~/types";
 import {
   formatHumanizeSeconds,
@@ -61,20 +64,21 @@ function DemoContainer({
 }
 
 type DashboardProfile = {
-  profile: RunProfile;
+  profile: RunProfileType;
 };
 
 function ProfileDashboard({ profile }: DashboardProfile) {
-  const highlightRun = !isEmpty(profile.highlightRun)
-    ? (profile.highlightRun as Activity)
+  const highlightRun = !isEmpty(profile?.highlightRun)
+    ? (profile?.highlightRun as Activity)
     : null;
-  const weekStats = !isEmpty(profile.weekStats)
-    ? (profile.weekStats as WeekStat)
+  const weekStats = !isEmpty(profile?.weekStats)
+    ? (profile?.weekStats as WeekStat)
     : null;
-  const shoes = !isEmpty(profile.shoes) ? (profile.shoes as Shoe[]) : [];
-  const events = !isEmpty(profile.events)
-    ? (profile.events as RaceEvent[])
+  const shoes = !isEmpty(profile?.shoes) ? (profile?.shoes as Shoe[]) : [];
+  const events = !isEmpty(profile?.events)
+    ? (profile?.events as RaceEvent[])
     : [];
+  const races = (profile?.races as unknown as RaceActivity[]) || [];
 
   return (
     <>
@@ -93,8 +97,11 @@ function ProfileDashboard({ profile }: DashboardProfile) {
           <DemoContainer>
             <ShoesCard shoes={shoes} />
           </DemoContainer>
-          <DemoContainer>
+          {/* <DemoContainer>
             <RaceEventsCard events={events} />
+          </DemoContainer> */}
+          <DemoContainer>
+            <RacesCard races={races} />
           </DemoContainer>
         </div>
       </div>
@@ -301,6 +308,43 @@ function RaceEventsCard({ events }: { events: RaceEvent[] }) {
           raceIndex={events.length}
           buttonType="add"
         />
+      </CardFooter>
+    </Card>
+  );
+}
+
+function RacesCard({ races }: { races: RaceActivity[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Races</CardTitle>
+        <CardDescription>Highlight your races</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        {races.map((race, index) => {
+          return (
+            <div
+              className="flex items-center justify-between space-x-4"
+              key={index}
+            >
+              <div className="flex items-center space-x-4">
+                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                  {race.name}
+                </p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <p className="text-sm text-muted-foreground">
+                  {metersToMiles(race.distance).toLocaleString()} mi
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+      <CardFooter>
+        <Link href="/settings/races" className={cn("w-full", buttonVariants())}>
+          Edit Races
+        </Link>
       </CardFooter>
     </Card>
   );

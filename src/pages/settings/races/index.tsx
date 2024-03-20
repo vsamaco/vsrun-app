@@ -2,9 +2,17 @@ import Head from "next/head";
 import Link from "next/link";
 import Layout from "~/components/settings/layout";
 import { buttonVariants } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { api } from "~/utils/api";
+import { formatDate } from "~/utils/date";
 
 function RacesSettings() {
   const { data: activities, isLoading } =
@@ -34,14 +42,35 @@ function RacesSettings() {
         <Separator />
         <div className="grid grid-cols-2 gap-4">
           {activities &&
-            activities.map((activity) => {
+            activities.map((race) => {
               return (
-                <Card key={activity.id}>
-                  <CardContent>
-                    <Link href={`/settings/races/${activity.slug}/edit`}>
-                      {activity.name}
+                <Card key={race.slug} className="">
+                  <CardHeader>
+                    <CardTitle className="truncate pb-2">{race.name}</CardTitle>
+                    <CardDescription className="mt-5">
+                      {formatDate(race.start_date, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent></CardContent>
+                  <CardFooter className="flex justify-between">
+                    {/* <Link
+                      href={`/races/${race.slug}`}
+                      className={buttonVariants({ variant: "outline" })}
+                      target="_blank"
+                    >
+                      View
+                    </Link> */}
+                    <Link
+                      className={buttonVariants({ variant: "outline" })}
+                      href={`/settings/races/${race.slug}/edit`}
+                    >
+                      Edit
                     </Link>
-                  </CardContent>
+                  </CardFooter>
                 </Card>
               );
             })}

@@ -17,21 +17,20 @@ declare global {
 export type Activity = {
   name: string;
   start_date: Date;
+  workout_type?: string;
   moving_time: number;
   moving_time_hms?: string;
-  elapsed_time: number;
-  elapsed_time_hms?: string;
   distance: number;
   distance_mi?: number;
   total_elevation_gain: number;
   total_elevation_gain_ft?: number;
-  start_latlng?: string;
-  end_latlng?: string;
+  start_latlng?: [number, number];
+  end_latlng?: [number, number];
   summary_polyline?: string;
-  metadata?: {
+  metadata: {
     external_id: string;
     external_source: string;
-  };
+  } | null;
 };
 
 export type ActivityLap = Activity & {
@@ -115,3 +114,6 @@ export type ShoeRotation = {
 type RouterOutput = inferRouterOutputs<AppRouter>;
 export type ShoeRotationType =
   RouterOutput["shoeRotation"]["getUserShoeRotations"][0];
+
+export type RunProfileType = RouterOutput["runProfile"]["getUserProfile"];
+export type RaceProfileType = RouterOutput["races"]["getProfileRaceBySlug"];

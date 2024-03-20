@@ -14,8 +14,8 @@ import Layout from "~/components/layout";
 import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
-import { isEmpty } from "~/utils/activity";
-import { type ShoeRotationType } from "~/types";
+import { formatDurationHMS, isEmpty } from "~/utils/activity";
+import { type RaceActivity, type ShoeRotationType } from "~/types";
 import Link from "next/link";
 import { formatDate } from "~/utils/date";
 import { notFound } from "next/navigation";
@@ -47,11 +47,12 @@ function RunProfilePage(
   const shoes = !isEmpty(profile.shoes) ? profile.shoes : null;
   const shoeRotations = profile.shoeRotations;
   const events = !isEmpty(profile.events) ? profile.events : null;
+  const races = (profile?.races as unknown as RaceActivity[]) || [];
 
   return (
     <>
       <Head>
-        <title>vsrun | {name}</title>
+        <title>{`vsrun | ${name}`}</title>
         <meta name="description" content={`vsrun | running showcase`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -61,8 +62,9 @@ function RunProfilePage(
           showHighlightRun={!!highlightRun}
           showWeekStats={!!weekStats}
           showShoes={!!shoes}
-          showShoeRotations={!!shoeRotations}
+          showShoeRotations={shoeRotations.length > 0}
           showEvents={!!events}
+          showRaces={races.length > 0}
         />
         {highlightRun && <Run activity={highlightRun} />}
         {weekStats && <Week weekStats={weekStats} />}
@@ -71,6 +73,7 @@ function RunProfilePage(
           <ShoeRotations shoeRotations={shoeRotations} />
         )}
         {events && <Events events={events} />}
+        {races.length > 0 && <Races races={races} />}
         {profile.user.accounts[0] && (
           <div className="">
             <Link
@@ -127,6 +130,44 @@ function ShoeRotations({
   );
 }
 
+function Races({ races }: { races: RaceActivity[] }) {
+  return (
+    <div id="races" className="py-10">
+      <div className=" mb-10 w-full border-b-4 border-red-400">
+        <h3 className="text-6xl uppercase text-red-400">Races</h3>
+      </div>
+
+      <div className="space-y-4 ">
+        {races.map((race) => (
+          <div
+            key={race.id}
+            className="border-gray group flex items-center justify-between rounded-lg border p-4 hover:cursor-pointer hover:border-black"
+          >
+            <div>
+              <div className="text-balance max-w-[200px] break-words text-2xl font-thin md:max-w-none md:whitespace-normal">
+                {race.name}
+              </div>
+              <div className="text-md font-thin uppercase">
+                {formatDate(race.start_date, {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+            </div>
+            <div className="text-lg font-thin md:text-2xl">
+              {race.moving_time > 0 && (
+                <div className="text-2xl font-thin md:text-4xl">
+                  {formatDurationHMS(race.moving_time)}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext<{ slug: string }>
 ) {

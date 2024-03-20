@@ -4,7 +4,12 @@ import { useState } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { type StravaActivity } from "~/server/api/routers/strava";
-import { ActivityWorkoutType, type RaceActivity } from "~/types";
+import {
+  ActivityWorkoutType,
+  type RaceProfileType,
+  type RaceActivity,
+  type ActivityWorkoutTypes,
+} from "~/types";
 import {
   feetToMeters,
   formatDurationHMS,
@@ -49,11 +54,7 @@ type FormValues = {
   race: Omit<RaceActivity, "id" | "slug">;
 };
 
-function EditRaceForm({
-  race,
-}: {
-  race: RaceActivity | Record<string, never>;
-}) {
+function EditRaceForm({ race }: { race: RaceProfileType }) {
   const router = useRouter();
   const methods = useForm<FormValues>({
     resolver: zodResolver(z.object({ race: RaceFormSchema })),
@@ -61,14 +62,12 @@ function EditRaceForm({
       race: {
         name: race?.name || "",
         description: race?.description || "",
-        workout_type: race?.workout_type,
+        workout_type: race?.workout_type
+          ? (race.workout_type as ActivityWorkoutTypes)
+          : undefined,
         start_date: race?.start_date,
         moving_time: race?.moving_time || 0,
         moving_time_hms: race?.moving_time
-          ? formatDurationHMS(race.moving_time)
-          : "0:00:00",
-        elapsed_time: race?.elapsed_time || 0,
-        elapsed_time_hms: race?.elapsed_time
           ? formatDurationHMS(race.moving_time)
           : "0:00:00",
         distance: race?.distance || 0,
@@ -78,7 +77,7 @@ function EditRaceForm({
           ? metersToFeet(race?.total_elevation_gain)
           : 0,
         laps: race?.laps || [],
-        metadata: race?.metadata,
+        metadata: race?.metadata || undefined,
       },
     },
   });
@@ -137,7 +136,11 @@ function EditRaceForm({
   const onSubmit = handleSubmit(
     (data) => {
       console.log("updatedRaces:", data);
-      const updatedRace = data.race;
+      const updatedRace = {
+        ...data.race,
+        laps: [],
+        metadata: data.race.metadata,
+      };
       if (!race) {
         console.log("create race");
         createRaceProfile.mutate({ body: updatedRace });
@@ -155,7 +158,9 @@ function EditRaceForm({
   );
 
   const handleRemove = () => {
-    deleteRaceProfile.mutate({ params: { slug: race.slug } });
+    if (race) {
+      deleteRaceProfile.mutate({ params: { slug: race.slug } });
+    }
   };
 
   return (
@@ -268,41 +273,6 @@ function EditRaceForm({
 
         <FormField
           control={control}
-          name="race.elapsed_time_hms"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Elapsed Time (hh:mm:ss)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="elapsed time hms"
-                  {...field}
-                  onBlur={(e) => {
-                    const elapsedTimeSeconds = parseHmsToSeconds(
-                      e.target.value
-                    );
-                    setValue("race.elapsed_time", elapsedTimeSeconds);
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={control}
-          name={`race.elapsed_time`}
-          render={({ field }) => (
-            <FormItem>
-              <FormMessage />
-              <FormControl>
-                <Input placeholder="elapsed time" type="hidden" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        ></FormField>
-
-        <FormField
-          control={control}
           name="race.distance_mi"
           render={({ field }) => (
             <FormItem>
@@ -372,9 +342,11 @@ function EditRaceForm({
         ></FormField>
 
         <div className="flex w-full items-center justify-between">
-          <Button type="button" onClick={handleRemove}>
-            Remove
-          </Button>
+          {race && (
+            <Button type="button" variant="outline" onClick={handleRemove}>
+              Remove
+            </Button>
+          )}
           <Button type="submit" form="hook-form">
             Save changes
           </Button>
@@ -399,8 +371,8 @@ function ImportRunModal() {
       moving_time_hms: formatDurationHMS(activity.moving_time),
       distance: activity.distance,
       distance_mi: metersToMiles(activity.distance),
-      start_latlng: activity.start_latlng.toString(),
-      end_latlng: activity.end_latlng.toString(),
+      start_latlng: activity.start_latlng,
+      end_latlng: activity.end_latlng,
       summary_polyline: activity.map.summary_polyline,
       total_elevation_gain: activity.total_elevation_gain,
       total_elevation_gain_ft: activity.total_elevation_gain
@@ -413,8 +385,6 @@ function ImportRunModal() {
       workout_type: activity.workout_type
         ? ActivityWorkoutType[activity.workout_type]
         : undefined,
-      elapsed_time: activity.elapsed_time,
-      elapsed_time_hms: formatDurationHMS(activity.elapsed_time),
       laps: [],
     });
     setOpen(false);
@@ -431,7 +401,7 @@ function ImportRunModal() {
         <DialogHeader>
           <DialogTitle>Import Activity</DialogTitle>
           <DialogDescription>
-            Choose an activity to import as highlighted run.
+            Choose an activity to import as race.
           </DialogDescription>
         </DialogHeader>
 

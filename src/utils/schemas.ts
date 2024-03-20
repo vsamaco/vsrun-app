@@ -21,20 +21,8 @@ const BaseActivitySchema = z.object({
     })
     .min(1),
   start_date: z.coerce.date(),
-  start_latlng: z.string().optional(),
-  end_latlng: z.string().optional(),
-  elapsed_time: z.coerce
-    .number({
-      required_error: "Elapsed time is required.",
-    })
-    .min(1, { message: "Elapsed time must be greater than 0" }),
-  elapsed_time_hms: z
-    .string()
-    .refine(
-      (value) => /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]:[0-5][0-9]$/.test(value),
-      "Format must be HH:mm:ss"
-    )
-    .optional(),
+  start_latlng: z.array(z.number()).optional(),
+  end_latlng: z.array(z.number()).optional(),
   moving_time: z.coerce
     .number({
       required_error: "Moving time is required.",
@@ -110,8 +98,8 @@ export const RunSettingsFormSchema = z
         external_id: z.string(),
         external_source: z.string(),
       })
-      .optional(),
-    workout_type: z.string(),
+      .nullable(),
+    workout_type: z.string().optional(),
     laps: z.array(ActivityLapSchema).optional(),
   })
   .superRefine((values, context) => {

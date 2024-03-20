@@ -122,11 +122,10 @@ model Race {
     name String
     description String
     moving_time Int
-    elapsed_time Int
     distance Float
     total_elevation_gain Float
-    start_latlng String?
-    end_latlng String?
+    start_latlng Float[]
+    end_latlng Float[]
     summary_polyline String?
     /// [RaceLapType]
     laps Json[]

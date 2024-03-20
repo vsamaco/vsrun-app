@@ -15,7 +15,6 @@ export type BaseActivity = {
   id: number;
   name: string;
   moving_time: number;
-  elapsed_time: number;
   type: string;
   distance: number;
   start_date: string;
