@@ -11,7 +11,7 @@ import { Calendar, Footprints, Mountain, Timer } from "lucide-react";
 import { formatDate } from "~/utils/date";
 
 type RunProps = {
-  activity: Activity | Record<string, never>;
+  activity: Activity;
 };
 
 const MapWithNoSSR = dynamic(() => import("./ActivityMap"), {
@@ -19,6 +19,8 @@ const MapWithNoSSR = dynamic(() => import("./ActivityMap"), {
 });
 
 function Run({ activity }: RunProps) {
+  if (!activity) return null;
+
   const top_stats = [
     {
       label: "distance",

@@ -5,7 +5,6 @@ import {
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import Head from "next/head";
-import Events from "~/components/Events";
 import Hero from "~/components/Hero";
 import Run from "~/components/Run";
 import Shoes from "~/components/Shoes";
@@ -15,7 +14,11 @@ import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 import { formatDurationHMS, isEmpty } from "~/utils/activity";
-import { type RaceActivity, type ShoeRotationType } from "~/types";
+import {
+  type Activity,
+  type RaceActivity,
+  type ShoeRotationType,
+} from "~/types";
 import Link from "next/link";
 import { formatDate } from "~/utils/date";
 import { notFound } from "next/navigation";
@@ -40,7 +43,7 @@ function RunProfilePage(
   }
 
   const name = profile.name;
-  const highlightRun = profile.highlightRun;
+  const highlightRun = profile.highlight_run as Activity;
   const weekStats = !isEmpty(profile.weekStats) ? profile.weekStats : null;
   const shoes = !isEmpty(profile.shoes) ? profile.shoes : null;
   const shoeRotations = profile.shoeRotations;
