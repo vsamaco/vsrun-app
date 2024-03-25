@@ -1,9 +1,7 @@
 import Head from "next/head";
 import { EditHighlightRun } from "~/components/settings/edit-highlight-run";
-import { EditHighlightRun2 } from "~/components/settings/edit-highlight-run2";
 import Layout from "~/components/settings/layout";
 import { Separator } from "~/components/ui/separator";
-import { type Activity } from "~/types";
 import { api } from "~/utils/api";
 
 function HighlightRunSettings() {
@@ -31,8 +29,7 @@ function HighlightRunSettings() {
           </p>
         </div>
         <Separator />
-        <EditHighlightRun highlightRun={highlightRun as unknown as Activity} />
-        <EditHighlightRun2 highlightRun={highlightRun} />
+        <EditHighlightRun highlightRun={highlightRun} />
       </div>
     </>
   );

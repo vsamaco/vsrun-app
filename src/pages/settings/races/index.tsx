@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import Layout from "~/components/settings/layout";
 import { buttonVariants } from "~/components/ui/button";
 import {
