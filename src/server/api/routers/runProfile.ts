@@ -40,6 +40,8 @@ export const runProfileRouter = createTRPCRouter({
               },
             },
           },
+          races: true,
+          highlight_run: true,
         },
       });
       return profile;
@@ -49,6 +51,10 @@ export const runProfileRouter = createTRPCRouter({
     const profile = await ctx.prisma.runProfile.findUnique({
       where: {
         userId: userId,
+      },
+      include: {
+        races: true,
+        highlight_run: true,
       },
     });
     return profile;

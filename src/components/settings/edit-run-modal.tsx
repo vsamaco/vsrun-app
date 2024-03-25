@@ -42,11 +42,7 @@ import {
 import { type StravaActivity } from "~/server/api/routers/strava";
 
 type FormValues = {
-  highlightRun: Activity & {
-    moving_time_hms: string;
-    distance_mi: number;
-    total_elevation_gain_ft: number;
-  };
+  highlightRun: Activity;
 };
 
 function EditRunModal({ highlightRun }: { highlightRun: Activity | null }) {

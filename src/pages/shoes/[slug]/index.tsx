@@ -48,7 +48,7 @@ export default function ShoesPage({
   return (
     <>
       <Head>
-        <title>vsrun | {name}</title>
+        <title>{`vsrun | ${name}`}</title>
         <meta name="description" content="vsrun | running showcase" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
