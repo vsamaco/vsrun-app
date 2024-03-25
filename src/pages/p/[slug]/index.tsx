@@ -40,9 +40,7 @@ function RunProfilePage(
   }
 
   const name = profile.name;
-  const highlightRun = !isEmpty(profile.highlightRun)
-    ? profile.highlightRun
-    : null;
+  const highlightRun = profile.highlightRun;
   const weekStats = !isEmpty(profile.weekStats) ? profile.weekStats : null;
   const shoes = !isEmpty(profile.shoes) ? profile.shoes : null;
   const shoeRotations = profile.shoeRotations;
@@ -72,7 +70,7 @@ function RunProfilePage(
         {shoeRotations.length > 0 && (
           <ShoeRotations shoeRotations={shoeRotations} />
         )}
-        {events && <Events events={events} />}
+        {/* {events && <Events events={events} />} */}
         {races.length > 0 && <Races races={races} />}
         {profile.user.accounts[0] && (
           <div className="">
@@ -141,7 +139,7 @@ function Races({ races }: { races: RaceActivity[] }) {
         {races.map((race) => (
           <div
             key={race.id}
-            className="border-gray group flex items-center justify-between rounded-lg border p-4 hover:cursor-pointer hover:border-black"
+            className="border-gray group flex items-center justify-between space-x-5 rounded-lg border p-4 hover:cursor-pointer hover:border-black"
           >
             <div>
               <div className="text-balance max-w-[200px] break-words text-2xl font-thin md:max-w-none md:whitespace-normal">

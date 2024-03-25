@@ -34,6 +34,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import {
   formatDurationHMS,
+  metersToFeet,
   metersToMiles,
   milesToMeters,
   parseHmsToSeconds,
@@ -42,10 +43,7 @@ import { type StravaActivity } from "~/server/api/routers/strava";
 import { API_CACHE_DURATION } from "~/utils/constants";
 
 type FormValues = {
-  event: RaceEvent & {
-    moving_time_hms: string;
-    distance_mi: number;
-  };
+  event: RaceEvent;
 };
 
 function EditRaceModal({
@@ -115,7 +113,11 @@ function EditRaceModal({
                 ? formatDurationHMS(event.moving_time)
                 : undefined,
               distance: event.distance,
-              distance_mi: event?.distance ? metersToMiles(event.distance) : 0,
+              distance_mi: event.distance ? metersToMiles(event.distance) : 0,
+              total_elevation_gain: event.total_elevation_gain,
+              total_elevation_gain_ft: event.total_elevation_gain
+                ? metersToFeet(event.total_elevation_gain)
+                : 0,
             };
       });
 
@@ -142,6 +144,8 @@ function EditRaceModal({
         distance_mi: metersToMiles(event.distance),
         moving_time: event.moving_time,
         moving_time_hms: formatDurationHMS(event.moving_time),
+        total_elevation_gain: event.total_elevation_gain,
+        total_elevation_gain_ft: metersToFeet(event.total_elevation_gain),
       }));
     updateRacesProfile.mutate({ events: updatedRaces });
   };
@@ -159,6 +163,8 @@ function EditRaceModal({
       moving_time_hms: formatDurationHMS(activity.moving_time),
       distance: activity.distance,
       distance_mi: metersToMiles(activity.distance),
+      total_elevation_gain: activity.total_elevation_gain,
+      total_elevation_gain_ft: metersToFeet(activity.total_elevation_gain),
     });
   };
 
@@ -293,7 +299,7 @@ function ImportRunForm({
             <Button
               type="button"
               variant="outline"
-              onClick={() => setPage((prevPage) => prevPage - 1)}
+              onClick={(_) => setPage((prevPage) => prevPage - 1)}
             >
               Prev {page - 1}
             </Button>
@@ -301,7 +307,7 @@ function ImportRunForm({
           <Button
             type="button"
             variant="outline"
-            onClick={() => setPage((prevPage) => prevPage + 1)}
+            onClick={(_) => setPage((prevPage) => prevPage + 1)}
           >
             Next {page}
           </Button>
@@ -383,10 +389,7 @@ function EditRaceForm() {
                   placeholder="distance"
                   {...field}
                   onBlur={(e) => {
-                    const distanceMeters = milesToMeters(
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                      getValues("event.distance_mi")
-                    );
+                    const distanceMeters = milesToMeters(+e.target.value);
                     setValue("event.distance", distanceMeters);
                   }}
                 />
@@ -406,10 +409,7 @@ function EditRaceForm() {
                   placeholder="hh:mm:ss"
                   {...field}
                   onBlur={(e) => {
-                    const movingTimeHMS = parseHmsToSeconds(
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                      getValues("event.moving_time_hms")
-                    );
+                    const movingTimeHMS = parseHmsToSeconds(e.target.value);
                     setValue("event.moving_time", movingTimeHMS);
                   }}
                 />

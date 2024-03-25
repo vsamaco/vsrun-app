@@ -41,6 +41,7 @@ export const runProfileRouter = createTRPCRouter({
             },
           },
           races: true,
+          highlight_run: true,
         },
       });
       return profile;
@@ -53,6 +54,7 @@ export const runProfileRouter = createTRPCRouter({
       },
       include: {
         races: true,
+        highlight_run: true,
       },
     });
     return profile;

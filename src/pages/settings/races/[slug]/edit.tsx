@@ -9,7 +9,7 @@ import { api } from "~/utils/api";
 function EditRaceSettingsPage() {
   const router = useRouter();
   const slug = router.query.slug as string;
-  const { data: race, isLoading } = api.races.getProfileRaceBySlug.useQuery({
+  const { data: race, isLoading } = api.activity.getProfileRaceBySlug.useQuery({
     slug,
   });
 

@@ -21,8 +21,8 @@ const BaseActivitySchema = z.object({
     })
     .min(1),
   start_date: z.coerce.date(),
-  start_latlng: z.array(z.number()).optional(),
-  end_latlng: z.array(z.number()).optional(),
+  start_latlng: z.tuple([z.number(), z.number()]).optional(),
+  end_latlng: z.tuple([z.number(), z.number()]).optional(),
   moving_time: z.coerce
     .number({
       required_error: "Moving time is required.",
@@ -167,40 +167,34 @@ export const ShoeSettingsFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export const EventSettingsFormSchema = z
-  .object({
-    name: z
-      .string({
-        required_error: "Name is required.",
-      })
-      .min(1),
-    start_date: z.coerce.date({
-      required_error: "Start date is required.",
-    }),
-    moving_time: z.coerce.number(),
-    moving_time_hms: z
-      .string()
-      .refine(
-        (value) => /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]:[0-5][0-9]$/.test(value),
-        "Format must be HH:mm:ss"
-      )
-      .optional(),
-    distance: z.coerce
-      .number({
-        required_error: "Distance is required.",
-      })
-      .min(1),
-    distance_mi: z.coerce.number(),
-  })
-  .superRefine((values, context) => {
-    if (!values.distance && !values.distance_mi) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["distance_mi"],
-        message: "Distance is required",
-      });
-    }
-  });
+export const EventSettingsFormSchema = z.object({
+  name: z
+    .string({
+      required_error: "Name is required.",
+    })
+    .min(1),
+  start_date: z.coerce.date({
+    required_error: "Start date is required.",
+  }),
+  moving_time: z.coerce.number(),
+  moving_time_hms: z
+    .string()
+    .refine(
+      (value) => /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]:[0-5][0-9]$/.test(value),
+      "Format must be HH:mm:ss"
+    )
+    .optional(),
+  distance: z.coerce
+    .number({
+      required_error: "Distance is required.",
+    })
+    .min(1),
+  distance_mi: z.coerce.number().optional(),
+  total_elevation_gain: z.coerce.number({
+    required_error: "Elevation is required.",
+  }),
+  total_elevation_gain_ft: z.coerce.number().optional(),
+});
 
 export const ShoeRotationFormSchema = z.object({
   name: z.string(),

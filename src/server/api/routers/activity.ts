@@ -16,7 +16,7 @@ import { RaceFormSchema } from "~/utils/schemas";
 //   return result;
 // }
 
-export const raceProfileRouter = createTRPCRouter({
+export const activityProfileRouter = createTRPCRouter({
   getProfileRaceBySlug: publicProcedure
     .input(
       z.object({
@@ -24,12 +24,12 @@ export const raceProfileRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const activity = await ctx.prisma.race.findUnique({
+      const activity = await ctx.prisma.activity.findUnique({
         where: {
           slug: input.slug,
         },
         include: {
-          runProfile: {
+          raceProfile: {
             select: {
               name: true,
               slug: true,
@@ -50,6 +50,22 @@ export const raceProfileRouter = createTRPCRouter({
       return activity;
     }),
 
+  getUserProfileHighlightRun: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const runProfile = await ctx.prisma.runProfile.findUnique({
+      where: { userId },
+    });
+    if (!runProfile) return null;
+
+    const activity = await ctx.prisma.activity.findUnique({
+      where: {
+        highlightRunProfileId: runProfile.id,
+      },
+    });
+
+    return activity;
+  }),
+
   getUserProfileRaces: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
     const runProfile = await ctx.prisma.runProfile.findUnique({
@@ -57,9 +73,9 @@ export const raceProfileRouter = createTRPCRouter({
     });
     if (!runProfile) return [];
 
-    const activities = await ctx.prisma.race.findMany({
+    const activities = await ctx.prisma.activity.findMany({
       where: {
-        profileId: runProfile.id,
+        raceProfileId: runProfile.id,
       },
       orderBy: {
         start_date: "desc",
@@ -68,6 +84,54 @@ export const raceProfileRouter = createTRPCRouter({
 
     return activities;
   }),
+
+  upsertProfileHighlightRun: protectedProcedure
+    .input(
+      z.object({
+        body: RaceFormSchema,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const runProfile = await ctx.prisma.runProfile.findUnique({
+        where: { userId },
+      });
+      if (!runProfile) return null;
+
+      try {
+        const data = {
+          name: input.body.name,
+          start_date: input.body.start_date,
+          workout_type: input.body.workout_type,
+          description: input.body.description || "",
+          moving_time: input.body.moving_time,
+          distance: input.body.distance,
+          total_elevation_gain: input.body.total_elevation_gain,
+          start_latlng: input.body.start_latlng,
+          end_latlng: input.body.end_latlng,
+          summary_polyline: input.body.summary_polyline,
+          laps: undefined,
+          metadata: input.body.metadata,
+        };
+
+        const result = await ctx.prisma.activity.upsert({
+          where: {
+            highlightRunProfileId: runProfile.id,
+          },
+          create: {
+            slug: nanoid(8),
+            ...data,
+          },
+          update: {
+            ...data,
+          },
+        });
+
+        return result;
+      } catch (error) {
+        console.log("created profile highlightRun error:", error);
+      }
+    }),
 
   createProfileRace: protectedProcedure
     .input(
@@ -83,7 +147,7 @@ export const raceProfileRouter = createTRPCRouter({
       if (!runProfile) return null;
 
       try {
-        const result = await ctx.prisma.race.create({
+        const result = await ctx.prisma.activity.create({
           data: {
             slug: nanoid(8),
             name: input.body.name,
@@ -98,7 +162,7 @@ export const raceProfileRouter = createTRPCRouter({
             summary_polyline: input.body.summary_polyline,
             laps: undefined,
             metadata: input.body.metadata,
-            profileId: runProfile.id,
+            raceProfileId: runProfile.id,
           },
         });
 
@@ -124,10 +188,10 @@ export const raceProfileRouter = createTRPCRouter({
       });
       if (!runProfile) return null;
 
-      const result = await ctx.prisma.race.update({
+      const result = await ctx.prisma.activity.update({
         where: {
           slug: input.params.slug,
-          profileId: runProfile.id,
+          raceProfileId: runProfile.id,
         },
         data: {
           name: input.body.name,
@@ -142,14 +206,14 @@ export const raceProfileRouter = createTRPCRouter({
           summary_polyline: input.body.summary_polyline,
           laps: undefined,
           metadata: input.body.metadata,
-          profileId: runProfile.id,
+          raceProfileId: runProfile.id,
         },
       });
 
       return result;
     }),
 
-  deleteProfileRace: protectedProcedure
+  deleteProfileActivity: protectedProcedure
     .input(
       z.object({
         params: z.object({ slug: z.string() }),
@@ -161,10 +225,10 @@ export const raceProfileRouter = createTRPCRouter({
         where: { userId },
       });
       if (!runProfile) return null;
-      const result = await ctx.prisma.race.delete({
+      const result = await ctx.prisma.activity.delete({
         where: {
           slug: input.params.slug,
-          profileId: runProfile.id,
+          raceProfileId: runProfile.id,
         },
       });
 

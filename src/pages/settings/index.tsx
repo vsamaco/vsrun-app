@@ -1,5 +1,4 @@
 import { type RunProfile } from "@prisma/client";
-import { inferRouterOutputs } from "@trpc/server";
 import { format } from "date-fns";
 import Link from "next/link";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
@@ -19,12 +18,10 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import {
-  type RaceEvent,
-  type Activity,
   type Shoe,
   type WeekStat,
   type RunProfileType,
-  type RaceActivity,
+  type RaceEvent,
 } from "~/types";
 import {
   formatHumanizeSeconds,
@@ -68,18 +65,10 @@ type DashboardProfile = {
 };
 
 function ProfileDashboard({ profile }: DashboardProfile) {
-  const highlightRun = !isEmpty(profile?.highlightRun)
-    ? (profile?.highlightRun as Activity)
-    : null;
   const weekStats = !isEmpty(profile?.weekStats)
     ? (profile?.weekStats as WeekStat)
     : null;
   const shoes = !isEmpty(profile?.shoes) ? (profile?.shoes as Shoe[]) : [];
-  const events = !isEmpty(profile?.events)
-    ? (profile?.events as RaceEvent[])
-    : [];
-  const races = (profile?.races as unknown as RaceActivity[]) || [];
-
   return (
     <>
       {profile && <ProfileSection profile={profile} />}
@@ -87,7 +76,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
       <div className="grid items-start justify-center gap-6 rounded-lg lg:grid-cols-2">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
-            <HighlightRunCard highlightRun={highlightRun} />
+            <HighlightRunCard profile={profile} />
           </DemoContainer>
           <DemoContainer>
             <WeekStatsCard weekStats={weekStats} />
@@ -97,12 +86,12 @@ function ProfileDashboard({ profile }: DashboardProfile) {
           <DemoContainer>
             <ShoesCard shoes={shoes} />
           </DemoContainer>
-          {/* <DemoContainer>
-            <RaceEventsCard events={events} />
-          </DemoContainer> */}
           <DemoContainer>
-            <RacesCard races={races} />
+            <RacesCard profile={profile} />
           </DemoContainer>
+          {/* <DemoContainer>
+            <RaceEventsCard events={profile?.events || []} />
+          </DemoContainer> */}
         </div>
       </div>
     </>
@@ -139,7 +128,9 @@ function ProfileSection({ profile }: { profile: RunProfile }) {
   );
 }
 
-function HighlightRunCard({ highlightRun }: { highlightRun: Activity | null }) {
+function HighlightRunCard({ profile }: { profile: RunProfileType }) {
+  const highlightRun = profile?.highlight_run;
+
   return (
     <Card>
       <CardHeader>
@@ -313,7 +304,13 @@ function RaceEventsCard({ events }: { events: RaceEvent[] }) {
   );
 }
 
-function RacesCard({ races }: { races: RaceActivity[] }) {
+function RacesCard({ profile }: { profile: RunProfileType }) {
+  if (!profile?.races) {
+    return null;
+  }
+
+  const { races } = profile;
+
   return (
     <Card>
       <CardHeader>

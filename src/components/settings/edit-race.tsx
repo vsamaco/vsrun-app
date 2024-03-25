@@ -83,9 +83,9 @@ function EditRaceForm({ race }: { race: RaceProfileType }) {
   });
 
   const utils = api.useContext();
-  const createRaceProfile = api.races.createProfileRace.useMutation({
+  const createRaceProfile = api.activity.createProfileRace.useMutation({
     onSuccess: async (_) => {
-      await utils.races.getProfileRaceBySlug.invalidate();
+      await utils.activity.getProfileRaceBySlug.invalidate();
       await router.push("/settings/races");
       toast({ title: "Success", description: "Successfully saved changes." });
     },
@@ -99,9 +99,9 @@ function EditRaceForm({ race }: { race: RaceProfileType }) {
     },
   });
 
-  const updateRaceProfile = api.races.updateProfileRace.useMutation({
+  const updateRaceProfile = api.activity.updateProfileRace.useMutation({
     onSuccess: async (_) => {
-      await utils.races.getProfileRaceBySlug.invalidate();
+      await utils.activity.getProfileRaceBySlug.invalidate();
       await router.push("/settings/races");
       toast({ title: "Success", description: "Successfully saved changes." });
     },
@@ -115,9 +115,9 @@ function EditRaceForm({ race }: { race: RaceProfileType }) {
     },
   });
 
-  const deleteRaceProfile = api.races.deleteProfileRace.useMutation({
+  const deleteRaceProfile = api.activity.deleteProfileActivity.useMutation({
     onSuccess: async (_) => {
-      await utils.races.getProfileRaceBySlug.invalidate();
+      await utils.activity.getProfileRaceBySlug.invalidate();
       await router.push("/settings/races");
       toast({ title: "Success", description: "Successfully saved changes." });
     },

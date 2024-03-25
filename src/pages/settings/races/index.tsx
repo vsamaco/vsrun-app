@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import Layout from "~/components/settings/layout";
 import { buttonVariants } from "~/components/ui/button";
 import {
@@ -15,12 +16,13 @@ import { api } from "~/utils/api";
 import { formatDate } from "~/utils/date";
 
 function RacesSettings() {
-  const { data: activities, isLoading } =
-    api.races.getUserProfileRaces.useQuery();
+  const { data, isLoading } = api.activity.getUserProfileRaces.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const races = data;
 
   return (
     <>
@@ -41,12 +43,12 @@ function RacesSettings() {
         </Link>
         <Separator />
         <div className="grid grid-cols-2 gap-4">
-          {activities &&
-            activities.map((race) => {
+          {races &&
+            races.map((race) => {
               return (
                 <Card key={race.slug} className="">
                   <CardHeader>
-                    <CardTitle className="truncate pb-2">{race.name}</CardTitle>
+                    <CardTitle className="pb-2">{race.name}</CardTitle>
                     <CardDescription className="mt-5">
                       {formatDate(race.start_date, {
                         month: "short",

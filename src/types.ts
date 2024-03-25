@@ -11,6 +11,7 @@ declare global {
     type ProfileShoesType = Shoe[] | undefined;
     type ProfileEventsType = RaceEvent[] | undefined;
     type RaceLapType = RaceActivity["laps"][0];
+    type ActivityLatLng = [number, number];
   }
 }
 
@@ -66,7 +67,11 @@ export type RaceEvent = {
   name: string;
   start_date: string;
   moving_time: number;
+  moving_time_hms?: string;
   distance: number;
+  distance_mi?: number;
+  total_elevation_gain: number;
+  total_elevation_gain_ft?: number;
 };
 
 export const ActivityWorkoutType = {
@@ -116,4 +121,6 @@ export type ShoeRotationType =
   RouterOutput["shoeRotation"]["getUserShoeRotations"][0];
 
 export type RunProfileType = RouterOutput["runProfile"]["getUserProfile"];
-export type RaceProfileType = RouterOutput["races"]["getProfileRaceBySlug"];
+export type RaceProfileType = RouterOutput["activity"]["getProfileRaceBySlug"];
+export type HighlightRunProfileType =
+  RouterOutput["activity"]["getUserProfileHighlightRun"];
