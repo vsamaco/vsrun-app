@@ -163,8 +163,16 @@ export const ShoeSettingsFormSchema = z.object({
     })
     .min(1),
   distance: z.coerce.number(),
+  start_date: z.coerce.date(),
   categories: z.array(z.enum(SHOE_CATEGORIES)),
   description: z.string().optional(),
+  metadata: z
+    .object({
+      external_id: z.string(),
+      external_source: z.string(),
+    })
+    .optional()
+    .nullable(),
 });
 
 export const EventSettingsFormSchema = z.object({

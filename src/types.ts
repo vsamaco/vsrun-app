@@ -55,12 +55,19 @@ export type WeekStat = {
 };
 
 export type Shoe = {
+  id: string;
+  slug: string;
   brand_name: string;
   model_name: string;
+  start_date: Date;
   distance: number;
   distance_mi?: number;
   categories: ShoeCategories[];
   description?: string;
+  metadata?: {
+    external_source: string;
+    external_id: string;
+  } | null;
 };
 
 export type RaceEvent = {
@@ -105,7 +112,7 @@ export const SHOE_CATEGORIES = [
   "trail",
   "race",
 ] as const;
-type ShoeCategories = (typeof SHOE_CATEGORIES)[number];
+export type ShoeCategories = (typeof SHOE_CATEGORIES)[number];
 
 export type ShoeRotation = {
   id: string;
@@ -124,3 +131,4 @@ export type RunProfileType = RouterOutput["runProfile"]["getUserProfile"];
 export type RaceProfileType = RouterOutput["activity"]["getProfileRaceBySlug"];
 export type HighlightRunProfileType =
   RouterOutput["activity"]["getUserProfileHighlightRun"];
+export type StravaShoeType = RouterOutput["strava"]["getShoes"][0];
