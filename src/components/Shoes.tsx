@@ -3,7 +3,7 @@ import { type Shoe } from "~/types";
 import { metersToMiles } from "~/utils/activity";
 
 type Props = {
-  shoes: Shoe[];
+  shoes: Omit<Shoe, "slug" | "start_date">[];
 };
 
 export default function Shoes({ shoes }: Props) {

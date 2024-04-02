@@ -217,6 +217,7 @@ function ShoeRotationForm({
   const defaultValues = {
     brand_name: "default brand",
     model_name: "default model",
+    start_date: new Date(),
     distance: 0,
     categories: [],
     description: "",
@@ -459,7 +460,7 @@ function EditShoeForm({
     setShowShoeForm(false);
   };
 
-  const handleImportSelect = (shoe: Shoe) => {
+  const handleImportSelect = (shoe: Omit<Shoe, "slug" | "start_date">) => {
     setValue(`shoes.${index}.brand_name`, shoe.brand_name);
     setValue(`shoes.${index}.model_name`, shoe.model_name);
     setValue(`shoes.${index}.distance`, shoe.distance);
@@ -616,7 +617,7 @@ function EditShoeForm({
 function ImportShoeForm({
   handleImportSelect,
 }: {
-  handleImportSelect: (shoe: Shoe) => void;
+  handleImportSelect: (shoe: Omit<Shoe, "slug" | "start_date">) => void;
 }) {
   const { data: shoes, isLoading } = api.strava.getShoes.useQuery();
   if (isLoading) {

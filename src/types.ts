@@ -8,7 +8,7 @@ declare global {
     type ShoeRotationShoeType = Omit<Shoe, "id" | "slug">;
     type ProfileHighlightRunType = Activity | Record<string, never>;
     type ProfileWeekStatsType = WeekStat | Record<string, never>;
-    type ProfileShoesType = Shoe[] | undefined;
+    type ProfileShoesType = Omit<Shoe, "slug" | "start_date">[] | undefined;
     type ProfileEventsType = RaceEvent[] | undefined;
     type RaceLapType = RaceActivity["laps"][0];
     type ActivityLatLng = [number, number];
@@ -55,7 +55,6 @@ export type WeekStat = {
 };
 
 export type Shoe = {
-  id: string;
   slug: string;
   brand_name: string;
   model_name: string;

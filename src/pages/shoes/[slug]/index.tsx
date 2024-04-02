@@ -103,7 +103,7 @@ export default function ShoesPage({
   );
 }
 
-function ShoeCard({ shoe }: { shoe: Shoe }) {
+function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
   const [showDescription, setShowDescription] = useState(false);
 
   return (

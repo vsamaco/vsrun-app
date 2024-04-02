@@ -37,13 +37,13 @@ import {
 } from "../ui/dialog";
 import { useState } from "react";
 
-type FormValues = {
-  shoe: Omit<Shoe, "id" | "slug">;
+export type EditShoeFormValues = {
+  shoe: Omit<Shoe, "slug">;
 };
 
 function EditShoe({ shoe }: { shoe: Shoe | null }) {
   const router = useRouter();
-  const methods = useForm<FormValues>({
+  const methods = useForm<EditShoeFormValues>({
     resolver: zodResolver(z.object({ shoe: ShoeSettingsFormSchema })),
     defaultValues: {
       shoe: {
@@ -161,7 +161,7 @@ function EditShoe({ shoe }: { shoe: Shoe | null }) {
   );
 }
 
-function EditShoeForm({ shoe }: { shoe: Shoe | null }) {
+export function EditShoeForm({ shoe }: { shoe: Shoe | null }) {
   const { control, setValue } = useFormContext();
   const shoeOp = shoe ? "Create" : "Update";
 
@@ -335,7 +335,7 @@ function EditShoeForm({ shoe }: { shoe: Shoe | null }) {
 
 function ImportRunModal() {
   const [open, setOpen] = useState(false);
-  const methods = useFormContext<FormValues>();
+  const methods = useFormContext<EditShoeFormValues>();
 
   const setSelectedShoe = (shoe: StravaShoeType) => {
     console.log("import activity:", shoe);

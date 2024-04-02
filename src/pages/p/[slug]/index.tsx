@@ -94,7 +94,7 @@ function RunProfilePage(
 function ShoeRotations({
   shoeRotations,
 }: {
-  shoeRotations: ShoeRotationType[];
+  shoeRotations: Omit<ShoeRotationType, "shoeList">[];
 }) {
   return (
     <div id="shoe-rotations" className="py-10">
