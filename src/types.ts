@@ -5,7 +5,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace PrismaJson {
     // Insert your types here!
-    type ShoeRotationShoeType = Shoe;
+    type ShoeRotationShoeType = Omit<Shoe, "id" | "slug">;
     type ProfileHighlightRunType = Activity | Record<string, never>;
     type ProfileWeekStatsType = WeekStat | Record<string, never>;
     type ProfileShoesType = Shoe[] | undefined;
@@ -120,6 +120,7 @@ export type ShoeRotation = {
   start_date: Date;
   name: string;
   description: string;
+  shoeList: string[];
   shoes: Shoe[];
 };
 

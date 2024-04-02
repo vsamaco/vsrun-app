@@ -152,6 +152,7 @@ export const WeekSettingsFormSchema = z.object({
 });
 
 export const ShoeSettingsFormSchema = z.object({
+  id: z.string().optional(),
   brand_name: z
     .string({
       required_error: "Brand is required",
@@ -208,6 +209,8 @@ export const ShoeRotationFormSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   startDate: z.coerce.date(),
+  shoeList: z.array(ShoeSettingsFormSchema),
+  // .min(1, { message: "must contain at least 1 shoe" }),
   shoes: z.array(ShoeSettingsFormSchema),
 });
 

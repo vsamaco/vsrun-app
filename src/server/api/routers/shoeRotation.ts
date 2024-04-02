@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { nanoid } from "nanoid";
 import { ShoeRotationFormSchema } from "~/utils/schemas";
+import { type Shoe } from "~/types";
 
 // function filter<T extends object>(
 //   obj: T,
@@ -45,6 +46,7 @@ export const shoeRotationRouter = createTRPCRouter({
               },
             },
           },
+          shoeList: true,
         },
       });
       return shoeRotation;
@@ -61,12 +63,18 @@ export const shoeRotationRouter = createTRPCRouter({
       where: {
         profileId: runProfile.id,
       },
+      include: {
+        shoeList: true,
+      },
       orderBy: {
         startDate: "desc",
       },
     });
 
-    return shoeRotations;
+    return shoeRotations.map((sr) => ({
+      ...sr,
+      shoeList: sr.shoeList as Shoe[],
+    }));
   }),
 
   createShoeRotation: protectedProcedure
@@ -90,6 +98,11 @@ export const shoeRotationRouter = createTRPCRouter({
           description: input.body.description || "",
           shoes: input.body.shoes,
           profileId: runProfile.id,
+          shoeList: {
+            connect: input.body.shoeList
+              .filter((s) => s.id)
+              .map((s) => ({ id: s.id })),
+          },
         },
       });
 
@@ -122,6 +135,11 @@ export const shoeRotationRouter = createTRPCRouter({
           startDate: input.body.startDate,
           description: input.body.description,
           shoes: input.body.shoes,
+          shoeList: {
+            set: input.body.shoeList
+              .filter((s) => s.id)
+              .map((s) => ({ id: s.id })),
+          },
         },
       });
 
