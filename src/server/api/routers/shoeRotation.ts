@@ -141,6 +141,9 @@ export const shoeRotationRouter = createTRPCRouter({
               .map((s) => ({ id: s.id })),
           },
         },
+        include: {
+          shoeList: true,
+        },
       });
 
       return result;

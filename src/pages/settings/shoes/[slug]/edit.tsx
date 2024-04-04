@@ -9,6 +9,8 @@ import { api } from "~/utils/api";
 function EditShoePage() {
   const router = useRouter();
   const slug = router.query.slug as string;
+  const nextShoeRotationId = router.query.nextShoeRotationId as string;
+
   const { data: shoe, isLoading } = api.shoe.getShoeBySlug.useQuery({ slug });
 
   if (isLoading) return <div>Loading...</div>;
@@ -25,7 +27,10 @@ function EditShoePage() {
           <h3 className="text-lg font-medium">Edit Shoe </h3>
         </div>
         <Separator />
-        <EditShoeForm shoe={shoe as Shoe} />
+        <EditShoeForm
+          shoe={shoe as Shoe}
+          nextShoeRotationId={nextShoeRotationId}
+        />
       </div>
     </>
   );

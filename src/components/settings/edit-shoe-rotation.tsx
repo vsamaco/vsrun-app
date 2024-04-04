@@ -3,10 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Pencil, XCircle, MoreVertical } from "lucide-react";
 import { useRouter } from "next/router";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import {
   FormProvider,
-  type UseFieldArrayAppend,
   useFieldArray,
   useForm,
   useFormContext,
@@ -34,7 +33,7 @@ import { Textarea } from "../ui/textarea";
 import { toast } from "../ui/use-toast";
 import { ToastClose } from "../ui/toast";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
@@ -65,6 +64,7 @@ import {
   type EditShoeFormValues,
 } from "./edit-shoe";
 import { z } from "zod";
+import Link from "next/link";
 
 type ShoeRotationFormValues = Omit<
   ShoeRotationType,
@@ -84,8 +84,8 @@ export function EditShoeRotationForm({
     defaultValues: {
       name: shoeRotation?.name || "",
       startDate: shoeRotation?.startDate,
-      description: shoeRotation?.description || "",
-      shoeList: shoeRotation?.shoeList || [],
+      description: shoeRotation?.description,
+      shoeList: shoeRotation?.shoeList,
       shoes:
         shoeRotation?.shoes?.map((s) => ({
           ...s,
@@ -97,11 +97,15 @@ export function EditShoeRotationForm({
   const {
     control,
     handleSubmit,
-    watch,
     reset,
-    setValue,
-    formState: { isDirty, dirtyFields },
+    formState: { isDirty, dirtyFields, errors },
   } = methods;
+
+  useEffect(() => {
+    if (shoeRotation) {
+      reset(shoeRotation);
+    }
+  }, [shoeRotation, reset]);
 
   const utils = api.useContext();
   const createShoeRotation = api.shoeRotation.createShoeRotation.useMutation({
@@ -122,12 +126,12 @@ export function EditShoeRotationForm({
   });
   const updateShoeRotation = api.shoeRotation.updateShoeRotation.useMutation({
     onSuccess: async (_) => {
-      await utils.shoeRotation.getShoeRotationBySlug.invalidate();
+      await utils.shoeRotation.getShoeRotationBySlug.invalidate({
+        slug: shoeRotation?.slug,
+      });
       await utils.shoeRotation.getUserShoeRotations.invalidate();
 
-      if (dirtyFields && dirtyFields?.shoes) {
-        reset({ shoes: watch("shoes"), shoeList: watch("shoeList") });
-      } else {
+      if (!dirtyFields?.shoeList) {
         await router.push(`/settings/shoe_rotations`);
       }
       toast({ title: "Success", description: "Successfully saved changes." });
@@ -189,42 +193,16 @@ export function EditShoeRotationForm({
 
   const {
     fields: shoeListFields,
-    append: shoeListAppend,
+    prepend: shoeListPrepend,
     remove: shoeListRemove,
   } = useFieldArray({
     control,
     name: "shoeList",
+    keyName: "key",
   });
-
-  const { fields, append } = useFieldArray({
-    control,
-    name: "shoes",
-  });
-
-  const defaultValues = {
-    brand_name: "",
-    model_name: "",
-    start_date: new Date(),
-    distance: 0,
-    distance_mi: 0,
-    categories: [],
-    description: "",
-  };
-
-  const [shoeIndex, setShoeIndex] = useState(() => {
-    return fields.length;
-  });
-  const [showAddShoeForm, setShowAddShoeForm] = useState(false);
-  const [shoeOp, setShoeOp] = useState<"add" | "edit" | null>(null);
-
-  const handleShoesUpdate = async () => {
-    await onSubmit();
-  };
-
-  const shoes = watch("shoes", []);
 
   const handleAddShoe = async (shoe: Shoe) => {
-    shoeListAppend(shoe);
+    shoeListPrepend(shoe);
     if (shoeRotation?.slug) {
       await onSubmit();
     }
@@ -241,219 +219,180 @@ export function EditShoeRotationForm({
     <div className="">
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} className="space-y-8">
-          {!showAddShoeForm && (
-            <>
-              <FormItem className="">
-                <FormField
-                  control={control}
-                  name={`name`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name:</FormLabel>
-                      <FormControl>
-                        <Input placeholder="name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                ></FormField>
-              </FormItem>
+          <FormItem className="">
+            <FormField
+              control={control}
+              name={`name`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name:</FormLabel>
+                  <FormControl>
+                    <Input placeholder="name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          </FormItem>
 
-              <FormItem className="">
-                <FormField
-                  control={control}
-                  name={`startDate`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start Date:</FormLabel>
-                      <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-[240px] pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                                  format(new Date(field.value), "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
+          <FormItem className="">
+            <FormField
+              control={control}
+              name={`startDate`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Start Date:</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
                               // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                              selected={new Date(field.value)}
-                              onSelect={field.onChange}
-                              disabled={(date) => date < new Date("1900-01-01")}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                ></FormField>
-              </FormItem>
-
-              <FormItem className="">
-                <FormField
-                  control={control}
-                  name={`description`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description:</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="description"
-                          rows={5}
-                          {...field}
+                              format(new Date(field.value), "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                          selected={new Date(field.value)}
+                          onSelect={field.onChange}
+                          disabled={(date) => date < new Date("1900-01-01")}
+                          initialFocus
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                ></FormField>
-              </FormItem>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          </FormItem>
 
-              <div className="">
-                <div className="flex justify-between">
-                  {!isNew && (
-                    <Button type="button" onClick={onDelete}>
-                      Delete
-                    </Button>
-                  )}
-                  <Button disabled={!isDirty} type="submit">
-                    {isNew ? "Create" : "Save"}
-                  </Button>
-                </div>
-              </div>
-            </>
-          )}
+          <FormItem className="">
+            <FormField
+              control={control}
+              name={`description`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description:</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="description" rows={5} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          </FormItem>
 
-          {showAddShoeForm && (
-            <EditShoeForm
-              shoeRotation={shoeRotation}
-              shoeOp={shoeOp}
-              setShowShoeForm={setShowAddShoeForm}
-              index={shoeIndex}
-              handleUpdate={handleShoesUpdate}
+          <FormItem>
+            <FormLabel>Shoes:</FormLabel>
+            {errors.shoeList && (
+              <FormMessage>{errors.shoeList.message}</FormMessage>
+            )}
+            <AddShoeModal
+              shoeList={shoeListFields}
+              handleAddShoe={handleAddShoe}
             />
-          )}
+            {shoeListFields.map((shoe, index) => {
+              return (
+                <Card
+                  key={shoe.key}
+                  className={cn(
+                    "border-gray group border hover:border-gray-500"
+                  )}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg font-normal">
+                      <div className="flex flex-row items-center justify-between">
+                        <div className="space-y-2 rounded-sm ">
+                          <div className="text-balance">
+                            <span>{shoe.brand_name}</span>&nbsp;
+                            <span className="font-thin">{shoe.model_name}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row space-x-2">
+                          <>
+                            {shoeRotation && (
+                              <Link
+                                href={`/settings/shoes/${shoe.slug}/edit?nextShoeRotationId=${shoeRotation.slug}`}
+                                className={buttonVariants({
+                                  variant: "outline",
+                                })}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Link>
+                            )}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={false}
+                                >
+                                  <MoreVertical className="h-4 w-4" />
+                                  <span className="sr-only">More</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => handleRemoveShoe(index)}
+                                >
+                                  Remove
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </>
+                        </div>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-x-2">
+                      {shoe.categories.map((category, categoryIdx) => (
+                        <Badge
+                          key={categoryIdx}
+                          variant="secondary"
+                          className="group-hover:bg-yellow-400"
+                        >
+                          {category.replace("_", " ")}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </FormItem>
         </form>
       </FormProvider>
 
-      <div className="space-y-4">
-        {shoeListFields.map((shoe, index) => {
-          return (
-            <ShoeRow2
-              key={shoe.id}
-              shoe={shoe}
-              index={index}
-              reset={reset}
-              methods={methods}
-              setValue={setValue}
-              handleRemove={() => handleRemoveShoe(index)}
-            />
-          );
-        })}
-        <AddShoeModal
-          append={shoeListAppend}
-          shoeList={shoeRotation?.shoeList || []}
-          handleAddShoe={handleAddShoe}
-        />
+      <div className="mt-10">
+        <div className="flex justify-between">
+          {!isNew && (
+            <Button type="button" variant="outline" onClick={onDelete}>
+              Remove
+            </Button>
+          )}
+          <Button disabled={!isDirty} onClick={onSubmit}>
+            {isNew ? "Create" : "Save"}
+          </Button>
+        </div>
       </div>
     </div>
-  );
-}
-
-function ShoeRow2({
-  shoe,
-  index,
-  setValue,
-  handleRemove,
-  reset,
-  methods,
-}: {
-  shoe: Shoe;
-  index: number;
-  setValue: UseFormSetValue<ShoeRotationFormValues>;
-  reset: UseFormReset<ShoeRotationFormValues>;
-  handleRemove: () => void;
-  methods: UseFormReturn<ShoeRotationFormValues, any, undefined>;
-}) {
-  return (
-    <Card className={cn("border-gray group border")}>
-      <CardHeader>
-        <CardTitle className="text-lg font-normal">
-          <div className="flex flex-row items-center justify-between">
-            <div className="space-y-2 rounded-sm ">
-              <div
-                // onClick={() => setIsOpen(true)}
-                className="text-balance group-hover:cursor-pointer"
-              >
-                <span>{shoe.brand_name}</span>&nbsp;
-                <span className="font-thin">{shoe.model_name}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-row space-x-2">
-              <>
-                <EditShoeModal
-                  shoe={shoe}
-                  index={index}
-                  setValue={setValue}
-                  reset={reset}
-                  parentMethods={methods}
-                  renderTrigger={
-                    <Button type="button" variant="outline">
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  }
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" disabled={false}>
-                      <MoreVertical className="h-4 w-4" />
-                      <span className="sr-only">More</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={handleRemove}>
-                      Remove
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            </div>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {true && (
-          <div className="space-x-2">
-            {shoe.categories.map((category, categoryIdx) => (
-              <Badge
-                key={categoryIdx}
-                variant="secondary"
-                className="group-hover:bg-yellow-400"
-              >
-                {category.replace("_", " ")}
-              </Badge>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
   );
 }
 
@@ -501,7 +440,7 @@ function EditShoeModal({
         setValue(`shoeList.${index}`, data as Shoe);
         const currentValues = parentMethods.getValues();
         console.log("updated shoeList:", currentValues);
-        parentMethods.reset(currentValues);
+        parentMethods.reset({ ...currentValues });
       }
 
       setOpen(false);
@@ -579,7 +518,6 @@ export function EditShoeForm3({
   index: number;
 }) {
   const { control, setValue } = useFormContext();
-  const shoeOp = shoe ? "Create" : "Update";
 
   return (
     <div className="space-y-8">
@@ -746,132 +684,6 @@ export function EditShoeForm3({
         )}
       ></FormField>
     </div>
-  );
-}
-
-function ShoeRow({
-  shoeRotation,
-  shoeIndex,
-  shoe,
-  handleRemove,
-  handleUpdate,
-}: {
-  shoeRotation: ShoeRotationType | null;
-  shoeIndex: number;
-  shoe: Omit<Shoe, "slug">;
-  handleRemove: () => void;
-  handleUpdate: () => void;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const {
-    control,
-    formState: { dirtyFields },
-    resetField,
-  } = useFormContext<ShoeRotationFormValues>();
-
-  const { remove } = useFieldArray({
-    control,
-    name: "shoes",
-  });
-
-  const onCancel = () => {
-    if (!shoeRotation) {
-      remove(shoeIndex);
-    }
-    if (shoeRotation) {
-      resetField(`shoes.${shoeIndex}`);
-    }
-    setIsOpen(false);
-  };
-
-  const onRemove = () => {
-    remove(shoeIndex);
-    if (shoeRotation) {
-      handleRemove();
-    }
-    setIsOpen(false);
-  };
-
-  return (
-    <Card
-      className={cn(
-        "border-gray group border",
-        dirtyFields && dirtyFields.shoes?.at(shoeIndex) && "border-red-400"
-      )}
-    >
-      <CardHeader>
-        <CardTitle className="text-lg font-normal">
-          <div className="flex flex-row items-center justify-between">
-            <div className="space-y-2 rounded-sm ">
-              <div
-                onClick={() => setIsOpen(true)}
-                className="text-balance group-hover:cursor-pointer"
-              >
-                <span>{shoe.brand_name}</span>&nbsp;
-                <span className="font-thin">{shoe.model_name}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-row space-x-2">
-              {isOpen && (
-                <Button type="button" variant="outline" onClick={onCancel}>
-                  <XCircle className="h-4 w-4" />
-                </Button>
-              )}
-              {!isOpen && (
-                <>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsOpen(true)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" disabled={false}>
-                        <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">More</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={onRemove}>
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </>
-              )}
-            </div>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {!isOpen && (
-          <div className="space-x-2">
-            {shoe.categories.map((category, categoryIdx) => (
-              <Badge
-                key={categoryIdx}
-                variant="secondary"
-                className="group-hover:bg-yellow-400"
-              >
-                {category.replace("_", " ")}
-              </Badge>
-            ))}
-          </div>
-        )}
-        {isOpen && (
-          <EditShoeForm
-            shoeRotation={shoeRotation}
-            index={shoeIndex}
-            shoeOp="edit"
-            setShowShoeForm={setIsOpen}
-            handleUpdate={handleUpdate}
-          />
-        )}
-      </CardContent>
-    </Card>
   );
 }
 
@@ -1078,11 +890,9 @@ function EditShoeForm({
 }
 
 function AddShoeModal({
-  append,
   shoeList,
   handleAddShoe,
 }: {
-  append: UseFieldArrayAppend<ShoeRotationFormValues, "shoeList">;
   handleAddShoe: (shoe: Shoe) => void;
   shoeList: Shoe[];
 }) {
@@ -1133,7 +943,7 @@ function AddShoeForm({
     return <div>No shoes found</div>;
   }
 
-  console.log("current shoes: ", shoeList);
+  console.log("current shoes: ", { shoeList });
 
   const existingShoeIds = shoeList.map((s) => s.slug);
   const unselectedShoes = shoes.filter(

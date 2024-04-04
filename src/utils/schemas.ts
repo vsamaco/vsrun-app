@@ -206,11 +206,12 @@ export const EventSettingsFormSchema = z.object({
 });
 
 export const ShoeRotationFormSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3),
   description: z.string().optional(),
   startDate: z.coerce.date(),
-  shoeList: z.array(ShoeSettingsFormSchema),
-  // .min(1, { message: "must contain at least 1 shoe" }),
+  shoeList: z
+    .array(ShoeSettingsFormSchema)
+    .min(1, { message: "must contain at least 1 shoe" }),
   shoes: z.array(ShoeSettingsFormSchema),
 });
 

@@ -41,7 +41,13 @@ export type EditShoeFormValues = {
   shoe: Omit<Shoe, "slug">;
 };
 
-function EditShoe({ shoe }: { shoe: Shoe | null }) {
+function EditShoe({
+  shoe,
+  nextShoeRotationId,
+}: {
+  shoe: Shoe | null;
+  nextShoeRotationId?: string;
+}) {
   const router = useRouter();
   const methods = useForm<EditShoeFormValues>({
     resolver: zodResolver(z.object({ shoe: ShoeSettingsFormSchema })),
@@ -82,8 +88,17 @@ function EditShoe({ shoe }: { shoe: Shoe | null }) {
     onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       await utils.shoe.getUserShoes.invalidate();
-      await utils.shoe.getShoeBySlug.invalidate();
-      await router.push("/settings/shoes");
+      await utils.shoe.getShoeBySlug.invalidate({ slug: shoe?.slug });
+      if (nextShoeRotationId) {
+        await utils.shoeRotation.getShoeRotationBySlug.invalidate({
+          slug: nextShoeRotationId,
+        });
+        await router.push(
+          `/settings/shoe_rotations/${nextShoeRotationId}/edit`
+        );
+      } else {
+        await router.push("/settings/shoes");
+      }
       toast({ title: "Success", description: "Successfully saved changes." });
     },
     onError: (error) => {
