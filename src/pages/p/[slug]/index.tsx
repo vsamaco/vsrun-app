@@ -13,8 +13,9 @@ import Layout from "~/components/layout";
 import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
-import { formatDurationHMS, isEmpty } from "~/utils/activity";
+import { formatDurationHMS, isEmpty, metersToMiles } from "~/utils/activity";
 import {
+  type Shoe,
   type Activity,
   type RaceActivity,
   type ShoeRotationType,
@@ -22,6 +23,8 @@ import {
 import Link from "next/link";
 import { formatDate } from "~/utils/date";
 import { notFound } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { CalendarIcon } from "lucide-react";
 
 function RunProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -45,7 +48,8 @@ function RunProfilePage(
   const name = profile.name;
   const highlightRun = profile.highlight_run as Activity;
   const weekStats = !isEmpty(profile.weekStats) ? profile.weekStats : null;
-  const shoes = !isEmpty(profile.shoes) ? profile.shoes : null;
+  // const shoes = !isEmpty(profile.shoes) ? profile.shoes : null;
+  const shoes = profile.shoes2 as Shoe[];
   const shoeRotations = profile.shoeRotations;
   const events = !isEmpty(profile.events) ? profile.events : null;
   const races = (profile?.races as unknown as RaceActivity[]) || [];
@@ -96,35 +100,51 @@ function ShoeRotations({
 }: {
   shoeRotations: Omit<ShoeRotationType, "shoeList">[];
 }) {
+  const totalShoeMiles = (shoes: Omit<Shoe, "id" | "slug">[]) => {
+    return Math.ceil(
+      shoes.reduce((acc, item) => {
+        acc += metersToMiles(item.distance);
+        return acc;
+      }, 0)
+    );
+  };
+
   return (
     <div id="shoe-rotations" className="py-10">
       <div className=" mb-10 w-full border-b-4 border-orange-400">
         <h3 className="text-6xl uppercase text-orange-400">Shoe Rotations</h3>
       </div>
 
-      <div className="space-y-4 ">
+      <div className="space-y-4">
         {shoeRotations.map((sr) => (
-          <Link
-            href={`/shoes/${sr.slug}`}
-            key={sr.id}
-            className="border-gray group flex items-center justify-between rounded-lg border p-4 hover:cursor-pointer hover:border-black"
-          >
-            <div>
-              <div className="text-balance max-w-[200px] break-words text-2xl font-thin md:max-w-none md:whitespace-normal">
-                {sr.name}
+          <Card key={sr.id} className="hover:border-gray-500">
+            <CardHeader>
+              <CardTitle className="hover:underline">
+                <Link
+                  href={`/shoes/${sr.slug}`}
+                  className="text-balance max-w-[200px] break-words md:max-w-none md:whitespace-normal"
+                >
+                  {sr.name}
+                </Link>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex space-x-4 text-sm text-muted-foreground">
+                <div className="flex items-center">
+                  <CalendarIcon className="mr-1 h-4 w-4" />
+                  {formatDate(sr.startDate, {
+                    month: "short",
+                    day: "2-digit",
+                    year: "numeric",
+                  })}
+                </div>
+                <div className="flex items-center">{sr.shoes.length} shoes</div>
+                <div className="flex items-center">
+                  {totalShoeMiles(sr.shoes)} miles
+                </div>
               </div>
-              <div className="text-md font-thin uppercase">
-                {formatDate(sr.startDate, {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
-              </div>
-            </div>
-            <div className="text-lg font-thin md:text-2xl">
-              {sr.shoes.length} shoes
-            </div>
-          </Link>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

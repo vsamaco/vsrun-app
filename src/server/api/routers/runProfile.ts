@@ -30,6 +30,7 @@ export const runProfileRouter = createTRPCRouter({
               startDate: "desc",
             },
           },
+          shoes2: true,
           user: {
             select: {
               accounts: {

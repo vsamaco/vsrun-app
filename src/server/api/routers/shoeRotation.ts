@@ -34,6 +34,7 @@ export const shoeRotationRouter = createTRPCRouter({
             select: {
               name: true,
               slug: true,
+
               user: {
                 select: {
                   accounts: {
@@ -42,6 +43,7 @@ export const shoeRotationRouter = createTRPCRouter({
                       providerAccountId: true,
                     },
                   },
+                  image: true,
                 },
               },
             },
