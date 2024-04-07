@@ -48,7 +48,6 @@ function RunProfilePage(
   const name = profile.name;
   const highlightRun = profile.highlight_run as Activity;
   const weekStats = !isEmpty(profile.weekStats) ? profile.weekStats : null;
-  // const shoes = !isEmpty(profile.shoes) ? profile.shoes : null;
   const shoes = profile.shoes2 as Shoe[];
   const shoeRotations = profile.shoeRotations;
   const events = !isEmpty(profile.events) ? profile.events : null;
@@ -98,9 +97,9 @@ function RunProfilePage(
 function ShoeRotations({
   shoeRotations,
 }: {
-  shoeRotations: Omit<ShoeRotationType, "shoeList">[];
+  shoeRotations: ShoeRotationType[];
 }) {
-  const totalShoeMiles = (shoes: Omit<Shoe, "id" | "slug">[]) => {
+  const totalShoeMiles = (shoes: ShoeRotationType["shoeList"]) => {
     return Math.ceil(
       shoes.reduce((acc, item) => {
         acc += metersToMiles(item.distance);
@@ -138,9 +137,11 @@ function ShoeRotations({
                     year: "numeric",
                   })}
                 </div>
-                <div className="flex items-center">{sr.shoes.length} shoes</div>
                 <div className="flex items-center">
-                  {totalShoeMiles(sr.shoes)} miles
+                  {sr.shoeList.length} shoes
+                </div>
+                <div className="flex items-center">
+                  {totalShoeMiles(sr.shoeList)} miles
                 </div>
               </div>
             </CardContent>

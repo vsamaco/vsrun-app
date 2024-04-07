@@ -2,7 +2,6 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { nanoid } from "nanoid";
 import { ShoeRotationFormSchema } from "~/utils/schemas";
-import { type Shoe } from "~/types";
 
 // function filter<T extends object>(
 //   obj: T,
@@ -75,7 +74,7 @@ export const shoeRotationRouter = createTRPCRouter({
 
     return shoeRotations.map((sr) => ({
       ...sr,
-      shoeList: sr.shoeList as Shoe[],
+      shoeList: sr.shoeList,
     }));
   }),
 

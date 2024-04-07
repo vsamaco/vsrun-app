@@ -62,7 +62,6 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.10",
     "@types/eslint": "^8.37.0",
     "@types/leaflet": "^1.9.3",

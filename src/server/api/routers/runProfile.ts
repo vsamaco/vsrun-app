@@ -29,6 +29,9 @@ export const runProfileRouter = createTRPCRouter({
             orderBy: {
               startDate: "desc",
             },
+            include: {
+              shoeList: true,
+            },
           },
           shoes2: true,
           user: {

@@ -119,11 +119,12 @@ export type ShoeRotation = {
   start_date: Date;
   name: string;
   description: string;
-  shoeList: string[];
+  shoeList: ShoeCategories[];
   shoes: Shoe[];
 };
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
+export type ShoeType = RouterOutput["shoe"]["getUserShoes"][0];
 export type ShoeRotationType =
   RouterOutput["shoeRotation"]["getUserShoeRotations"][0];
 

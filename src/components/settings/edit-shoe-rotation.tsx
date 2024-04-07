@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarIcon, Pencil, XCircle, MoreVertical } from "lucide-react";
+import { CalendarIcon, Pencil, MoreVertical } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useId, useState } from "react";
 import {
@@ -19,6 +19,7 @@ import {
   type StravaShoeType,
   type Shoe,
   type ShoeRotationType,
+  type ShoeType,
 } from "~/types";
 import { metersToMiles, milesToMeters } from "~/utils/activity";
 import { api } from "~/utils/api";
@@ -85,7 +86,10 @@ export function EditShoeRotationForm({
       name: shoeRotation?.name || "",
       startDate: shoeRotation?.startDate,
       description: shoeRotation?.description,
-      shoeList: shoeRotation?.shoeList,
+      shoeList: shoeRotation?.shoeList.map((s) => ({
+        ...s,
+        metadata: s.metadata || undefined,
+      })),
       shoes:
         shoeRotation?.shoes?.map((s) => ({
           ...s,
@@ -168,7 +172,7 @@ export function EditShoeRotationForm({
 
       const shoeRotationData = {
         ...data,
-        shoeList: data.shoeList,
+        shoeList: data.shoeList.map((shoe) => shoe as Shoe),
       };
 
       if (shoeRotation?.slug) {
@@ -201,7 +205,7 @@ export function EditShoeRotationForm({
     keyName: "key",
   });
 
-  const handleAddShoe = async (shoe: Shoe) => {
+  const handleAddShoe = async (shoe: ShoeRotationType["shoeList"][0]) => {
     shoeListPrepend(shoe);
     if (shoeRotation?.slug) {
       await onSubmit();
@@ -437,9 +441,8 @@ function EditShoeModal({
       await utils.shoe.getShoeBySlug.invalidate();
 
       if (data) {
-        setValue(`shoeList.${index}`, data as Shoe);
+        setValue(`shoeList.${index}`, data);
         const currentValues = parentMethods.getValues();
-        console.log("updated shoeList:", currentValues);
         parentMethods.reset({ ...currentValues });
       }
 
@@ -893,13 +896,12 @@ function AddShoeModal({
   shoeList,
   handleAddShoe,
 }: {
-  handleAddShoe: (shoe: Shoe) => void;
-  shoeList: Shoe[];
+  handleAddShoe: (shoe: ShoeType) => void;
+  shoeList: ShoeRotationType["shoeList"];
 }) {
   const [open, setOpen] = useState(false);
 
-  const setSelectedShoe = (shoe: Shoe) => {
-    console.log("import shoe:", shoe);
+  const setSelectedShoe = (shoe: ShoeType) => {
     handleAddShoe(shoe);
     setOpen(false);
   };
@@ -929,8 +931,8 @@ function AddShoeForm({
   setSelectedShoe,
   shoeList,
 }: {
-  setSelectedShoe: (shoe: Shoe) => void;
-  shoeList: Shoe[];
+  setSelectedShoe: (shoe: ShoeType) => void;
+  shoeList: ShoeRotationType["shoeList"];
 }) {
   const { data: shoes, isLoading } = api.shoe.getUserShoes.useQuery(undefined, {
     staleTime: API_CACHE_DURATION.stravaGetShoes,
@@ -942,8 +944,6 @@ function AddShoeForm({
   if (!shoes) {
     return <div>No shoes found</div>;
   }
-
-  console.log("current shoes: ", { shoeList });
 
   const existingShoeIds = shoeList.map((s) => s.slug);
   const unselectedShoes = shoes.filter(
@@ -970,7 +970,7 @@ function AddShoeForm({
               <div>
                 <Button
                   variant="secondary"
-                  onClick={() => setSelectedShoe(shoe as Shoe)}
+                  onClick={() => setSelectedShoe(shoe)}
                 >
                   Select
                 </Button>
