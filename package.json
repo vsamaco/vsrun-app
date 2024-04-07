@@ -11,7 +11,8 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "data-migration:activity": "ts-node --compiler-options {\\\"module\\\":\\\"commonjs\\\"} ./prisma/data-migrations/data_migration_activity.ts"
+    "data-migration:activity": "ts-node --compiler-options {\\\"module\\\":\\\"commonjs\\\"} ./prisma/data-migrations/data_migration_activity.ts",
+    "data-migration:shoes": "ts-node --compiler-options {\\\"module\\\":\\\"commonjs\\\"} ./prisma/data-migrations/data_migration_shoes.ts"
   },
   "dependencies": {
     "@formspree/react": "^2.5.1",
