@@ -5,10 +5,10 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace PrismaJson {
     // Insert your types here!
-    type ShoeRotationShoeType = Shoe;
+    type ShoeRotationShoeType = Omit<Shoe, "id" | "slug">;
     type ProfileHighlightRunType = Activity | Record<string, never>;
     type ProfileWeekStatsType = WeekStat | Record<string, never>;
-    type ProfileShoesType = Shoe[] | undefined;
+    type ProfileShoesType = Omit<Shoe, "slug" | "start_date">[] | undefined;
     type ProfileEventsType = RaceEvent[] | undefined;
     type RaceLapType = RaceActivity["laps"][0];
     type ActivityLatLng = [number, number];
@@ -55,12 +55,18 @@ export type WeekStat = {
 };
 
 export type Shoe = {
+  slug: string;
   brand_name: string;
   model_name: string;
+  start_date: Date;
   distance: number;
   distance_mi?: number;
   categories: ShoeCategories[];
   description?: string;
+  metadata?: {
+    external_source: string;
+    external_id: string;
+  } | null;
 };
 
 export type RaceEvent = {
@@ -105,7 +111,7 @@ export const SHOE_CATEGORIES = [
   "trail",
   "race",
 ] as const;
-type ShoeCategories = (typeof SHOE_CATEGORIES)[number];
+export type ShoeCategories = (typeof SHOE_CATEGORIES)[number];
 
 export type ShoeRotation = {
   id: string;
@@ -113,10 +119,12 @@ export type ShoeRotation = {
   start_date: Date;
   name: string;
   description: string;
+  shoeList: ShoeCategories[];
   shoes: Shoe[];
 };
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
+export type ShoeType = RouterOutput["shoe"]["getUserShoes"][0];
 export type ShoeRotationType =
   RouterOutput["shoeRotation"]["getUserShoeRotations"][0];
 
@@ -124,3 +132,4 @@ export type RunProfileType = RouterOutput["runProfile"]["getUserProfile"];
 export type RaceProfileType = RouterOutput["activity"]["getProfileRaceBySlug"];
 export type HighlightRunProfileType =
   RouterOutput["activity"]["getUserProfileHighlightRun"];
+export type StravaShoeType = RouterOutput["strava"]["getShoes"][0];

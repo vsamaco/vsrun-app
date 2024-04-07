@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { EditShoeRotationForm } from "~/components/settings/edit-shoe-rotation";
 import Layout from "~/components/settings/layout";
 import { Separator } from "~/components/ui/separator";
+import { type ShoeRotationType } from "~/types";
 import { api } from "~/utils/api";
 
 function EditShoeRotationPage() {
@@ -28,7 +29,7 @@ function EditShoeRotationPage() {
           <h3 className="text-lg font-medium">Edit Shoe Rotation</h3>
         </div>
         <Separator />
-        <EditShoeRotationForm shoeRotation={shoeRotation} />
+        <EditShoeRotationForm shoeRotation={shoeRotation as ShoeRotationType} />
       </div>
     </>
   );

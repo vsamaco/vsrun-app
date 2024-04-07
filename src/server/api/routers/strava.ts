@@ -100,7 +100,7 @@ export const stravaRouter = createTRPCRouter({
     });
 
     if (!account) {
-      return null;
+      return [];
     }
 
     const athlete = (await strava.athlete.get({
@@ -108,7 +108,7 @@ export const stravaRouter = createTRPCRouter({
     })) as StravaAthlete;
 
     if (!athlete || !athlete.shoes) {
-      return null;
+      return [];
     }
 
     return athlete.shoes.map((shoe) => {

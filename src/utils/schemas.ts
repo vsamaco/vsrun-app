@@ -152,6 +152,7 @@ export const WeekSettingsFormSchema = z.object({
 });
 
 export const ShoeSettingsFormSchema = z.object({
+  id: z.string().optional(),
   brand_name: z
     .string({
       required_error: "Brand is required",
@@ -163,8 +164,16 @@ export const ShoeSettingsFormSchema = z.object({
     })
     .min(1),
   distance: z.coerce.number(),
+  start_date: z.coerce.date(),
   categories: z.array(z.enum(SHOE_CATEGORIES)),
   description: z.string().optional(),
+  metadata: z
+    .object({
+      external_id: z.string(),
+      external_source: z.string(),
+    })
+    .optional()
+    .nullable(),
 });
 
 export const EventSettingsFormSchema = z.object({
@@ -197,9 +206,12 @@ export const EventSettingsFormSchema = z.object({
 });
 
 export const ShoeRotationFormSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3),
   description: z.string().optional(),
   startDate: z.coerce.date(),
+  shoeList: z
+    .array(ShoeSettingsFormSchema)
+    .min(1, { message: "must contain at least 1 shoe" }),
   shoes: z.array(ShoeSettingsFormSchema),
 });
 

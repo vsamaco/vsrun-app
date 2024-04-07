@@ -9,12 +9,12 @@ import superjson from "superjson";
 import { api } from "~/utils/api";
 import { notFound } from "next/navigation";
 import Layout from "~/components/layout";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { metersToMiles } from "~/utils/activity";
 import { Badge } from "~/components/ui/badge";
 import { formatDate } from "~/utils/date";
 import { type Shoe } from "~/types";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
@@ -26,6 +26,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import Head from "next/head";
+import { Separator } from "~/components/ui/separator";
 
 export default function ShoesPage({
   slug,
@@ -43,7 +44,7 @@ export default function ShoesPage({
     return notFound();
   }
 
-  const { name, description, shoes, runProfile } = shoeRotation;
+  const { name, description, shoeList: shoes, runProfile } = shoeRotation;
 
   return (
     <>
@@ -53,39 +54,46 @@ export default function ShoesPage({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="space-y-5 p-4 md:p-10">
-        <div className="mx-auto items-center">
-          <div className="border-bottom flex h-full flex-col items-center justify-center space-y-5 border-black">
-            <h1 className="mt-20 scroll-m-20 text-center text-2xl font-extrabold tracking-tight md:text-4xl lg:text-5xl ">
-              {name}
-            </h1>
-            <div className="">
-              {formatDate(shoeRotation.startDate, {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </div>
-            {runProfile && (
+        <h1 className="mt-10 text-6xl font-medium">{name}</h1>
+        <div className="flex flex-row space-x-4">
+          {runProfile && (
+            <div className="flex flex-row items-center space-x-4">
               <div className="flex flex-row items-center space-x-2">
                 <Avatar>
+                  {runProfile.user.image && (
+                    <AvatarImage
+                      src={runProfile.user.image}
+                      alt={`${runProfile.name}`}
+                      className=""
+                    />
+                  )}
                   <AvatarFallback>{runProfile.name[0]}</AvatarFallback>
                 </Avatar>
                 <Link href={`/p/${runProfile.slug}`} className="">
                   {runProfile.name}
                 </Link>
               </div>
-            )}
-          </div>
-          <div className="mt-5 text-center">
-            <p className="text-xl  [&:not(:first-child)]:mt-6">{description}</p>
-          </div>
-          <div className="mt-10 space-y-5">
-            {shoes.map((shoe, index) => (
-              <div key={index}>
-                <ShoeCard shoe={shoe} />
+              <Separator orientation="vertical" className="my-4 " />
+              <div className="">
+                {formatDate(shoeRotation.startDate, {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+        </div>
+        <Separator />
+        <div className="">
+          <p className="[&:not(:first-child)]:mt-6">{description}</p>
+        </div>
+        <div className="space-y-5">
+          {shoes.map((shoe, index) => (
+            <div key={index}>
+              <ShoeCard shoe={shoe as Shoe} />
+            </div>
+          ))}
         </div>
         {shoeRotation.runProfile.user.accounts[0] && (
           <div>
@@ -103,42 +111,60 @@ export default function ShoesPage({
   );
 }
 
-function ShoeCard({ shoe }: { shoe: Shoe }) {
-  const [showDescription, setShowDescription] = useState(false);
+export function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const [isReadingMore, setIsReadingMore] = useState(false);
+  const readMoreRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const { offsetHeight, scrollHeight } = readMoreRef.current || {};
+
+    if (offsetHeight && scrollHeight && offsetHeight < scrollHeight) {
+      setIsTruncated(true);
+    } else {
+      setIsTruncated(false);
+    }
+  }, [readMoreRef]);
 
   return (
-    <Card
-      className={cn(
-        "group hover:border-black",
-        shoe.description && "cursor-pointer"
-      )}
-      onClick={() => setShowDescription((value) => !value)}
-    >
+    <Card className={cn("group hover:border-black")}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="font-normal">
+        <CardTitle className="">
           <div className="flex items-center">
-            <div className="flex max-w-[200px] flex-col text-lg md:max-w-none md:flex-row md:text-2xl">
+            <div className="flex max-w-[200px] flex-col leading-normal md:max-w-none md:flex-row ">
               <span className="mr-2">{shoe.brand_name}</span>
-              <span className="text-balance font-thin">{shoe.model_name}</span>
-            </div>
-            <div>
-              {shoe.description && !showDescription && (
-                <ChevronRight className="w-10" />
-              )}
-              {shoe.description && showDescription && (
-                <ChevronDown className="w-10" />
-              )}
+              <span className="">{shoe.model_name}</span>
             </div>
           </div>
         </CardTitle>
-        <div className="text-right text-xl font-thin text-gray-500 md:text-6xl">
+        <div className=" text-xl md:text-2xl">
           {Math.ceil(metersToMiles(shoe.distance))} mi
         </div>
       </CardHeader>
-      {showDescription && shoe.description && (
-        <CardContent>{shoe.description}</CardContent>
-      )}
-      <CardFooter>
+      <CardContent>
+        <div
+          ref={readMoreRef}
+          className={cn("", !isReadingMore && "line-clamp-1")}
+        >
+          {shoe.description}
+        </div>
+        {isTruncated && (
+          <div onClick={() => setIsReadingMore((prev) => !prev)}>
+            {isReadingMore ? (
+              <span className="flex items-center">
+                Read less
+                <ChevronRight className="w-4" />
+              </span>
+            ) : (
+              <span className="flex items-center">
+                Read more
+                <ChevronDown className="w-4" />
+              </span>
+            )}
+          </div>
+        )}
+      </CardContent>
+      <CardFooter className="flex justify-between">
         <div className="space-x-2 uppercase">
           {shoe.categories.map((category, index) => (
             <Badge

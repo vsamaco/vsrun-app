@@ -83,12 +83,13 @@ model RunProfile {
   weekStats    Json
   /// [ProfileShoesType]
   shoes        Json
+  shoes2       Shoe[]
   /// [ProfileEventsType]
   events       Json
 
   shoeRotations ShoeRotation[]
-  highlight_run Activity? @relation("HighlightRun")
-  races         Activity[] @relation("Races")
+  highlight_run Activity?      @relation("HighlightRun")
+  races         Activity[]     @relation("Races")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,6 +97,27 @@ model RunProfile {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+model Shoe {
+  id            String         @id @default(cuid())
+  slug          String         @unique @default(nanoid(8))
+  start_date    DateTime
+  brand_name    String
+  model_name    String
+  description   String
+  distance      Float
+  categories    String[]
+  shoeRotations ShoeRotation[]
+  metadata      Json?
+
+  runProfileId String
+  runProfile   RunProfile @relation(fields: [runProfileId], references: [id], onDelete: Cascade)
+
+  activities Activity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ShoeRotation {
@@ -107,6 +129,8 @@ model ShoeRotation {
   profileId   String
   /// [ShoeRotationShoeType]
   shoes       Json[]
+
+  shoeList Shoe[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,9 +160,12 @@ model Activity {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  raceProfileId            String?
-  raceProfile RunProfile? @relation("Races", fields: [raceProfileId], references: [id], onDelete: Cascade)
-  
-  highlightRunProfileId String? @unique
-  highlightRunProfile RunProfile? @relation("HighlightRun", fields:[highlightRunProfileId], references: [id], onDelete: Cascade)
+  shoeId String?
+  shoe   Shoe?   @relation(fields: [shoeId], references: [id], onDelete: Cascade)
+
+  raceProfileId String?
+  raceProfile   RunProfile? @relation("Races", fields: [raceProfileId], references: [id], onDelete: Cascade)
+
+  highlightRunProfileId String?     @unique
+  highlightRunProfile   RunProfile? @relation("HighlightRun", fields: [highlightRunProfileId], references: [id], onDelete: Cascade)
 }
