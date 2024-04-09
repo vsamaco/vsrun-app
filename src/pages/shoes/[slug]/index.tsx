@@ -54,7 +54,7 @@ export default function ShoesPage({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="space-y-5 p-4 md:p-10">
-        <h1 className="mt-10 text-6xl font-medium">{name}</h1>
+        <h1 className="mt-10 break-words text-6xl font-medium">{name}</h1>
         <div className="flex flex-row space-x-4">
           {runProfile && (
             <div className="flex flex-row items-center space-x-4">
@@ -128,16 +128,14 @@ export function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
 
   return (
     <Card className={cn("group hover:border-black")}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className="flex flex-row justify-between space-y-0 pb-4">
         <CardTitle className="">
-          <div className="flex items-center">
-            <div className="flex max-w-[200px] flex-col leading-normal md:max-w-none md:flex-row ">
-              <span className="mr-2">{shoe.brand_name}</span>
-              <span className="">{shoe.model_name}</span>
-            </div>
+          <div className="flex max-w-[200px] flex-col md:max-w-none md:flex-row">
+            <span className="mr-2">{shoe.brand_name}</span>
+            <span className="">{shoe.model_name}</span>
           </div>
         </CardTitle>
-        <div className=" text-xl md:text-2xl">
+        <div className="text-xl  md:text-2xl">
           {Math.ceil(metersToMiles(shoe.distance))} mi
         </div>
       </CardHeader>

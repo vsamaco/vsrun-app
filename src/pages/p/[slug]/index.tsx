@@ -13,7 +13,12 @@ import Layout from "~/components/layout";
 import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
-import { formatDurationHMS, isEmpty, metersToMiles } from "~/utils/activity";
+import {
+  formatDurationHMS,
+  isEmpty,
+  metersToFeet,
+  metersToMiles,
+} from "~/utils/activity";
 import {
   type Shoe,
   type Activity,
@@ -23,7 +28,7 @@ import {
 import Link from "next/link";
 import { formatDate } from "~/utils/date";
 import { notFound } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { CalendarIcon } from "lucide-react";
 
 function RunProfilePage(
@@ -117,7 +122,7 @@ function ShoeRotations({
       <div className="space-y-4">
         {shoeRotations.map((sr) => (
           <Card key={sr.id} className="hover:border-gray-500">
-            <CardHeader>
+            <CardHeader className="pb-4">
               <CardTitle className="hover:underline">
                 <Link
                   href={`/shoes/${sr.slug}`}
@@ -127,7 +132,7 @@ function ShoeRotations({
                 </Link>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardFooter>
               <div className="flex space-x-4 text-sm text-muted-foreground">
                 <div className="flex items-center">
                   <CalendarIcon className="mr-1 h-4 w-4" />
@@ -144,7 +149,7 @@ function ShoeRotations({
                   {totalShoeMiles(sr.shoeList)} miles
                 </div>
               </div>
-            </CardContent>
+            </CardFooter>
           </Card>
         ))}
       </div>
@@ -161,30 +166,34 @@ function Races({ races }: { races: RaceActivity[] }) {
 
       <div className="space-y-4 ">
         {races.map((race) => (
-          <div
-            key={race.id}
-            className="border-gray group flex items-center justify-between space-x-5 rounded-lg border p-4 hover:cursor-pointer hover:border-black"
-          >
-            <div>
-              <div className="text-balance max-w-[200px] break-words text-2xl font-thin md:max-w-none md:whitespace-normal">
-                {race.name}
+          <Card key={race.id} className="hover:border-gray-500">
+            <CardHeader className="flex flex-row items-center justify-between space-x-4 pb-4">
+              <CardTitle className="hover:underline">
+                <span className="text-balance max-w-[200px] break-words md:max-w-none md:whitespace-normal">
+                  {race.name}
+                </span>
+              </CardTitle>
+              <div className="text-xl  md:text-2xl">
+                {formatDurationHMS(race.moving_time)}
               </div>
-              <div className="text-md font-thin uppercase">
-                {formatDate(race.start_date, {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
-              </div>
-            </div>
-            <div className="text-lg font-thin md:text-2xl">
-              {race.moving_time > 0 && (
-                <div className="text-2xl font-thin md:text-4xl">
-                  {formatDurationHMS(race.moving_time)}
+            </CardHeader>
+            <CardFooter>
+              <div className="flex space-x-4 text-sm text-muted-foreground">
+                <div className="flex items-center">
+                  <CalendarIcon className="mr-1 h-4 w-4" />
+                  {formatDate(race.start_date, {
+                    month: "short",
+                    day: "2-digit",
+                    year: "numeric",
+                  })}
                 </div>
-              )}
-            </div>
-          </div>
+                <div>{metersToMiles(race.distance)} mi</div>
+                {race.total_elevation_gain > 0 && (
+                  <div>{metersToFeet(race.total_elevation_gain)} ft</div>
+                )}
+              </div>
+            </CardFooter>
+          </Card>
         ))}
       </div>
     </div>

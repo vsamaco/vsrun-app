@@ -18,7 +18,7 @@ export default function Shoes({ shoes }: Props) {
       <div className="space-y-4">
         {shoes.map((shoe, index) => (
           <Card key={index} className="group hover:border-gray-500">
-            <CardHeader className="flex flex-row justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row justify-between space-y-0 pb-4">
               <CardTitle className="">
                 <div className="flex max-w-[200px] flex-col md:max-w-none md:flex-row">
                   <span className="mr-2">{shoe.brand_name}</span>
