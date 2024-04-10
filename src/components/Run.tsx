@@ -52,7 +52,7 @@ function Run({ activity }: RunProps) {
         </div>
         <div className="flex flex-row items-center gap-2">
           <Calendar className="h-6 w-6 text-muted-foreground" />
-          <span className="monospace text-lg font-thin uppercase md:text-2xl">
+          <span className=" text-md uppercase md:text-xl">
             {formatDate(new Date(activity.start_date), {
               year: "numeric",
               month: "short",
@@ -64,13 +64,13 @@ function Run({ activity }: RunProps) {
           {top_stats.map((stat) => (
             <Card key={stat.label} className="">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-thin uppercase md:text-2xl">
+                <CardTitle className="text-md font-normal uppercase md:text-xl">
                   {stat.label}
                 </CardTitle>
                 {stat.icon}
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-thin md:text-4xl">
+                <div className="text-xl font-normal md:text-2xl">
                   {stat.value}
                 </div>
               </CardContent>
