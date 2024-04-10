@@ -49,6 +49,7 @@ export type WeekStat = {
   total_distance_mi?: number;
   total_elevation: number;
   total_elevation_ft?: number;
+  activities: Activity[];
   metadata: {
     external_source: string;
   } | null;

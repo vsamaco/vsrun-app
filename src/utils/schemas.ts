@@ -149,6 +149,7 @@ export const WeekSettingsFormSchema = z.object({
     .min(1),
   start_date: z.coerce.date(),
   end_date: z.coerce.date(),
+  activities: z.array(RunSettingsFormSchema),
 });
 
 export const ShoeSettingsFormSchema = z.object({
