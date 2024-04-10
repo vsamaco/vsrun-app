@@ -103,7 +103,6 @@ function EditWeekStats({
 
   const onSubmit = handleSubmit(
     (data) => {
-      console.log("onsubmit:", data);
       updateWeekStatProfile.mutate({
         weekStats: {
           ...data.weekStats,
@@ -429,7 +428,6 @@ function ImportRunForm({
 
   const weeklyActivities: WeekGroupStats = {};
   const groupActivitiesByWeek = () => {
-    console.log("called GA");
     activities.forEach((activity) => {
       const date = new Date(activity.start_date);
       const key = format(date, "yyyy-I");
