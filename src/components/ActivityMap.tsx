@@ -13,6 +13,10 @@ type Props = {
 export default function ActivityMap({ activity, zoom = 12 }: Props) {
   const { start_latlng, summary_polyline: polylines } = activity;
 
+  if (!polylines || !start_latlng) {
+    return null;
+  }
+
   const polyData = polyline.decode(polylines);
   const bounds = L.latLngBounds(polyData);
 

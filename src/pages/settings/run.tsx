@@ -1,18 +1,18 @@
 import Head from "next/head";
-import { notFound } from "next/navigation";
 import { EditHighlightRun } from "~/components/settings/edit-highlight-run";
 import Layout from "~/components/settings/layout";
 import { Separator } from "~/components/ui/separator";
 import { api } from "~/utils/api";
 
 function HighlightRunSettings() {
-  const { data, isLoading } = api.runProfile.getUserProfile.useQuery();
+  const { data, isLoading } =
+    api.activity.getUserProfileHighlightRun.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!data) return notFound();
+  const highlightRun = data || null;
 
   return (
     <>
@@ -29,7 +29,7 @@ function HighlightRunSettings() {
           </p>
         </div>
         <Separator />
-        <EditHighlightRun highlightRun={data?.highlightRun} />
+        <EditHighlightRun highlightRun={highlightRun} />
       </div>
     </>
   );

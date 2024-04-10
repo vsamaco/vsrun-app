@@ -38,6 +38,7 @@ import { Calendar } from "../ui/calendar";
 import { Badge } from "../ui/badge";
 import { Textarea } from "../ui/textarea";
 import { metersToMiles, milesToMeters } from "~/utils/activity";
+import { ShoeSettingsFormSchema } from "~/utils/schemas";
 
 type ShoeRotationModalProps = {
   shoeRotation: ShoeRotationType | null;
@@ -101,6 +102,7 @@ function ShoeRotationForm({
         name: z.string(),
         startDate: z.coerce.date(),
         description: z.string().optional(),
+        shoeList: z.array(ShoeSettingsFormSchema),
         shoes: z.array(
           z.object({
             brand_name: z.string(),
@@ -121,6 +123,7 @@ function ShoeRotationForm({
         shoeRotation?.shoes?.map((s) => ({
           ...s,
           distance_mi: metersToMiles(s.distance),
+          categories: s.categories,
         })) || [],
     },
   });
@@ -192,10 +195,10 @@ function ShoeRotationForm({
       if (shoeRotation?.slug) {
         updateShoeRotation.mutate({
           params: { slug: shoeRotation.slug },
-          body: data,
+          body: { ...data, shoeList: [] },
         });
       } else {
-        createShoeRotation.mutate({ body: data });
+        createShoeRotation.mutate({ body: { ...data, shoeList: [] } });
       }
     },
     (error) => {
@@ -217,8 +220,10 @@ function ShoeRotationForm({
   const defaultValues = {
     brand_name: "default brand",
     model_name: "default model",
+    start_date: new Date(),
     distance: 0,
     categories: [],
+    shoeList: [],
     description: "",
   };
 
@@ -459,7 +464,7 @@ function EditShoeForm({
     setShowShoeForm(false);
   };
 
-  const handleImportSelect = (shoe: Shoe) => {
+  const handleImportSelect = (shoe: Omit<Shoe, "slug" | "start_date">) => {
     setValue(`shoes.${index}.brand_name`, shoe.brand_name);
     setValue(`shoes.${index}.model_name`, shoe.model_name);
     setValue(`shoes.${index}.distance`, shoe.distance);
@@ -616,7 +621,7 @@ function EditShoeForm({
 function ImportShoeForm({
   handleImportSelect,
 }: {
-  handleImportSelect: (shoe: Shoe) => void;
+  handleImportSelect: (shoe: Omit<Shoe, "slug" | "start_date">) => void;
 }) {
   const { data: shoes, isLoading } = api.strava.getShoes.useQuery();
   if (isLoading) {

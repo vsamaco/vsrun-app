@@ -6,6 +6,7 @@ type HeroProps = {
   showShoes: boolean;
   showShoeRotations: boolean;
   showEvents: boolean;
+  showRaces: boolean;
 };
 
 function Hero({
@@ -15,6 +16,7 @@ function Hero({
   showShoes,
   showShoeRotations,
   showEvents,
+  showRaces,
 }: HeroProps) {
   return (
     <div className="flex flex-col justify-center py-10  sm:py-20">
@@ -40,7 +42,12 @@ function Hero({
             SHOE ROTATIONS
           </a>
         )}
-        {showEvents && (
+        {/* {showEvents && (
+          <a href="#races" className="text-red-400 hover:underline">
+            RACES
+          </a>
+        )} */}
+        {showRaces && (
           <a href="#races" className="text-red-400 hover:underline">
             RACES
           </a>

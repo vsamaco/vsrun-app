@@ -18,10 +18,10 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import {
-  type RaceEvent,
-  type Activity,
   type Shoe,
   type WeekStat,
+  type RunProfileType,
+  type RaceEvent,
 } from "~/types";
 import {
   formatHumanizeSeconds,
@@ -61,21 +61,14 @@ function DemoContainer({
 }
 
 type DashboardProfile = {
-  profile: RunProfile;
+  profile: RunProfileType;
 };
 
 function ProfileDashboard({ profile }: DashboardProfile) {
-  const highlightRun = !isEmpty(profile.highlightRun)
-    ? (profile.highlightRun as Activity)
+  const weekStats = !isEmpty(profile?.weekStats)
+    ? (profile?.weekStats as WeekStat)
     : null;
-  const weekStats = !isEmpty(profile.weekStats)
-    ? (profile.weekStats as WeekStat)
-    : null;
-  const shoes = !isEmpty(profile.shoes) ? (profile.shoes as Shoe[]) : [];
-  const events = !isEmpty(profile.events)
-    ? (profile.events as RaceEvent[])
-    : [];
-
+  const shoes = !isEmpty(profile?.shoes) ? (profile?.shoes as Shoe[]) : [];
   return (
     <>
       {profile && <ProfileSection profile={profile} />}
@@ -83,7 +76,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
       <div className="grid items-start justify-center gap-6 rounded-lg lg:grid-cols-2">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <DemoContainer>
-            <HighlightRunCard highlightRun={highlightRun} />
+            <HighlightRunCard profile={profile} />
           </DemoContainer>
           <DemoContainer>
             <WeekStatsCard weekStats={weekStats} />
@@ -94,8 +87,11 @@ function ProfileDashboard({ profile }: DashboardProfile) {
             <ShoesCard shoes={shoes} />
           </DemoContainer>
           <DemoContainer>
-            <RaceEventsCard events={events} />
+            <RacesCard profile={profile} />
           </DemoContainer>
+          {/* <DemoContainer>
+            <RaceEventsCard events={profile?.events || []} />
+          </DemoContainer> */}
         </div>
       </div>
     </>
@@ -132,7 +128,9 @@ function ProfileSection({ profile }: { profile: RunProfile }) {
   );
 }
 
-function HighlightRunCard({ highlightRun }: { highlightRun: Activity | null }) {
+function HighlightRunCard({ profile }: { profile: RunProfileType }) {
+  const highlightRun = profile?.highlight_run;
+
   return (
     <Card>
       <CardHeader>
@@ -301,6 +299,49 @@ function RaceEventsCard({ events }: { events: RaceEvent[] }) {
           raceIndex={events.length}
           buttonType="add"
         />
+      </CardFooter>
+    </Card>
+  );
+}
+
+function RacesCard({ profile }: { profile: RunProfileType }) {
+  if (!profile?.races) {
+    return null;
+  }
+
+  const { races } = profile;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Races</CardTitle>
+        <CardDescription>Highlight your races</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        {races.map((race, index) => {
+          return (
+            <div
+              className="flex items-center justify-between space-x-4"
+              key={index}
+            >
+              <div className="flex items-center space-x-4">
+                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                  {race.name}
+                </p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <p className="text-sm text-muted-foreground">
+                  {metersToMiles(race.distance).toLocaleString()} mi
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+      <CardFooter>
+        <Link href="/settings/races" className={cn("w-full", buttonVariants())}>
+          Edit Races
+        </Link>
       </CardFooter>
     </Card>
   );

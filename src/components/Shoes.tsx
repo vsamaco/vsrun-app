@@ -1,9 +1,11 @@
 import React from "react";
 import { type Shoe } from "~/types";
+import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Badge } from "./ui/badge";
 import { metersToMiles } from "~/utils/activity";
 
 type Props = {
-  shoes: Shoe[];
+  shoes: Omit<Shoe, "slug">[];
 };
 
 export default function Shoes({ shoes }: Props) {
@@ -13,24 +15,36 @@ export default function Shoes({ shoes }: Props) {
         <h3 className="text-6xl text-green-300">SHOES</h3>
       </div>
 
-      <ul className="space-y-5 divide-y divide-black">
+      <div className="space-y-4">
         {shoes.map((shoe, index) => (
-          <li
-            key={index}
-            className="flex w-full items-center justify-between pt-5"
-          >
-            <div className="">
-              <div className="text-lg  md:text-2xl">{shoe.brand_name}</div>
-              <div className=" text-lg font-thin  md:text-2xl">
-                {shoe.model_name}
+          <Card key={index} className="group hover:border-gray-500">
+            <CardHeader className="flex flex-row justify-between space-y-0 pb-4">
+              <CardTitle className="">
+                <div className="flex max-w-[200px] flex-col md:max-w-none md:flex-row">
+                  <span className="mr-2">{shoe.brand_name}</span>
+                  <span className="">{shoe.model_name}</span>
+                </div>
+              </CardTitle>
+              <div className="text-xl  md:text-2xl">
+                {Math.ceil(metersToMiles(shoe.distance))} mi
               </div>
-            </div>
-            <div className="text-2xl font-thin md:text-4xl">
-              {Math.ceil(metersToMiles(shoe.distance))} mi
-            </div>
-          </li>
+            </CardHeader>
+            <CardFooter>
+              <div className="space-x-2">
+                {shoe.categories.map((category, index) => (
+                  <Badge
+                    key={index}
+                    variant="secondary"
+                    className="text-sm uppercase tracking-wide group-hover:bg-yellow-400"
+                  >
+                    {category.replace("_", " ")}
+                  </Badge>
+                ))}
+              </div>
+            </CardFooter>
+          </Card>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

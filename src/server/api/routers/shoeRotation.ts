@@ -33,6 +33,7 @@ export const shoeRotationRouter = createTRPCRouter({
             select: {
               name: true,
               slug: true,
+
               user: {
                 select: {
                   accounts: {
@@ -41,10 +42,12 @@ export const shoeRotationRouter = createTRPCRouter({
                       providerAccountId: true,
                     },
                   },
+                  image: true,
                 },
               },
             },
           },
+          shoeList: true,
         },
       });
       return shoeRotation;
@@ -61,12 +64,18 @@ export const shoeRotationRouter = createTRPCRouter({
       where: {
         profileId: runProfile.id,
       },
+      include: {
+        shoeList: true,
+      },
       orderBy: {
         startDate: "desc",
       },
     });
 
-    return shoeRotations;
+    return shoeRotations.map((sr) => ({
+      ...sr,
+      shoeList: sr.shoeList,
+    }));
   }),
 
   createShoeRotation: protectedProcedure
@@ -90,6 +99,11 @@ export const shoeRotationRouter = createTRPCRouter({
           description: input.body.description || "",
           shoes: input.body.shoes,
           profileId: runProfile.id,
+          shoeList: {
+            connect: input.body.shoeList
+              .filter((s) => s.id)
+              .map((s) => ({ id: s.id })),
+          },
         },
       });
 
@@ -122,6 +136,14 @@ export const shoeRotationRouter = createTRPCRouter({
           startDate: input.body.startDate,
           description: input.body.description,
           shoes: input.body.shoes,
+          shoeList: {
+            set: input.body.shoeList
+              .filter((s) => s.id)
+              .map((s) => ({ id: s.id })),
+          },
+        },
+        include: {
+          shoeList: true,
         },
       });
 

@@ -3,16 +3,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { type Activity } from "~/types";
+import {
+  ActivityWorkoutType,
+  type RaceActivity,
+  type ActivityWorkoutTypes,
+  type HighlightRunProfileType,
+} from "~/types";
 import {
   feetToMeters,
   formatDurationHMS,
+  metersToFeet,
   metersToMiles,
   milesToMeters,
   parseHmsToSeconds,
 } from "~/utils/activity";
 import { api } from "~/utils/api";
-import { RunSettingsFormSchema } from "~/utils/schemas";
+import { RaceFormSchema } from "~/utils/schemas";
 import { toast } from "../ui/use-toast";
 import { ToastClose } from "../ui/toast";
 import { format } from "date-fns";
@@ -43,37 +49,67 @@ import { type StravaActivity } from "~/server/api/routers/strava";
 import { z } from "zod";
 import { Calendar } from "../ui/calendar";
 import { API_CACHE_DURATION } from "~/utils/constants";
+import { Textarea } from "../ui/textarea";
 
 type FormValues = {
-  highlightRun: Omit<Activity, "id">;
+  highlightRun: Omit<RaceActivity, "id" | "slug">;
 };
 
 export function EditHighlightRun({
   highlightRun,
 }: {
-  highlightRun: Activity | Record<string, never>;
+  highlightRun: HighlightRunProfileType | null;
 }) {
   const router = useRouter();
-
   const methods = useForm<FormValues>({
-    resolver: zodResolver(z.object({ highlightRun: RunSettingsFormSchema })),
+    resolver: zodResolver(z.object({ highlightRun: RaceFormSchema })),
     defaultValues: {
       highlightRun: {
         name: highlightRun?.name || "",
+        description: highlightRun?.description || "",
         start_date: highlightRun?.start_date,
+        start_latlng: highlightRun?.start_latlng || undefined,
+        end_latlng: highlightRun?.end_latlng || undefined,
         moving_time: highlightRun?.moving_time || 0,
-        moving_time_hms: highlightRun?.moving_time_hms || "00:00:00",
+        moving_time_hms: highlightRun?.moving_time
+          ? formatDurationHMS(highlightRun.moving_time)
+          : "0:00:00",
         distance: highlightRun?.distance || 0,
-        distance_mi: highlightRun?.distance_mi || 0,
+        distance_mi: highlightRun?.distance
+          ? metersToMiles(highlightRun.distance)
+          : 0,
         total_elevation_gain: highlightRun?.total_elevation_gain || 0,
-        total_elevation_gain_ft: highlightRun?.total_elevation_gain_ft || 0,
-        metadata: highlightRun?.metadata || null,
+        total_elevation_gain_ft: highlightRun?.total_elevation_gain
+          ? metersToFeet(highlightRun.total_elevation_gain)
+          : 0,
+        workout_type: highlightRun?.workout_type
+          ? (highlightRun.workout_type as ActivityWorkoutTypes)
+          : undefined,
+        laps: [],
+        metadata: highlightRun?.metadata || undefined,
       },
     },
   });
 
   const utils = api.useContext();
-  const updateRunProfile = api.runProfile.updateProfile.useMutation({
+  const updateRunProfile = api.activity.upsertProfileHighlightRun.useMutation({
+    onSuccess: async (_) => {
+      await utils.runProfile.getUserProfile.invalidate();
+      await utils.activity.getUserProfileHighlightRun.invalidate();
+      await router.push("/settings");
+      toast({ title: "Success", description: "Successfully saved changes." });
+    },
+    onError: (error) => {
+      console.log({ error });
+      toast({
+        title: "Error",
+        description: error.message,
+        action: <ToastClose>Close</ToastClose>,
+      });
+    },
+  });
+
+  const deleteRunProfile = api.activity.deleteProfileActivity.useMutation({
     onSuccess: async (_) => {
       await utils.runProfile.getUserProfile.invalidate();
       await router.push("/settings");
@@ -94,13 +130,13 @@ export function EditHighlightRun({
   const onSubmit = handleSubmit(
     (data) => {
       console.log("onsubmit:", data);
-      const updatedRun = {
-        ...data,
-        start_date: new Date(data.highlightRun.start_date),
+      const highlightRun = {
+        ...data.highlightRun,
+        laps: [],
       };
 
-      console.log("updatedRun:", updatedRun);
-      updateRunProfile.mutate(updatedRun);
+      console.log("updatedRun:", highlightRun);
+      updateRunProfile.mutate({ body: highlightRun });
     },
     (errors) => {
       console.log("errors:", errors);
@@ -108,7 +144,9 @@ export function EditHighlightRun({
   );
 
   const handleRemove = () => {
-    updateRunProfile.mutate({ highlightRun: null });
+    if (highlightRun?.slug) {
+      deleteRunProfile.mutate({ params: { slug: highlightRun.slug } });
+    }
   };
 
   return (
@@ -190,6 +228,22 @@ function EditRunForm() {
           </FormItem>
         )}
       />
+
+      <FormField
+        control={control}
+        name="highlightRun.description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Textarea placeholder="description" {...field} />
+            </FormControl>
+            <FormDescription></FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      ></FormField>
+
       <FormField
         control={control}
         name="highlightRun.moving_time_hms"
@@ -308,19 +362,25 @@ function ImportRunModal() {
     methods.setValue("highlightRun", {
       name: activity.name,
       start_date: new Date(activity.start_date),
+      description: "",
+      workout_type: activity.workout_type
+        ? ActivityWorkoutType[activity.workout_type]
+        : undefined,
       moving_time: activity.moving_time,
       moving_time_hms: formatDurationHMS(activity.moving_time),
       distance: activity.distance,
       distance_mi: metersToMiles(activity.distance),
       start_latlng: activity.start_latlng,
+      end_latlng: activity.end_latlng,
       summary_polyline: activity.map.summary_polyline,
       total_elevation_gain: activity.total_elevation_gain,
       total_elevation_gain_ft: activity.total_elevation_gain
         ? feetToMeters(activity.total_elevation_gain)
         : 0,
+      laps: [],
       metadata: {
         external_id: activity.id.toString(),
-        external_source: "Strava",
+        external_source: "strava",
       },
     });
     setOpen(false);

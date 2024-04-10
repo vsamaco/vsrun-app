@@ -1,21 +1,23 @@
 import Head from "next/head";
 import { notFound } from "next/navigation";
 import { useRouter } from "next/router";
-import { EditShoeRotationForm } from "~/components/settings/edit-shoe-rotation";
+import EditRaceForm from "~/components/settings/edit-race";
 import Layout from "~/components/settings/layout";
 import { Separator } from "~/components/ui/separator";
-import { type ShoeRotationType } from "~/types";
 import { api } from "~/utils/api";
 
-function EditShoeRotationPage() {
+function EditRaceSettingsPage() {
   const router = useRouter();
   const slug = router.query.slug as string;
-  const { data: shoeRotation, isLoading } =
-    api.shoeRotation.getShoeRotationBySlug.useQuery({ slug });
+  const { data: race, isLoading } = api.activity.getProfileRaceBySlug.useQuery({
+    slug,
+  });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!shoeRotation) return notFound();
+  if (!race) return notFound();
 
   return (
     <>
@@ -26,17 +28,17 @@ function EditShoeRotationPage() {
       </Head>
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-medium">Edit Shoe Rotation</h3>
+          <h3 className="text-lg font-medium">Edit Race</h3>
         </div>
         <Separator />
-        <EditShoeRotationForm shoeRotation={shoeRotation as ShoeRotationType} />
+        <EditRaceForm race={race} />
       </div>
     </>
   );
 }
 
-EditShoeRotationPage.getLayout = function getLayout(page: React.ReactElement) {
+EditRaceSettingsPage.getLayout = function getLayout(page: React.ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export default EditShoeRotationPage;
+export default EditRaceSettingsPage;

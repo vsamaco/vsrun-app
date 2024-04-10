@@ -29,7 +29,11 @@ export const runProfileRouter = createTRPCRouter({
             orderBy: {
               startDate: "desc",
             },
+            include: {
+              shoeList: true,
+            },
           },
+          shoes2: true,
           user: {
             select: {
               accounts: {
@@ -40,6 +44,8 @@ export const runProfileRouter = createTRPCRouter({
               },
             },
           },
+          races: true,
+          highlight_run: true,
         },
       });
       return profile;
@@ -49,6 +55,10 @@ export const runProfileRouter = createTRPCRouter({
     const profile = await ctx.prisma.runProfile.findUnique({
       where: {
         userId: userId,
+      },
+      include: {
+        races: true,
+        highlight_run: true,
       },
     });
     return profile;

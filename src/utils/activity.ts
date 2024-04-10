@@ -46,7 +46,7 @@ export const parseDateDay = (weekDate: Date) => {
 };
 
 export const metersToMiles = (i: number) => {
-  return Math.round(i * 0.000621371192 * 100) / 100;
+  return roundNumber(i * 0.000621371192);
 };
 
 export const milesToMeters = (mi: number) => {
@@ -54,7 +54,7 @@ export const milesToMeters = (mi: number) => {
 };
 
 export const metersToFeet = (i: number) => {
-  return i * 3.2808;
+  return roundNumber(i * 3.2808);
 };
 
 export const feetToMeters = (ft: number) => {
@@ -63,4 +63,8 @@ export const feetToMeters = (ft: number) => {
 
 export const isEmpty = (obj: JSONValue | object) => {
   return !obj || Object.keys(obj).length === 0;
+};
+
+const roundNumber = (num: number) => {
+  return +num.toFixed(2);
 };

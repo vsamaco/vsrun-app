@@ -114,7 +114,7 @@ function EditShoeModal({
   const [showImport, setShowImport] = useState(false);
   const handleImportShoe = () => setShowImport(true);
 
-  const setSelectedShoe = (shoe: Shoe) => {
+  const setSelectedShoe = (shoe: Omit<Shoe, "slug" | "start_date">) => {
     setShowImport(false);
     console.log("import shoe:", shoe);
     methods.setValue("shoe.model_name", shoe.model_name);
@@ -189,7 +189,7 @@ function EditShoeModal({
 function ImportShoeForm({
   setSelectedShoe,
 }: {
-  setSelectedShoe: (shoe: Shoe) => void;
+  setSelectedShoe: (shoe: Omit<Shoe, "slug" | "start_date">) => void;
 }) {
   const { data: shoes, isLoading } = api.strava.getShoes.useQuery();
   if (isLoading) {
@@ -200,7 +200,7 @@ function ImportShoeForm({
     return <div>No shoes found</div>;
   }
 
-  const handleImportSelect = (shoe: Shoe) => {
+  const handleImportSelect = (shoe: Omit<Shoe, "slug" | "start_date">) => {
     setSelectedShoe(shoe);
   };
 
