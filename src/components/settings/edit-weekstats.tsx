@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { Activity, type WeekStat } from "~/types";
+import { type Activity, type WeekStat } from "~/types";
 import { api } from "~/utils/api";
 import { WeekSettingsFormSchema } from "~/utils/schemas";
 import { toast } from "../ui/use-toast";
@@ -443,7 +443,6 @@ function ImportRunForm({
         distance: activity.distance,
         moving_time: activity.moving_time,
         total_elevation_gain: activity.total_elevation_gain,
-        summary_polyline: activity.map.summary_polyline,
         metadata: {
           external_id: activity.id.toString(),
           external_source: "strava",
