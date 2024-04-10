@@ -65,17 +65,17 @@ function EditWeekStats({
           : undefined,
         total_runs: weekStats?.total_runs,
         total_distance: weekStats?.total_distance || 0,
-        total_distance_mi: weekStats.total_distance_mi
-          ? weekStats.total_distance_mi
-          : metersToMiles(weekStats.total_distance),
+        total_distance_mi: weekStats.total_distance
+          ? metersToMiles(weekStats.total_distance)
+          : undefined,
         total_duration: weekStats?.total_duration || 0,
-        total_duration_hms: weekStats.total_duration_hms
-          ? weekStats.total_duration_hms
-          : formatDurationHMS(weekStats.total_duration),
+        total_duration_hms: weekStats.total_duration
+          ? formatDurationHMS(weekStats.total_duration)
+          : undefined,
         total_elevation: weekStats?.total_elevation || 0,
         total_elevation_ft: weekStats.total_elevation_ft
-          ? weekStats.total_elevation_ft
-          : Math.ceil(metersToFeet(weekStats.total_elevation)),
+          ? Math.ceil(metersToFeet(weekStats.total_elevation))
+          : undefined,
         metadata: weekStats?.metadata || null,
       },
     },
@@ -373,7 +373,14 @@ function ImportFormModal() {
       total_duration_hms: formatDurationHMS(weekStats.total_duration),
       total_elevation: weekStats.total_elevation,
       total_elevation_ft: metersToFeet(weekStats.total_elevation),
-      activities: weekStats.activities,
+      activities: weekStats.activities.map((a) => ({
+        name: a.name,
+        start_date: a.start_date,
+        distance: a.distance,
+        moving_time: a.moving_time,
+        total_elevation_gain: a.total_elevation_gain,
+        metadata: a.metadata,
+      })),
       metadata: {
         external_source: "strava",
       },
