@@ -73,7 +73,7 @@ function ShoeRotationRow({ shoeRotation }: { shoeRotation: ShoeRotationType }) {
       <CardFooter>
         <div className="flex space-x-4 text-sm text-muted-foreground">
           <div className="flex items-center">
-            <CalendarIcon className="mr-1 h-4 w-4" />
+            <CalendarIcon className="mr-1 hidden h-4 w-4 md:block" />
             {formatDate(shoeRotation.startDate, {
               month: "short",
               day: "2-digit",

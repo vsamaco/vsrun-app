@@ -53,7 +53,7 @@ function RacesSettings() {
                   </CardHeader>
                   <CardFooter className="flex space-x-4 text-sm text-muted-foreground">
                     <div className="flex items-center">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <CalendarIcon className="mr-2 hidden h-4 w-4 md:block" />
                       {formatDate(race.start_date, {
                         month: "short",
                         day: "numeric",
