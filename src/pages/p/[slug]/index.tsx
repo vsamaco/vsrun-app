@@ -30,6 +30,7 @@ import { formatDate } from "~/utils/date";
 import { notFound } from "next/navigation";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { CalendarIcon } from "lucide-react";
+import { totalShoeMiles } from "~/utils/shoe";
 
 function RunProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -104,15 +105,6 @@ function ShoeRotations({
 }: {
   shoeRotations: ShoeRotationType[];
 }) {
-  const totalShoeMiles = (shoes: ShoeRotationType["shoeList"]) => {
-    return Math.ceil(
-      shoes.reduce((acc, item) => {
-        acc += metersToMiles(item.distance);
-        return acc;
-      }, 0)
-    );
-  };
-
   return (
     <div id="shoe-rotations" className="py-10">
       <div className=" mb-10 w-full border-b-4 border-orange-400">

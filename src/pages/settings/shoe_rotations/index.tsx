@@ -1,20 +1,15 @@
+import { CalendarIcon, ExternalLink } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "~/components/settings/layout";
 import { buttonVariants } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 import { type ShoeRotationType } from "~/types";
 import { api } from "~/utils/api";
 import { formatDate } from "~/utils/date";
+import { totalShoeMiles } from "~/utils/shoe";
 
 function ShoeRotationSettings() {
   const { data: shoeRotations, isLoading } =
@@ -43,7 +38,7 @@ function ShoeRotationSettings() {
           </Link>
         </div>
         <Separator />
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="flex flex-col gap-4">
           {shoeRotations &&
             shoeRotations.map((shoeRotation) => (
               <ShoeRotationRow
@@ -61,32 +56,37 @@ function ShoeRotationRow({ shoeRotation }: { shoeRotation: ShoeRotationType }) {
   if (!shoeRotation) return;
 
   return (
-    <Card className="">
-      <CardHeader>
-        <CardTitle className="truncate pb-2">{shoeRotation.name}</CardTitle>
-        <CardDescription className="mt-5">
-          {formatDate(shoeRotation.startDate, {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </CardDescription>
+    <Card className="hover:outline hover:outline-1">
+      <CardHeader className="flex flex-row justify-between pb-4">
+        <CardTitle className="hover:underline">
+          <Link
+            href={`/settings/shoe_rotations/${shoeRotation.slug}/edit`}
+            className="text-balance max-w-[200px] break-words md:max-w-none md:whitespace-normal"
+          >
+            {shoeRotation.name}
+          </Link>
+        </CardTitle>
+        <Link href={`/shoes/${shoeRotation.slug}`} target="_blank">
+          <ExternalLink className="h-6 w-6" />
+        </Link>
       </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter className="flex justify-between">
-        <Link
-          href={`/shoes/${shoeRotation.slug}`}
-          className={buttonVariants({ variant: "outline" })}
-          target="_blank"
-        >
-          View
-        </Link>
-        <Link
-          className={buttonVariants({ variant: "outline" })}
-          href={`/settings/shoe_rotations/${shoeRotation.slug}/edit`}
-        >
-          Edit
-        </Link>
+      <CardFooter>
+        <div className="flex space-x-4 text-sm text-muted-foreground">
+          <div className="flex items-center">
+            <CalendarIcon className="mr-1 h-4 w-4" />
+            {formatDate(shoeRotation.startDate, {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            })}
+          </div>
+          <div className="flex items-center">
+            {shoeRotation.shoeList.length} shoes
+          </div>
+          <div className="flex items-center">
+            {totalShoeMiles(shoeRotation.shoeList)} miles
+          </div>
+        </div>
       </CardFooter>
     </Card>
   );

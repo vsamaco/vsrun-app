@@ -31,7 +31,7 @@ export const shoeRouter = createTRPCRouter({
         runProfileId: runProfile.id,
       },
       orderBy: {
-        start_date: "desc",
+        start_date: "asc",
       },
     });
 
