@@ -242,7 +242,7 @@ function ShoesCard({ shoes }: { shoes: Shoe[] }) {
               key={index}
             >
               <div className="flex items-center space-x-4">
-                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                <p className="w-[160px] truncate text-sm font-medium leading-none">
                   {shoe.brand_name} {shoe.model_name}
                 </p>
               </div>
@@ -284,7 +284,7 @@ function ShoeRotationsCard({
               key={index}
             >
               <div className="flex items-center space-x-4">
-                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                <p className="w-[160px] truncate text-sm font-medium leading-none">
                   {shoeRotation.name}
                 </p>
               </div>
@@ -368,7 +368,7 @@ function RacesCard({ profile }: { profile: RunProfileType }) {
               key={index}
             >
               <div className="flex items-center space-x-4">
-                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                <p className="w-[160px] truncate text-sm font-medium leading-none">
                   {race.name}
                 </p>
               </div>
