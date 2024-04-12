@@ -299,8 +299,11 @@ function ShoeRotationsCard({
       </CardContent>
 
       <CardFooter>
-        <Link className={cn("w-full", buttonVariants())} href="/settings/shoes">
-          Edit Shoes
+        <Link
+          className={cn("w-full", buttonVariants())}
+          href="/settings/shoe_rotations"
+        >
+          Edit Rotations
         </Link>
       </CardFooter>
     </Card>
