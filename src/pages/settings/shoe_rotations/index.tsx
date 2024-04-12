@@ -28,7 +28,7 @@ function ShoeRotationSettings() {
         <div>
           <h3 className="text-lg font-medium">Shoe Rotations</h3>
           <p className="text-sm text-muted-foreground">
-            Show shoe rotations used for a given period.
+            Highlight shoe rotations used for a given period
           </p>
           <Link
             href="/settings/shoe_rotations/new"

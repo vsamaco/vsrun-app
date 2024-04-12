@@ -232,7 +232,7 @@ function ShoesCard({ shoes }: { shoes: Shoe[] }) {
     <Card>
       <CardHeader>
         <CardTitle>Shoes</CardTitle>
-        <CardDescription>Highlight shoes used in shoe rotation</CardDescription>
+        <CardDescription>Highlight your shoes</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         {shoes.map((shoe, index) => {

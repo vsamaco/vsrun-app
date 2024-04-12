@@ -3,14 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Layout from "~/components/settings/layout";
 import { buttonVariants } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { formatDurationHMS, metersToMiles } from "~/utils/activity";
 import { api } from "~/utils/api";
