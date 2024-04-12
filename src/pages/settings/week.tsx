@@ -25,7 +25,7 @@ function WeekStatsSettings() {
         <div>
           <h3 className="text-lg font-medium">Weekly Stats</h3>
           <p className="text-sm text-muted-foreground">
-            Highlight weekly running stats
+            Highlight your weekly mileage, duration, and elevation
           </p>
         </div>
         <Separator />
