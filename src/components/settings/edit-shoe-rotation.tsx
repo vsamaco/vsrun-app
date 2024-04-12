@@ -43,7 +43,7 @@ import {
   ShoeRotationFormSchema,
   ShoeSettingsFormSchema,
 } from "~/utils/schemas";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -310,76 +310,73 @@ export function EditShoeRotationForm({
               shoeList={shoeListFields}
               handleAddShoe={handleAddShoe}
             />
-            {shoeListFields.map((shoe, index) => {
-              return (
-                <Card
-                  key={shoe.key}
-                  className={cn(
-                    "border-gray group border hover:border-gray-500"
-                  )}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-lg font-normal">
-                      <div className="flex flex-row items-center justify-between">
-                        <div className="space-y-2 rounded-sm ">
-                          <div className="text-balance">
-                            <span>{shoe.brand_name}</span>&nbsp;
-                            <span className="font-thin">{shoe.model_name}</span>
-                          </div>
+            <div className="space-y-4">
+              {shoeListFields.map((shoe, index) => {
+                return (
+                  <Card
+                    key={shoe.key}
+                    className={cn(
+                      "border-gray group border hover:border-gray-500"
+                    )}
+                  >
+                    <CardHeader className="flex flex-row justify-between pb-4">
+                      <CardTitle className="">
+                        <div className="flex max-w-[200px] flex-col md:max-w-none md:flex-row">
+                          <span className="mr-2">{shoe.brand_name}</span>
+                          <span className="">{shoe.model_name}</span>
                         </div>
-
-                        <div className="flex flex-row space-x-2">
-                          <>
-                            {shoeRotation && (
-                              <Link
-                                href={`/settings/shoes/${shoe.slug}/edit?nextShoeRotationId=${shoeRotation.slug}`}
-                                className={buttonVariants({
-                                  variant: "outline",
-                                })}
+                      </CardTitle>
+                      <div className="flex flex-row space-x-2">
+                        <>
+                          {shoeRotation && (
+                            <Link
+                              href={`/settings/shoes/${shoe.slug}/edit?nextShoeRotationId=${shoeRotation.slug}`}
+                              className={buttonVariants({
+                                variant: "outline",
+                              })}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Link>
+                          )}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                disabled={false}
                               >
-                                <Pencil className="h-4 w-4" />
-                              </Link>
-                            )}
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  disabled={false}
-                                >
-                                  <MoreVertical className="h-4 w-4" />
-                                  <span className="sr-only">More</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => handleRemoveShoe(index)}
-                                >
-                                  Remove
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </>
-                        </div>
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">More</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleRemoveShoe(index)}
+                              >
+                                Remove
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </>
                       </div>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-x-2">
-                      {shoe.categories.map((category, categoryIdx) => (
-                        <Badge
-                          key={categoryIdx}
-                          variant="secondary"
-                          className="group-hover:bg-yellow-400"
-                        >
-                          {category.replace("_", " ")}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </CardHeader>
+                    <CardFooter className="flex justify-between">
+                      <div className="space-x-2 uppercase">
+                        {shoe.categories.map((category, index) => (
+                          <Badge
+                            key={index}
+                            variant="secondary"
+                            className="text-sm group-hover:bg-yellow-400"
+                          >
+                            {category.replace("_", " ")}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
           </FormItem>
         </form>
       </FormProvider>

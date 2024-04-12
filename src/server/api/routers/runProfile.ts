@@ -59,6 +59,12 @@ export const runProfileRouter = createTRPCRouter({
       include: {
         races: true,
         highlight_run: true,
+        shoes2: true,
+        shoeRotations: {
+          include: {
+            shoeList: true,
+          },
+        },
       },
     });
     return profile;

@@ -1,3 +1,6 @@
+import { type ShoeRotationType } from "~/types";
+import { metersToMiles } from "./activity";
+
 export const SHOE_BRANDS = [
   "Adidas",
   "Altra",
@@ -21,4 +24,13 @@ export const parseShoeBrandModel = (shoeName: string) => {
     return { brand: match[1], model: match[2] };
   }
   return { brand: "", model: shoeName };
+};
+
+export const totalShoeMiles = (shoes: ShoeRotationType["shoeList"]) => {
+  return Math.ceil(
+    shoes.reduce((acc, item) => {
+      acc += metersToMiles(item.distance);
+      return acc;
+    }, 0)
+  );
 };

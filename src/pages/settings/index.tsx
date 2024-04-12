@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import Link from "next/link";
 import EditProfileModal from "~/components/settings/edit-profile-modal";
 import EditRaceModal from "~/components/settings/edit-race-modal";
-import EditShoeModal from "~/components/settings/edit-shoe-modal";
 import Layout from "~/components/settings/layout";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -22,6 +21,7 @@ import {
   type WeekStat,
   type RunProfileType,
   type RaceEvent,
+  type ShoeRotationType,
 } from "~/types";
 import {
   formatHumanizeSeconds,
@@ -68,7 +68,7 @@ function ProfileDashboard({ profile }: DashboardProfile) {
   const weekStats = !isEmpty(profile?.weekStats)
     ? (profile?.weekStats as WeekStat)
     : null;
-  const shoes = !isEmpty(profile?.shoes) ? (profile?.shoes as Shoe[]) : [];
+  const shoes = (profile?.shoes2 as Shoe[]) || [];
   return (
     <>
       {profile && <ProfileSection profile={profile} />}
@@ -87,11 +87,15 @@ function ProfileDashboard({ profile }: DashboardProfile) {
             <ShoesCard shoes={shoes} />
           </DemoContainer>
           <DemoContainer>
+            <ShoeRotationsCard
+              shoeRotations={
+                (profile?.shoeRotations as ShoeRotationType[]) || []
+              }
+            />
+          </DemoContainer>
+          <DemoContainer>
             <RacesCard profile={profile} />
           </DemoContainer>
-          {/* <DemoContainer>
-            <RaceEventsCard events={profile?.events || []} />
-          </DemoContainer> */}
         </div>
       </div>
     </>
@@ -228,7 +232,7 @@ function ShoesCard({ shoes }: { shoes: Shoe[] }) {
     <Card>
       <CardHeader>
         <CardTitle>Shoes</CardTitle>
-        <CardDescription>Highlight your shoe rotation</CardDescription>
+        <CardDescription>Highlight shoes used in shoe rotation</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         {shoes.map((shoe, index) => {
@@ -246,7 +250,6 @@ function ShoesCard({ shoes }: { shoes: Shoe[] }) {
                 <p className="text-sm text-muted-foreground">
                   {Math.ceil(metersToMiles(shoe.distance))} mi
                 </p>
-                {shoes && <EditShoeModal shoes={shoes} shoeIndex={index} />}
               </div>
             </div>
           );
@@ -254,11 +257,51 @@ function ShoesCard({ shoes }: { shoes: Shoe[] }) {
       </CardContent>
 
       <CardFooter>
-        <EditShoeModal
-          shoes={shoes}
-          shoeIndex={shoes.length}
-          buttonType="add"
-        />
+        <Link className={cn("w-full", buttonVariants())} href="/settings/shoes">
+          Edit Shoes
+        </Link>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function ShoeRotationsCard({
+  shoeRotations,
+}: {
+  shoeRotations: ShoeRotationType[];
+}) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Shoe Rotations</CardTitle>
+        <CardDescription>Highlight your shoe rotation</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        {shoeRotations.map((shoeRotation, index) => {
+          return (
+            <div
+              className="flex items-center justify-between space-x-4"
+              key={index}
+            >
+              <div className="flex items-center space-x-4">
+                <p className="w-[180px] truncate text-sm font-medium leading-none">
+                  {shoeRotation.name}
+                </p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <p className="text-sm text-muted-foreground">
+                  {shoeRotation.shoeList.length || 0} shoes
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+
+      <CardFooter>
+        <Link className={cn("w-full", buttonVariants())} href="/settings/shoes">
+          Edit Shoes
+        </Link>
       </CardFooter>
     </Card>
   );
