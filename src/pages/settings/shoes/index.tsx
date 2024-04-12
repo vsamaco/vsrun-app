@@ -24,9 +24,7 @@ function ShoeSettingsPage() {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-medium">Shoes</h3>
-          <p className="text-sm text-muted-foreground">
-            Showcase shoes used on your runs
-          </p>
+          <p className="text-sm text-muted-foreground">Highlight your shoes</p>
           <Link
             href="/settings/shoes/new"
             className={cn("mt-5", buttonVariants())}
