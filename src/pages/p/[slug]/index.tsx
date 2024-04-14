@@ -47,8 +47,8 @@ function RunProfilePage(
   const profileContext = useProfile();
   const heroRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
-    if (profile) {
-      profileContext.setProfile(profile);
+    if (profile && profile?.slug !== profileContext.profile?.slug) {
+      profileContext.setProfile({ name: profile.name, slug: profile.slug });
     }
 
     const observer = new IntersectionObserver(([entry]) => {
