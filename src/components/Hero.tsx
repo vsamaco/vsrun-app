@@ -8,6 +8,7 @@ type HeroProps = {
   showShoeRotations: boolean;
   showEvents: boolean;
   showRaces: boolean;
+  heroRef: React.RefObject<HTMLHeadingElement>;
 };
 
 function Hero({
@@ -18,10 +19,16 @@ function Hero({
   showShoeRotations,
   showEvents,
   showRaces,
+  heroRef,
 }: HeroProps) {
   return (
     <div className="flex flex-col justify-center py-10  sm:py-20">
-      <h1 className="mt-40 flex-wrap text-5xl sm:mt-40 sm:text-9xl">{name}</h1>
+      <h1
+        ref={heroRef}
+        className="mt-40 flex-wrap text-5xl sm:mt-40 sm:text-9xl"
+      >
+        {name}
+      </h1>
       <Separator className="my-2 h-1 bg-black md:my-4 md:h-2" />
       <div className="flex flex-col pb-32 text-4xl opacity-50 sm:text-6xl">
         {showHighlightRun && (
