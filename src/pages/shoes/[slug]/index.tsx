@@ -14,7 +14,7 @@ import { metersToMiles } from "~/utils/activity";
 import { Badge } from "~/components/ui/badge";
 import { formatDate } from "~/utils/date";
 import { type Shoe } from "~/types";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
@@ -27,6 +27,7 @@ import {
 } from "~/components/ui/card";
 import Head from "next/head";
 import { Separator } from "~/components/ui/separator";
+import { useProfile } from "~/contexts/useProfile";
 
 export default function ShoesPage({
   slug,
@@ -35,6 +36,11 @@ export default function ShoesPage({
     api.shoeRotation.getShoeRotationBySlug.useQuery({
       slug: slug,
     });
+
+  const profileContext = useProfile();
+  useEffect(() => {
+    profileContext.setShowProfileHeader(true);
+  }, [profileContext]);
 
   if (isLoading) {
     return <div>Loading...</div>;

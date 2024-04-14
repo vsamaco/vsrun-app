@@ -124,7 +124,7 @@ function ProfileSection({ profile }: { profile: RunProfile }) {
       </div>
       <div className="space-x-2">
         <EditProfileModal profile={profile} />
-        <Link href={`/p/${profile.slug}`} target="_blank">
+        <Link href={`/p/${profile.slug}`}>
           <Button>View Profile</Button>
         </Link>
       </div>

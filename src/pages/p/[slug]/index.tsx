@@ -31,17 +31,36 @@ import { notFound } from "next/navigation";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { CalendarIcon } from "lucide-react";
 import { totalShoeMiles } from "~/utils/shoe";
+import React, { useEffect, useRef } from "react";
+import { useProfile } from "~/contexts/useProfile";
 
 function RunProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const { slug } = props;
-
   const { data: profile, isLoading } = api.runProfile.getProfileBySlug.useQuery(
     {
       slug: slug,
     }
   );
+
+  const profileContext = useProfile();
+  const heroRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (profile) {
+      profileContext.setProfile(profile);
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      profileContext.setShowProfileHeader(!entry?.isIntersecting || false);
+    });
+
+    observer.observe(heroRef.current!);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [profile, profileContext]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -75,6 +94,7 @@ function RunProfilePage(
           showShoeRotations={shoeRotations.length > 0}
           showEvents={!!events}
           showRaces={races.length > 0}
+          heroRef={heroRef}
         />
         {highlightRun && <Run activity={highlightRun} />}
         {weekStats && <Week weekStats={weekStats} />}

@@ -4,6 +4,7 @@ import { api as tApi } from "~/utils/api";
 import "~/styles/globals.css";
 import { type NextPage } from "next";
 import type Layout from "~/components/layout";
+import { ProfileProvider } from "~/contexts/Profile";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
@@ -22,8 +23,12 @@ function MyApp({
   const getLayout = Component.getLayout ?? ((page) => page);
   const layout = getLayout(<Component {...pageProps} />);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  return <SessionProvider session={session}>{layout}</SessionProvider>;
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    <SessionProvider session={session}>
+      <ProfileProvider>{layout}</ProfileProvider>
+    </SessionProvider>
+  );
 }
 
 export default tApi.withTRPC(MyApp);
