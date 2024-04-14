@@ -90,12 +90,6 @@ export function EditShoeRotationForm({
         ...s,
         metadata: s.metadata || undefined,
       })),
-      shoes:
-        shoeRotation?.shoes?.map((s) => ({
-          ...s,
-          distance_mi: metersToMiles(s.distance),
-          start_date: new Date(),
-        })) || [],
     },
   });
   const {
@@ -706,25 +700,7 @@ function EditShoeForm({
   const { control, setValue, trigger } =
     useFormContext<ShoeRotationFormValues>();
 
-  // const distanceWatch = watch(`shoes.${index}.distance`);
-  // useEffect(() => {
-  //   if (distanceWatch && distanceWatch > 0) {
-  //     setValue(`shoes.${index}.distance_mi`, metersToMiles(distanceWatch));
-  //   }
-  // }, [distanceWatch, getValues, index, setValue]);
-
   if (shoeOp == null) return;
-
-  // const handleCancel = () => {
-  //   if (shoeOp === "add") {
-  //     remove(index);
-  //     setShowShoeForm(false);
-  //   }
-  //   if (shoeOp === "edit") {
-  //     resetField(`shoes.${index}`);
-  //     setShowShoeForm(false);
-  //   }
-  // };
 
   const handleEdit = async () => {
     const result = await trigger(`shoes.${index}`);

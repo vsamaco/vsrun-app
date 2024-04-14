@@ -97,7 +97,6 @@ export const shoeRotationRouter = createTRPCRouter({
           name: input.body.name,
           startDate: input.body.startDate,
           description: input.body.description || "",
-          shoes: input.body.shoes,
           profileId: runProfile.id,
           shoeList: {
             connect: input.body.shoeList
@@ -135,7 +134,6 @@ export const shoeRotationRouter = createTRPCRouter({
           name: input.body.name,
           startDate: input.body.startDate,
           description: input.body.description,
-          shoes: input.body.shoes,
           shoeList: {
             set: input.body.shoeList
               .filter((s) => s.id)

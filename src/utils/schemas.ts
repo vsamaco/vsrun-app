@@ -213,7 +213,6 @@ export const ShoeRotationFormSchema = z.object({
   shoeList: z
     .array(ShoeSettingsFormSchema)
     .min(1, { message: "must contain at least 1 shoe" }),
-  shoes: z.array(ShoeSettingsFormSchema),
 });
 
 export const RaceFormSchema = BaseActivitySchema.merge(
