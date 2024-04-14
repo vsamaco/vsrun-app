@@ -39,8 +39,18 @@ export default function ShoesPage({
 
   const profileContext = useProfile();
   useEffect(() => {
+    if (
+      shoeRotation &&
+      shoeRotation.runProfile &&
+      shoeRotation.runProfile.slug !== profileContext.profile?.slug
+    ) {
+      profileContext.setProfile({
+        name: shoeRotation.runProfile.name,
+        slug: shoeRotation.runProfile.slug,
+      });
+    }
     profileContext.setShowProfileHeader(true);
-  }, [profileContext]);
+  }, [profileContext, shoeRotation]);
 
   if (isLoading) {
     return <div>Loading...</div>;
