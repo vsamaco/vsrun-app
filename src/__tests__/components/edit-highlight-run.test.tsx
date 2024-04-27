@@ -1,10 +1,10 @@
 import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { EditHighlightRun } from "./edit-highlight-run";
-import { renderWithProviders, trpcMsw } from "~/__test__/utils";
-import { server } from "~/__test__/server";
+import { renderWithProviders, trpcMsw } from "~/__tests__/utils";
+import { server } from "~/__tests__/server";
 import userEvent from "@testing-library/user-event";
 import { http } from "msw";
+import { EditHighlightRun } from "~/components/settings/edit-highlight-run";
 
 describe("edit-highlight-run form", () => {
   server.use(
