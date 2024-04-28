@@ -40,7 +40,7 @@ describe("edit-highlight-run form", () => {
       return [
         {
           athlete: {
-            id: 45458214,
+            id: 2344567,
             resource_state: 1,
           },
           name: "Foo Activity",
@@ -51,17 +51,16 @@ describe("edit-highlight-run form", () => {
           total_elevation_gain: 150,
           type: "Run",
           workout_type: 2,
-          id: 11079920884,
+          id: 123456789,
           start_date: "2024-03-31T20:48:06Z",
           photo_count: 0,
           map: {
             id: "a11079920884",
-            summary_polyline:
-              "mpveF|uljVb@fF^jAhAdBPvAkAhToAzOeBtByA|@iErAyDj@{Ar@uBxA_BtBw@zAHhAaAtCe@`DSjD@vCMxBQ`Bg@zBk@z@eEtAm@?fBP|@w@pAg@`@a@Z{@f@aDNmD?_Db@_F`@yA\\k@RcAXu@ZYv@yDx@eAfAw@zDgBtAgBfDsG~@cIL{EQ{EOaOkDeh@{@mEiAiQq@yEAqA|AoCjCk@JS?[uBu[c@[mBXU[iBoYHy@YcAe@oHTg@lBOLO]yFFa@lFm@^_@Fk@YaEn@m@N@DNXrEIz@gGdLe@dB|Clc@dCv`@j@`Fr@rHb@jIJXd@A`A`A~@Sv@@|Ag@r@bAh@Xj@n@hHzD?p@_DjJc@hBP~@b@f@Or@~LxIFPk@rA_@GyLuIEUXsALGf@XzL|Ii@rAQBoM}IMJGt@]lAz@jCb@|BhAtHWt@o@b@e@x@y@`@s@|ECr@XhA]`CFjCTn@TvBEfAYbAmARyCvC_As@_AbAcBjAoBv@aHpAoAh@mCnBeC|DFpA_ApC]~BYtE?hCO|C_@jC]jAOXmAf@{Dz@nBHz@u@tAi@^]|@sFLgGLuCRgBd@qCz@mBj@g@^cCdA{BbG{Cv@y@lAoBfCcFv@cHLkE[oUuDoj@s@eDoAoRa@wAOyA@{AJUxAj@t@Q@[LIV^bAGHa@mCma@K]QKsBTY]gBmYF_AUg@i@iIN]bCc@_@sFHc@fFs@b@a@H]YoEv@u@HP\\rEIdAmGjL[~AlE|n@|@lOl@bIh@vE`AbONR`@?\\h@d@VpBSdBc@h@z@~AlA`HtDHTKp@}DhM@Nb@z@Q`AxKvHz@p@@Ng@hA[D_KeHeAaAX{A`@BfMzIDRi@jASBmMaJODGz@a@jAzAjFrAvI[z@g@\\k@~@{@d@q@`FVtB[`DHzA`@xAH`AGzBYn@gAJaDzC}@w@iAlAiCtAqC~@sC^cBf@sDdCaB`CIf@[ZHdAwA~E[fDCjGMrBMlAi@zBSf@e@\\}Al@[AoBd@hBPz@y@pBcA^mAb@aDNaGLyCZqC^wB`AsBf@a@ZyBx@oBpAcAtCqApAaAfDyFr@}ARaAj@_FNqCCiEWoJ@sEkC}`@k@aIs@_DGgAdDUpBl@xBj]`@pFVFpBU",
+            summary_polyline: "",
             polyline: "",
             resource_state: 2,
           },
-          gear_id: "g14409393",
+          gear_id: "gear_id",
           start_latlng: [37.8, -122.46],
           end_latlng: [37.8, -122.46],
         },
