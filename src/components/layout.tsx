@@ -3,6 +3,7 @@ import Footer from "./ui/layout/footer";
 import MainNavigation from "./ui/layout/main-navigation";
 import { MaxWidthWrapper } from "./ui/layout/max-width-wrapper";
 import UserNavigation from "./ui/layout/user-navigation";
+import { Analytics } from "@vercel/analytics/react";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -32,6 +33,7 @@ export default function RootLayout({ children, showNav = true }: LayoutProps) {
           <Footer className="mx-6 px-4" />
         </MaxWidthWrapper>
       </div>
+      <Analytics />
     </ThemeProvider>
   );
 }
