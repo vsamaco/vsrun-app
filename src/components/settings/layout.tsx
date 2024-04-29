@@ -5,6 +5,7 @@ import MainNavigation from "../ui/layout/main-navigation";
 import { MaxWidthWrapper } from "../ui/layout/max-width-wrapper";
 import UserNavigation from "../ui/layout/user-navigation";
 import Footer from "../ui/layout/footer";
+import { Analytics } from "@vercel/analytics/react";
 
 const sidebarNavItems = [
   {
@@ -71,6 +72,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
         </main>
         <Footer className="mx-6 px-4" />
       </MaxWidthWrapper>
+      <Analytics />
     </div>
   );
 }
