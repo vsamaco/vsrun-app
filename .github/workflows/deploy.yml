@@ -39,6 +39,7 @@ jobs:
 
   production:
     runs-on: ubuntu-latest
+    environment: production
     needs: test
     steps:
       - name: Checkout main branch
