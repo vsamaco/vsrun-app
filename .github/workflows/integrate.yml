@@ -4,11 +4,14 @@ on:
     branches-ignore:
       - "main"
 env:
-  DATABASE_URL: ${{ vars.DATABASE_URL }}
-  NEXTAUTH_SECRET: ${{ vars.NEXTAUTH_SECRET }}
-  NEXTAUTH_URL: ${{ vars.NEXTAUTH_URL }}
-  STRAVA_CLIENT_ID: ${{ vars.STRAVA_CLIENT_ID }}
-  STRAVA_CLIENT_SECRET: ${{ vars.STRAVA_CLIENT_SECRET }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+  NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+  STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+  STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
   lint:
@@ -17,7 +20,7 @@ jobs:
     steps:
       - name: Use Variables
         run: |
-          echo "nextauth url variable : $NEXTAUTH_URL"
+          echo "NEXTAUTH_URL: $NEXTAUTH_URL"
       - name: Begin linting
         uses: actions/checkout@v2
         with:
@@ -68,3 +71,45 @@ jobs:
 
       - name: Run Tests
         run: yarn test
+  deploy:
+    runs-on: ubuntu-latest
+    environment: preview
+    needs: test
+    steps:
+      - name: Begin Deploy
+        uses: actions/checkout@v2
+
+      - name: Deploy to development
+        uses: amondnet/vercel-action@v20
+        id: deploy-vercel-deployment
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
+    outputs:
+      preview-url: ${{ steps.vercel-deployment.outputs.preview-url }}
+  # deploy:
+  #   environment: preview
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Use Variables
+  #       run: |
+  #         echo "VER : $VERCEL_PROJECT_ID"
+
+  #     - name: Begin Deploy
+  #       uses: actions/checkout@v2
+
+  #     - name: Install Vercel CLI
+  #       run: npm install --global vercel@latest
+
+  #     - name: Pull Vercel Environment Information
+  #       run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+  #     - name: Build Project Artifacts
+  #       run: vercel build --token=${{ secrets.VERCEL_TOKEN }} --debug
+  #       env:
+  #         VERCEL_URL: http://localhost:3000
+
+  #     - name: Deploy Project Artifacts to Vercel
+  #       run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
