@@ -136,7 +136,7 @@ function HighlightRunCard({ profile }: { profile: RunProfileType }) {
   const highlightRun = profile?.highlight_run;
 
   return (
-    <Card>
+    <Card data-testid="settings-highlight-run-card">
       <CardHeader>
         <CardTitle>Run</CardTitle>
         <CardDescription>Highlight your recent activity</CardDescription>
@@ -175,7 +175,7 @@ function HighlightRunCard({ profile }: { profile: RunProfileType }) {
 
 function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
   return (
-    <Card>
+    <Card data-testid="settings-weekstats-card">
       <CardHeader>
         <CardTitle>Week</CardTitle>
         <CardDescription>Highlight your weekly stats</CardDescription>
@@ -229,7 +229,7 @@ function WeekStatsCard({ weekStats }: { weekStats: WeekStat | null }) {
 
 function ShoesCard({ shoes }: { shoes: Shoe[] }) {
   return (
-    <Card>
+    <Card data-testid="settings-shoes-card">
       <CardHeader>
         <CardTitle>Shoes</CardTitle>
         <CardDescription>Highlight your shoes</CardDescription>
@@ -271,7 +271,7 @@ function ShoeRotationsCard({
   shoeRotations: ShoeRotationType[];
 }) {
   return (
-    <Card>
+    <Card data-testid="settings-shoe-rotations-card">
       <CardHeader>
         <CardTitle>Shoe Rotations</CardTitle>
         <CardDescription>Highlight your shoe rotation</CardDescription>
@@ -358,7 +358,7 @@ function RacesCard({ profile }: { profile: RunProfileType }) {
   const { races } = profile;
 
   return (
-    <Card>
+    <Card data-testid="settings-races-card">
       <CardHeader>
         <CardTitle>Races</CardTitle>
         <CardDescription>Highlight your races</CardDescription>

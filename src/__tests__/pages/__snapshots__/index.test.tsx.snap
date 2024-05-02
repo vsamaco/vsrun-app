@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`home page > renders page as auth 1`] = `
+exports[`home page > with auth > renders page with manage profile 1`] = `
 {
   "asFragment": [Function],
   "baseElement": <body>

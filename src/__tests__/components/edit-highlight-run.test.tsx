@@ -1,78 +1,73 @@
 import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithProviders, trpcMsw } from "~/__tests__/utils";
 import { server } from "~/__tests__/server";
 import userEvent from "@testing-library/user-event";
-import { http } from "msw";
 import { EditHighlightRun } from "~/components/settings/edit-highlight-run";
 
 describe("edit-highlight-run form", () => {
-  server.use(
-    http.get("/hello", () => {
-      return new Response(JSON.stringify({ message: "hello" }), {
-        status: 200,
-      });
-    }),
-    trpcMsw.activity.upsertProfileHighlightRun.mutation((input) => {
-      return {
-        id: "id",
-        name: "name",
-        slug: "slug",
-        start_date: new Date(),
-        workout_type: "",
-        description: "",
-        start_latlng: null,
-        end_latlng: null,
-        distance: 0,
-        moving_time: 0,
-        total_elevation_gain: 0,
-        summary_polyline: null,
-        laps: [],
-        metadata: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        shoeId: "1",
-        raceProfileId: "1",
-        highlightRunProfileId: "1",
-      };
-    }),
-    trpcMsw.strava.getActivities.query((_input) => {
-      return [
-        {
-          athlete: {
-            id: 2344567,
-            resource_state: 1,
-          },
-          name: "Foo Activity",
-          laps: [],
-          distance: 27527.2,
-          moving_time: 9946,
-          elapsed_time: 10137,
-          total_elevation_gain: 150,
-          type: "Run",
-          workout_type: 2,
-          id: 123456789,
-          start_date: "2024-03-31T20:48:06Z",
-          photo_count: 0,
-          map: {
-            id: "a11079920884",
-            summary_polyline: "",
-            polyline: "",
-            resource_state: 2,
-          },
-          gear_id: "gear_id",
-          start_latlng: [37.8, -122.46],
-          end_latlng: [37.8, -122.46],
-        },
-      ];
-    })
-  );
-
-  vi.mock("next/router", () => ({
-    useRouter: vi.fn(),
-  }));
-
   beforeEach(() => {
+    server.use(
+      trpcMsw.activity.upsertProfileHighlightRun.mutation((input) => {
+        return {
+          id: "id",
+          name: "name",
+          slug: "slug",
+          start_date: new Date(),
+          workout_type: "",
+          description: "",
+          start_latlng: null,
+          end_latlng: null,
+          distance: 0,
+          moving_time: 0,
+          total_elevation_gain: 0,
+          summary_polyline: null,
+          laps: [],
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          shoeId: "1",
+          raceProfileId: "1",
+          highlightRunProfileId: "1",
+        };
+      }),
+      trpcMsw.strava.getActivities.query((_input) => {
+        return [
+          {
+            athlete: {
+              id: 2344567,
+              resource_state: 1,
+            },
+            name: "Foo Activity",
+            laps: [],
+            distance: 27527.2,
+            moving_time: 9946,
+            elapsed_time: 10137,
+            total_elevation_gain: 150,
+            type: "Run",
+            workout_type: 2,
+            id: 123456789,
+            start_date: "2024-03-31T20:48:06Z",
+            photo_count: 0,
+            map: {
+              id: "a11079920884",
+              summary_polyline: "",
+              polyline: "",
+              resource_state: 2,
+            },
+            gear_id: "gear_id",
+            start_latlng: [37.8, -122.46],
+            end_latlng: [37.8, -122.46],
+          },
+        ];
+      })
+    );
+    vi.mock("next/router", () => ({
+      useRouter: vi.fn(),
+    }));
+  });
+
+  afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
   });
