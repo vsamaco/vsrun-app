@@ -1,0 +1,1560 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`profile > with runprofile > render profile with data 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="space-y-5 p-4 md:p-10"
+      >
+        <div
+          class="flex flex-col justify-center py-10  sm:py-20"
+        >
+          <h1
+            class="mt-40 flex-wrap text-5xl sm:mt-40 sm:text-9xl"
+          >
+            Foo Bar
+          </h1>
+          <div
+            class="shrink-0 w-full my-2 h-1 bg-black md:my-4 md:h-2"
+            data-orientation="horizontal"
+            role="none"
+          />
+          <div
+            class="flex flex-col pb-32 text-4xl opacity-50 sm:text-6xl"
+          >
+            <a
+              class="uppercase text-yellow-400 hover:bg-yellow-400 hover:text-white md:hover:py-2"
+              href="#run"
+            >
+              RUN
+            </a>
+            <a
+              class=" text-blue-400 hover:bg-blue-400 hover:text-white md:hover:py-2"
+              href="#week"
+            >
+              WEEK
+            </a>
+            <a
+              class=" text-green-400 hover:bg-green-400 hover:text-white md:hover:py-2"
+              href="#shoes"
+            >
+              SHOES
+            </a>
+            <a
+              class="text-orange-400 hover:bg-orange-400 hover:text-white md:hover:py-2"
+              href="#shoe-rotations"
+            >
+              SHOE ROTATIONS
+            </a>
+            <a
+              class="text-red-400 hover:bg-red-400 hover:text-white md:hover:py-2"
+              href="#races"
+            >
+              RACES
+            </a>
+          </div>
+        </div>
+        <div
+          class="flex flex-col justify-center py-10 sm:py-20"
+          id="run"
+        >
+          <div
+            class=" mb-10 flex w-full border-b-4 border-yellow-300"
+          >
+            <h3
+              class="text-6xl uppercase text-yellow-300"
+            >
+              Run
+            </h3>
+          </div>
+          <div
+            class="mb-10 space-y-5"
+          >
+            <div
+              class="flex flex-col md:flex-row md:items-center md:justify-between"
+            >
+              <div
+                class="text-2xl md:text-4xl"
+              >
+                foobar run
+              </div>
+            </div>
+            <div
+              class="flex flex-row items-center gap-2"
+            >
+              <svg
+                class="h-6 w-6 text-muted-foreground"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="18"
+                  rx="2"
+                  ry="2"
+                  width="18"
+                  x="3"
+                  y="4"
+                />
+                <line
+                  x1="16"
+                  x2="16"
+                  y1="2"
+                  y2="6"
+                />
+                <line
+                  x1="8"
+                  x2="8"
+                  y1="2"
+                  y2="6"
+                />
+                <line
+                  x1="3"
+                  x2="21"
+                  y1="10"
+                  y2="10"
+                />
+              </svg>
+              <span
+                class=" text-md uppercase md:text-xl"
+              >
+                May 1, 2024
+              </span>
+            </div>
+            <div
+              class="grid gap-4 md:grid-cols-3"
+            >
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              >
+                <div
+                  class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+                >
+                  <h3
+                    class="tracking-tight text-md font-normal uppercase md:text-xl"
+                  >
+                    distance
+                  </h3>
+                  <svg
+                    class="h-6 w-6 text-muted-foreground"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"
+                    />
+                    <path
+                      d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"
+                    />
+                    <path
+                      d="M16 17h4"
+                    />
+                    <path
+                      d="M4 13h4"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="p-6 pt-0"
+                >
+                  <div
+                    class="text-xl font-normal md:text-2xl"
+                  >
+                    0.99 mi
+                  </div>
+                </div>
+              </div>
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              >
+                <div
+                  class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+                >
+                  <h3
+                    class="tracking-tight text-md font-normal uppercase md:text-xl"
+                  >
+                    duration
+                  </h3>
+                  <svg
+                    class="h-6 w-6 text-muted-foreground"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="10"
+                      x2="14"
+                      y1="2"
+                      y2="2"
+                    />
+                    <line
+                      x1="12"
+                      x2="15"
+                      y1="14"
+                      y2="11"
+                    />
+                    <circle
+                      cx="12"
+                      cy="14"
+                      r="8"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="p-6 pt-0"
+                >
+                  <div
+                    class="text-xl font-normal md:text-2xl"
+                  >
+                    1h 0m
+                  </div>
+                </div>
+              </div>
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              >
+                <div
+                  class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+                >
+                  <h3
+                    class="tracking-tight text-md font-normal uppercase md:text-xl"
+                  >
+                    elevation
+                  </h3>
+                  <svg
+                    class="h-6 w-6 text-muted-foreground"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m8 3 4 8 5-5 5 15H2L8 3z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="p-6 pt-0"
+                >
+                  <div
+                    class="text-xl font-normal md:text-2xl"
+                  >
+                    0 ft
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-col justify-center py-10 sm:py-20"
+          id="week"
+        >
+          <div
+            class="mb-5 border-b-4 border-blue-300"
+          >
+            <h2
+              class="text-6xl text-blue-300"
+            >
+              WEEK
+            </h2>
+          </div>
+          <div
+            class="flex flex-row items-center space-x-2"
+          >
+            <svg
+              class="h-6 w-6 text-muted-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="18"
+                rx="2"
+                ry="2"
+                width="18"
+                x="3"
+                y="4"
+              />
+              <line
+                x1="16"
+                x2="16"
+                y1="2"
+                y2="6"
+              />
+              <line
+                x1="8"
+                x2="8"
+                y1="2"
+                y2="6"
+              />
+              <line
+                x1="3"
+                x2="21"
+                y1="10"
+                y2="10"
+              />
+            </svg>
+            <div
+              class="hidden text-xl uppercase md:text-2xl"
+              style="display: block;"
+            >
+              May 01 -  01
+            </div>
+          </div>
+          <div
+            class="my-5 grid gap-4 md:grid-cols-3"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+            >
+              <div
+                class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+              >
+                <h3
+                  class="tracking-tight text-md font-normal uppercase md:text-xl"
+                >
+                  Distance
+                </h3>
+                <svg
+                  class="h-6 w-6 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"
+                  />
+                  <path
+                    d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"
+                  />
+                  <path
+                    d="M16 17h4"
+                  />
+                  <path
+                    d="M4 13h4"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-6 pt-0"
+              >
+                <div
+                  class="text-xl font-normal md:text-2xl"
+                >
+                  0.99
+                   mi
+                </div>
+              </div>
+            </div>
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+            >
+              <div
+                class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+              >
+                <h3
+                  class="tracking-tight text-md font-normal uppercase md:text-xl"
+                >
+                  Duration
+                </h3>
+                <svg
+                  class="h-6 w-6 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="10"
+                    x2="14"
+                    y1="2"
+                    y2="2"
+                  />
+                  <line
+                    x1="12"
+                    x2="15"
+                    y1="14"
+                    y2="11"
+                  />
+                  <circle
+                    cx="12"
+                    cy="14"
+                    r="8"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-6 pt-0"
+              >
+                <div
+                  class="text-xl font-normal md:text-2xl"
+                >
+                  1h 0m
+                </div>
+              </div>
+            </div>
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+            >
+              <div
+                class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+              >
+                <h3
+                  class="tracking-tight text-md font-normal uppercase md:text-xl"
+                >
+                  Elevation
+                </h3>
+                <svg
+                  class="h-6 w-6 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m8 3 4 8 5-5 5 15H2L8 3z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-6 pt-0"
+              >
+                <div
+                  class="text-xl font-normal md:text-2xl"
+                >
+                  0
+                   ft
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recharts-responsive-container"
+            style="width: 800px; height: 350px;"
+          />
+        </div>
+        <div
+          class="flex flex-col justify-center py-10 sm:py-20"
+          id="shoes"
+        >
+          <div
+            class=" mb-5 border-b-4 border-green-300"
+          >
+            <h3
+              class="text-6xl text-green-300"
+            >
+              SHOES
+            </h3>
+          </div>
+          <div
+            class="space-y-4"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm group hover:border-gray-500"
+            >
+              <div
+                class="p-6 flex flex-row justify-between space-y-0 pb-4"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight"
+                >
+                  <div
+                    class="flex max-w-[200px] flex-col md:max-w-none md:flex-row"
+                  >
+                    <span
+                      class="mr-2"
+                    >
+                      brand
+                    </span>
+                    <span
+                      class=""
+                    >
+                      model
+                    </span>
+                  </div>
+                </h3>
+                <div
+                  class="text-xl  md:text-2xl"
+                >
+                  1
+                   mi
+                </div>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <div
+                  class="space-x-2"
+                >
+                  <div
+                    class="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-sm uppercase tracking-wide group-hover:bg-yellow-400"
+                  >
+                    daily-trainer
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="py-10"
+          id="shoe-rotations"
+        >
+          <div
+            class=" mb-10 w-full border-b-4 border-orange-400"
+          >
+            <h3
+              class="text-6xl uppercase text-orange-400"
+            >
+              Shoe Rotations
+            </h3>
+          </div>
+          <div
+            class="space-y-4"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-gray-500"
+            >
+              <div
+                class="flex flex-col space-y-1.5 p-6 pb-4"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight hover:underline"
+                >
+                  <a
+                    class="text-balance max-w-[200px] break-words md:max-w-none md:whitespace-normal"
+                    href="/shoes/rotation-slug"
+                  >
+                    Foobar Rotation
+                  </a>
+                </h3>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <div
+                  class="flex space-x-4 text-sm text-muted-foreground"
+                >
+                  <div
+                    class="flex items-center"
+                  >
+                    <svg
+                      class="mr-1 h-4 w-4"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        height="18"
+                        rx="2"
+                        ry="2"
+                        width="18"
+                        x="3"
+                        y="4"
+                      />
+                      <line
+                        x1="16"
+                        x2="16"
+                        y1="2"
+                        y2="6"
+                      />
+                      <line
+                        x1="8"
+                        x2="8"
+                        y1="2"
+                        y2="6"
+                      />
+                      <line
+                        x1="3"
+                        x2="21"
+                        y1="10"
+                        y2="10"
+                      />
+                    </svg>
+                    May 01, 2024
+                  </div>
+                  <div
+                    class="flex items-center"
+                  >
+                    0
+                     shoes
+                  </div>
+                  <div
+                    class="flex items-center"
+                  >
+                    0
+                     miles
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="py-10"
+          id="races"
+        >
+          <div
+            class=" mb-10 w-full border-b-4 border-red-400"
+          >
+            <h3
+              class="text-6xl uppercase text-red-400"
+            >
+              Races
+            </h3>
+          </div>
+          <div
+            class="space-y-4 "
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-gray-500"
+            >
+              <div
+                class="space-y-1.5 p-6 flex flex-row items-center justify-between space-x-4 pb-4"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight hover:underline"
+                >
+                  <span
+                    class="text-balance max-w-[200px] break-words md:max-w-none md:whitespace-normal"
+                  >
+                    foobar race
+                  </span>
+                </h3>
+                <div
+                  class="text-xl  md:text-2xl"
+                >
+                  1:00:00
+                </div>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <div
+                  class="flex space-x-4 text-sm text-muted-foreground"
+                >
+                  <div
+                    class="flex items-center"
+                  >
+                    <svg
+                      class="mr-1 h-4 w-4"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        height="18"
+                        rx="2"
+                        ry="2"
+                        width="18"
+                        x="3"
+                        y="4"
+                      />
+                      <line
+                        x1="16"
+                        x2="16"
+                        y1="2"
+                        y2="6"
+                      />
+                      <line
+                        x1="8"
+                        x2="8"
+                        y1="2"
+                        y2="6"
+                      />
+                      <line
+                        x1="3"
+                        x2="21"
+                        y1="10"
+                        y2="10"
+                      />
+                    </svg>
+                    May 01, 2024
+                  </div>
+                  <div>
+                    0.99
+                     mi
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class=""
+        >
+          <a
+            class="text-[#FC4C02]"
+            href="https://www.strava.com/athletes/123"
+            target="_blank"
+          >
+            View on Strava
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="space-y-5 p-4 md:p-10"
+    >
+      <div
+        class="flex flex-col justify-center py-10  sm:py-20"
+      >
+        <h1
+          class="mt-40 flex-wrap text-5xl sm:mt-40 sm:text-9xl"
+        >
+          Foo Bar
+        </h1>
+        <div
+          class="shrink-0 w-full my-2 h-1 bg-black md:my-4 md:h-2"
+          data-orientation="horizontal"
+          role="none"
+        />
+        <div
+          class="flex flex-col pb-32 text-4xl opacity-50 sm:text-6xl"
+        >
+          <a
+            class="uppercase text-yellow-400 hover:bg-yellow-400 hover:text-white md:hover:py-2"
+            href="#run"
+          >
+            RUN
+          </a>
+          <a
+            class=" text-blue-400 hover:bg-blue-400 hover:text-white md:hover:py-2"
+            href="#week"
+          >
+            WEEK
+          </a>
+          <a
+            class=" text-green-400 hover:bg-green-400 hover:text-white md:hover:py-2"
+            href="#shoes"
+          >
+            SHOES
+          </a>
+          <a
+            class="text-orange-400 hover:bg-orange-400 hover:text-white md:hover:py-2"
+            href="#shoe-rotations"
+          >
+            SHOE ROTATIONS
+          </a>
+          <a
+            class="text-red-400 hover:bg-red-400 hover:text-white md:hover:py-2"
+            href="#races"
+          >
+            RACES
+          </a>
+        </div>
+      </div>
+      <div
+        class="flex flex-col justify-center py-10 sm:py-20"
+        id="run"
+      >
+        <div
+          class=" mb-10 flex w-full border-b-4 border-yellow-300"
+        >
+          <h3
+            class="text-6xl uppercase text-yellow-300"
+          >
+            Run
+          </h3>
+        </div>
+        <div
+          class="mb-10 space-y-5"
+        >
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between"
+          >
+            <div
+              class="text-2xl md:text-4xl"
+            >
+              foobar run
+            </div>
+          </div>
+          <div
+            class="flex flex-row items-center gap-2"
+          >
+            <svg
+              class="h-6 w-6 text-muted-foreground"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="18"
+                rx="2"
+                ry="2"
+                width="18"
+                x="3"
+                y="4"
+              />
+              <line
+                x1="16"
+                x2="16"
+                y1="2"
+                y2="6"
+              />
+              <line
+                x1="8"
+                x2="8"
+                y1="2"
+                y2="6"
+              />
+              <line
+                x1="3"
+                x2="21"
+                y1="10"
+                y2="10"
+              />
+            </svg>
+            <span
+              class=" text-md uppercase md:text-xl"
+            >
+              May 1, 2024
+            </span>
+          </div>
+          <div
+            class="grid gap-4 md:grid-cols-3"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+            >
+              <div
+                class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+              >
+                <h3
+                  class="tracking-tight text-md font-normal uppercase md:text-xl"
+                >
+                  distance
+                </h3>
+                <svg
+                  class="h-6 w-6 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"
+                  />
+                  <path
+                    d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"
+                  />
+                  <path
+                    d="M16 17h4"
+                  />
+                  <path
+                    d="M4 13h4"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-6 pt-0"
+              >
+                <div
+                  class="text-xl font-normal md:text-2xl"
+                >
+                  0.99 mi
+                </div>
+              </div>
+            </div>
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+            >
+              <div
+                class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+              >
+                <h3
+                  class="tracking-tight text-md font-normal uppercase md:text-xl"
+                >
+                  duration
+                </h3>
+                <svg
+                  class="h-6 w-6 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="10"
+                    x2="14"
+                    y1="2"
+                    y2="2"
+                  />
+                  <line
+                    x1="12"
+                    x2="15"
+                    y1="14"
+                    y2="11"
+                  />
+                  <circle
+                    cx="12"
+                    cy="14"
+                    r="8"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-6 pt-0"
+              >
+                <div
+                  class="text-xl font-normal md:text-2xl"
+                >
+                  1h 0m
+                </div>
+              </div>
+            </div>
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+            >
+              <div
+                class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+              >
+                <h3
+                  class="tracking-tight text-md font-normal uppercase md:text-xl"
+                >
+                  elevation
+                </h3>
+                <svg
+                  class="h-6 w-6 text-muted-foreground"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m8 3 4 8 5-5 5 15H2L8 3z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-6 pt-0"
+              >
+                <div
+                  class="text-xl font-normal md:text-2xl"
+                >
+                  0 ft
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex flex-col justify-center py-10 sm:py-20"
+        id="week"
+      >
+        <div
+          class="mb-5 border-b-4 border-blue-300"
+        >
+          <h2
+            class="text-6xl text-blue-300"
+          >
+            WEEK
+          </h2>
+        </div>
+        <div
+          class="flex flex-row items-center space-x-2"
+        >
+          <svg
+            class="h-6 w-6 text-muted-foreground"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              height="18"
+              rx="2"
+              ry="2"
+              width="18"
+              x="3"
+              y="4"
+            />
+            <line
+              x1="16"
+              x2="16"
+              y1="2"
+              y2="6"
+            />
+            <line
+              x1="8"
+              x2="8"
+              y1="2"
+              y2="6"
+            />
+            <line
+              x1="3"
+              x2="21"
+              y1="10"
+              y2="10"
+            />
+          </svg>
+          <div
+            class="hidden text-xl uppercase md:text-2xl"
+            style="display: block;"
+          >
+            May 01 -  01
+          </div>
+        </div>
+        <div
+          class="my-5 grid gap-4 md:grid-cols-3"
+        >
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+            >
+              <h3
+                class="tracking-tight text-md font-normal uppercase md:text-xl"
+              >
+                Distance
+              </h3>
+              <svg
+                class="h-6 w-6 text-muted-foreground"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"
+                />
+                <path
+                  d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"
+                />
+                <path
+                  d="M16 17h4"
+                />
+                <path
+                  d="M4 13h4"
+                />
+              </svg>
+            </div>
+            <div
+              class="p-6 pt-0"
+            >
+              <div
+                class="text-xl font-normal md:text-2xl"
+              >
+                0.99
+                 mi
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+            >
+              <h3
+                class="tracking-tight text-md font-normal uppercase md:text-xl"
+              >
+                Duration
+              </h3>
+              <svg
+                class="h-6 w-6 text-muted-foreground"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="10"
+                  x2="14"
+                  y1="2"
+                  y2="2"
+                />
+                <line
+                  x1="12"
+                  x2="15"
+                  y1="14"
+                  y2="11"
+                />
+                <circle
+                  cx="12"
+                  cy="14"
+                  r="8"
+                />
+              </svg>
+            </div>
+            <div
+              class="p-6 pt-0"
+            >
+              <div
+                class="text-xl font-normal md:text-2xl"
+              >
+                1h 0m
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+            >
+              <h3
+                class="tracking-tight text-md font-normal uppercase md:text-xl"
+              >
+                Elevation
+              </h3>
+              <svg
+                class="h-6 w-6 text-muted-foreground"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m8 3 4 8 5-5 5 15H2L8 3z"
+                />
+              </svg>
+            </div>
+            <div
+              class="p-6 pt-0"
+            >
+              <div
+                class="text-xl font-normal md:text-2xl"
+              >
+                0
+                 ft
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="recharts-responsive-container"
+          style="width: 800px; height: 350px;"
+        />
+      </div>
+      <div
+        class="flex flex-col justify-center py-10 sm:py-20"
+        id="shoes"
+      >
+        <div
+          class=" mb-5 border-b-4 border-green-300"
+        >
+          <h3
+            class="text-6xl text-green-300"
+          >
+            SHOES
+          </h3>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm group hover:border-gray-500"
+          >
+            <div
+              class="p-6 flex flex-row justify-between space-y-0 pb-4"
+            >
+              <h3
+                class="text-2xl font-semibold leading-none tracking-tight"
+              >
+                <div
+                  class="flex max-w-[200px] flex-col md:max-w-none md:flex-row"
+                >
+                  <span
+                    class="mr-2"
+                  >
+                    brand
+                  </span>
+                  <span
+                    class=""
+                  >
+                    model
+                  </span>
+                </div>
+              </h3>
+              <div
+                class="text-xl  md:text-2xl"
+              >
+                1
+                 mi
+              </div>
+            </div>
+            <div
+              class="flex items-center p-6 pt-0"
+            >
+              <div
+                class="space-x-2"
+              >
+                <div
+                  class="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-sm uppercase tracking-wide group-hover:bg-yellow-400"
+                >
+                  daily-trainer
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="py-10"
+        id="shoe-rotations"
+      >
+        <div
+          class=" mb-10 w-full border-b-4 border-orange-400"
+        >
+          <h3
+            class="text-6xl uppercase text-orange-400"
+          >
+            Shoe Rotations
+          </h3>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-gray-500"
+          >
+            <div
+              class="flex flex-col space-y-1.5 p-6 pb-4"
+            >
+              <h3
+                class="text-2xl font-semibold leading-none tracking-tight hover:underline"
+              >
+                <a
+                  class="text-balance max-w-[200px] break-words md:max-w-none md:whitespace-normal"
+                  href="/shoes/rotation-slug"
+                >
+                  Foobar Rotation
+                </a>
+              </h3>
+            </div>
+            <div
+              class="flex items-center p-6 pt-0"
+            >
+              <div
+                class="flex space-x-4 text-sm text-muted-foreground"
+              >
+                <div
+                  class="flex items-center"
+                >
+                  <svg
+                    class="mr-1 h-4 w-4"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      height="18"
+                      rx="2"
+                      ry="2"
+                      width="18"
+                      x="3"
+                      y="4"
+                    />
+                    <line
+                      x1="16"
+                      x2="16"
+                      y1="2"
+                      y2="6"
+                    />
+                    <line
+                      x1="8"
+                      x2="8"
+                      y1="2"
+                      y2="6"
+                    />
+                    <line
+                      x1="3"
+                      x2="21"
+                      y1="10"
+                      y2="10"
+                    />
+                  </svg>
+                  May 01, 2024
+                </div>
+                <div
+                  class="flex items-center"
+                >
+                  0
+                   shoes
+                </div>
+                <div
+                  class="flex items-center"
+                >
+                  0
+                   miles
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="py-10"
+        id="races"
+      >
+        <div
+          class=" mb-10 w-full border-b-4 border-red-400"
+        >
+          <h3
+            class="text-6xl uppercase text-red-400"
+          >
+            Races
+          </h3>
+        </div>
+        <div
+          class="space-y-4 "
+        >
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm hover:border-gray-500"
+          >
+            <div
+              class="space-y-1.5 p-6 flex flex-row items-center justify-between space-x-4 pb-4"
+            >
+              <h3
+                class="text-2xl font-semibold leading-none tracking-tight hover:underline"
+              >
+                <span
+                  class="text-balance max-w-[200px] break-words md:max-w-none md:whitespace-normal"
+                >
+                  foobar race
+                </span>
+              </h3>
+              <div
+                class="text-xl  md:text-2xl"
+              >
+                1:00:00
+              </div>
+            </div>
+            <div
+              class="flex items-center p-6 pt-0"
+            >
+              <div
+                class="flex space-x-4 text-sm text-muted-foreground"
+              >
+                <div
+                  class="flex items-center"
+                >
+                  <svg
+                    class="mr-1 h-4 w-4"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      height="18"
+                      rx="2"
+                      ry="2"
+                      width="18"
+                      x="3"
+                      y="4"
+                    />
+                    <line
+                      x1="16"
+                      x2="16"
+                      y1="2"
+                      y2="6"
+                    />
+                    <line
+                      x1="8"
+                      x2="8"
+                      y1="2"
+                      y2="6"
+                    />
+                    <line
+                      x1="3"
+                      x2="21"
+                      y1="10"
+                      y2="10"
+                    />
+                  </svg>
+                  May 01, 2024
+                </div>
+                <div>
+                  0.99
+                   mi
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class=""
+      >
+        <a
+          class="text-[#FC4C02]"
+          href="https://www.strava.com/athletes/123"
+          target="_blank"
+        >
+          View on Strava
+        </a>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
