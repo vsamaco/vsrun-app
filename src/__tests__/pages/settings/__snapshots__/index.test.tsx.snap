@@ -1,0 +1,920 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`settings > with runprofile > renders page with profile 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="space-y-6"
+      >
+        <div
+          class="mb-10 flex w-full flex-col items-center justify-between space-y-2 md:flex-row"
+        >
+          <div
+            class="flex items-center space-x-4"
+          >
+            <span
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+            >
+              <span
+                class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+              >
+                F
+              </span>
+            </span>
+            <h3
+              class=" text-lg"
+            >
+              Foo Bar
+            </h3>
+          </div>
+          <div
+            class="space-x-2"
+          >
+            <button
+              aria-controls="radix-:r0:"
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+              data-state="closed"
+              type="button"
+            >
+              Edit Profile
+            </button>
+            <a
+              href="/p/foobar"
+            >
+              <button
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              >
+                View Profile
+              </button>
+            </a>
+          </div>
+        </div>
+        <div
+          class="shrink-0 bg-border h-[1px] w-full"
+          data-orientation="horizontal"
+          role="none"
+        />
+        <div
+          class="grid items-start justify-center gap-6 rounded-lg lg:grid-cols-2"
+        >
+          <div
+            class="col-span-2 grid items-start gap-6 lg:col-span-1"
+          >
+            <div
+              class="flex items-center justify-center [&>div]:w-full"
+            >
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+                data-testid="settings-highlight-run-card"
+              >
+                <div
+                  class="flex flex-col space-y-1.5 p-6"
+                >
+                  <h3
+                    class="text-2xl font-semibold leading-none tracking-tight"
+                  >
+                    Run
+                  </h3>
+                  <p
+                    class="text-sm text-muted-foreground"
+                  >
+                    Highlight your recent activity
+                  </p>
+                </div>
+                <div
+                  class="p-6 pt-0 grid gap-4"
+                >
+                  <div
+                    class="grid-cols mb-4 grid items-start pb-4 last:mb-0 last:pb-0"
+                  >
+                    <div
+                      class="flex items-center justify-between space-x-4"
+                    >
+                      <div
+                        class="space-y-1"
+                      >
+                        <p
+                          class="text-sm font-medium leading-none"
+                        >
+                          foobar run
+                        </p>
+                        <p
+                          class="text-sm text-muted-foreground"
+                        >
+                          May 1, 2024
+                        </p>
+                      </div>
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        0.99
+                         mi
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center p-6 pt-0"
+                >
+                  <a
+                    class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                    href="/settings/run"
+                  >
+                    Edit Run
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex items-center justify-center [&>div]:w-full"
+            >
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+                data-testid="settings-weekstats-card"
+              >
+                <div
+                  class="flex flex-col space-y-1.5 p-6"
+                >
+                  <h3
+                    class="text-2xl font-semibold leading-none tracking-tight"
+                  >
+                    Week
+                  </h3>
+                  <p
+                    class="text-sm text-muted-foreground"
+                  >
+                    Highlight your weekly stats
+                  </p>
+                </div>
+                <div
+                  class="p-6 pt-0 grid gap-1"
+                >
+                  <div
+                    class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                  >
+                    <div
+                      class="space-y-1"
+                    >
+                      <p
+                        class="text-sm font-medium leading-none"
+                      >
+                        Date
+                      </p>
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        05/01
+                         -
+                         
+                        05/01
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                  >
+                    <div
+                      class="space-y-1"
+                    >
+                      <p
+                        class="text-sm font-medium leading-none"
+                      >
+                        Distance
+                      </p>
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        0.99
+                         mi
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                  >
+                    <div
+                      class="space-y-1"
+                    >
+                      <p
+                        class="text-sm font-medium leading-none"
+                      >
+                        Time
+                      </p>
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        1h 0m
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                  >
+                    <div
+                      class="space-y-1"
+                    >
+                      <p
+                        class="text-sm font-medium leading-none"
+                      >
+                        Elevation
+                      </p>
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        0
+                         ft
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center p-6 pt-0"
+                >
+                  <a
+                    class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                    href="/settings/week"
+                  >
+                    Edit
+                     Week
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-span-2 grid items-start gap-6 lg:col-span-1"
+          >
+            <div
+              class="flex items-center justify-center [&>div]:w-full"
+            >
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+                data-testid="settings-shoes-card"
+              >
+                <div
+                  class="flex flex-col space-y-1.5 p-6"
+                >
+                  <h3
+                    class="text-2xl font-semibold leading-none tracking-tight"
+                  >
+                    Shoes
+                  </h3>
+                  <p
+                    class="text-sm text-muted-foreground"
+                  >
+                    Highlight your shoes
+                  </p>
+                </div>
+                <div
+                  class="p-6 pt-0 grid gap-4"
+                >
+                  <div
+                    class="flex items-center justify-between space-x-4"
+                  >
+                    <div
+                      class="flex items-center space-x-4"
+                    >
+                      <p
+                        class="w-[160px] truncate text-sm font-medium leading-none"
+                      >
+                        brand
+                         
+                        model
+                      </p>
+                    </div>
+                    <div
+                      class="flex items-center space-x-4"
+                    >
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        1
+                         mi
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center p-6 pt-0"
+                >
+                  <a
+                    class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                    href="/settings/shoes"
+                  >
+                    Edit Shoes
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex items-center justify-center [&>div]:w-full"
+            >
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+                data-testid="settings-shoe-rotations-card"
+              >
+                <div
+                  class="flex flex-col space-y-1.5 p-6"
+                >
+                  <h3
+                    class="text-2xl font-semibold leading-none tracking-tight"
+                  >
+                    Shoe Rotations
+                  </h3>
+                  <p
+                    class="text-sm text-muted-foreground"
+                  >
+                    Highlight your shoe rotation
+                  </p>
+                </div>
+                <div
+                  class="p-6 pt-0 grid gap-4"
+                >
+                  <div
+                    class="flex items-center justify-between space-x-4"
+                  >
+                    <div
+                      class="flex items-center space-x-4"
+                    >
+                      <p
+                        class="w-[160px] truncate text-sm font-medium leading-none"
+                      >
+                        Foobar Rotation
+                      </p>
+                    </div>
+                    <div
+                      class="flex items-center space-x-4"
+                    >
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        0
+                         shoes
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center p-6 pt-0"
+                >
+                  <a
+                    class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                    href="/settings/shoe_rotations"
+                  >
+                    Edit Rotations
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex items-center justify-center [&>div]:w-full"
+            >
+              <div
+                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+                data-testid="settings-races-card"
+              >
+                <div
+                  class="flex flex-col space-y-1.5 p-6"
+                >
+                  <h3
+                    class="text-2xl font-semibold leading-none tracking-tight"
+                  >
+                    Races
+                  </h3>
+                  <p
+                    class="text-sm text-muted-foreground"
+                  >
+                    Highlight your races
+                  </p>
+                </div>
+                <div
+                  class="p-6 pt-0 grid gap-4"
+                >
+                  <div
+                    class="flex items-center justify-between space-x-4"
+                  >
+                    <div
+                      class="flex items-center space-x-4"
+                    >
+                      <p
+                        class="w-[160px] truncate text-sm font-medium leading-none"
+                      >
+                        foobar race
+                      </p>
+                    </div>
+                    <div
+                      class="flex items-center space-x-4"
+                    >
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        0.99
+                         mi
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center p-6 pt-0"
+                >
+                  <a
+                    class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                    href="/settings/races"
+                  >
+                    Edit Races
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="space-y-6"
+    >
+      <div
+        class="mb-10 flex w-full flex-col items-center justify-between space-y-2 md:flex-row"
+      >
+        <div
+          class="flex items-center space-x-4"
+        >
+          <span
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+          >
+            <span
+              class="flex h-full w-full items-center justify-center rounded-full bg-muted"
+            >
+              F
+            </span>
+          </span>
+          <h3
+            class=" text-lg"
+          >
+            Foo Bar
+          </h3>
+        </div>
+        <div
+          class="space-x-2"
+        >
+          <button
+            aria-controls="radix-:r0:"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+            data-state="closed"
+            type="button"
+          >
+            Edit Profile
+          </button>
+          <a
+            href="/p/foobar"
+          >
+            <button
+              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            >
+              View Profile
+            </button>
+          </a>
+        </div>
+      </div>
+      <div
+        class="shrink-0 bg-border h-[1px] w-full"
+        data-orientation="horizontal"
+        role="none"
+      />
+      <div
+        class="grid items-start justify-center gap-6 rounded-lg lg:grid-cols-2"
+      >
+        <div
+          class="col-span-2 grid items-start gap-6 lg:col-span-1"
+        >
+          <div
+            class="flex items-center justify-center [&>div]:w-full"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              data-testid="settings-highlight-run-card"
+            >
+              <div
+                class="flex flex-col space-y-1.5 p-6"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight"
+                >
+                  Run
+                </h3>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Highlight your recent activity
+                </p>
+              </div>
+              <div
+                class="p-6 pt-0 grid gap-4"
+              >
+                <div
+                  class="grid-cols mb-4 grid items-start pb-4 last:mb-0 last:pb-0"
+                >
+                  <div
+                    class="flex items-center justify-between space-x-4"
+                  >
+                    <div
+                      class="space-y-1"
+                    >
+                      <p
+                        class="text-sm font-medium leading-none"
+                      >
+                        foobar run
+                      </p>
+                      <p
+                        class="text-sm text-muted-foreground"
+                      >
+                        May 1, 2024
+                      </p>
+                    </div>
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      0.99
+                       mi
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <a
+                  class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                  href="/settings/run"
+                >
+                  Edit Run
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex items-center justify-center [&>div]:w-full"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              data-testid="settings-weekstats-card"
+            >
+              <div
+                class="flex flex-col space-y-1.5 p-6"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight"
+                >
+                  Week
+                </h3>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Highlight your weekly stats
+                </p>
+              </div>
+              <div
+                class="p-6 pt-0 grid gap-1"
+              >
+                <div
+                  class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                >
+                  <div
+                    class="space-y-1"
+                  >
+                    <p
+                      class="text-sm font-medium leading-none"
+                    >
+                      Date
+                    </p>
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      05/01
+                       -
+                       
+                      05/01
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                >
+                  <div
+                    class="space-y-1"
+                  >
+                    <p
+                      class="text-sm font-medium leading-none"
+                    >
+                      Distance
+                    </p>
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      0.99
+                       mi
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                >
+                  <div
+                    class="space-y-1"
+                  >
+                    <p
+                      class="text-sm font-medium leading-none"
+                    >
+                      Time
+                    </p>
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      1h 0m
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground"
+                >
+                  <div
+                    class="space-y-1"
+                  >
+                    <p
+                      class="text-sm font-medium leading-none"
+                    >
+                      Elevation
+                    </p>
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      0
+                       ft
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <a
+                  class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                  href="/settings/week"
+                >
+                  Edit
+                   Week
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-span-2 grid items-start gap-6 lg:col-span-1"
+        >
+          <div
+            class="flex items-center justify-center [&>div]:w-full"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              data-testid="settings-shoes-card"
+            >
+              <div
+                class="flex flex-col space-y-1.5 p-6"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight"
+                >
+                  Shoes
+                </h3>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Highlight your shoes
+                </p>
+              </div>
+              <div
+                class="p-6 pt-0 grid gap-4"
+              >
+                <div
+                  class="flex items-center justify-between space-x-4"
+                >
+                  <div
+                    class="flex items-center space-x-4"
+                  >
+                    <p
+                      class="w-[160px] truncate text-sm font-medium leading-none"
+                    >
+                      brand
+                       
+                      model
+                    </p>
+                  </div>
+                  <div
+                    class="flex items-center space-x-4"
+                  >
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      1
+                       mi
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <a
+                  class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                  href="/settings/shoes"
+                >
+                  Edit Shoes
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex items-center justify-center [&>div]:w-full"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              data-testid="settings-shoe-rotations-card"
+            >
+              <div
+                class="flex flex-col space-y-1.5 p-6"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight"
+                >
+                  Shoe Rotations
+                </h3>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Highlight your shoe rotation
+                </p>
+              </div>
+              <div
+                class="p-6 pt-0 grid gap-4"
+              >
+                <div
+                  class="flex items-center justify-between space-x-4"
+                >
+                  <div
+                    class="flex items-center space-x-4"
+                  >
+                    <p
+                      class="w-[160px] truncate text-sm font-medium leading-none"
+                    >
+                      Foobar Rotation
+                    </p>
+                  </div>
+                  <div
+                    class="flex items-center space-x-4"
+                  >
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      0
+                       shoes
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <a
+                  class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                  href="/settings/shoe_rotations"
+                >
+                  Edit Rotations
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex items-center justify-center [&>div]:w-full"
+          >
+            <div
+              class="rounded-lg border bg-card text-card-foreground shadow-sm"
+              data-testid="settings-races-card"
+            >
+              <div
+                class="flex flex-col space-y-1.5 p-6"
+              >
+                <h3
+                  class="text-2xl font-semibold leading-none tracking-tight"
+                >
+                  Races
+                </h3>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Highlight your races
+                </p>
+              </div>
+              <div
+                class="p-6 pt-0 grid gap-4"
+              >
+                <div
+                  class="flex items-center justify-between space-x-4"
+                >
+                  <div
+                    class="flex items-center space-x-4"
+                  >
+                    <p
+                      class="w-[160px] truncate text-sm font-medium leading-none"
+                    >
+                      foobar race
+                    </p>
+                  </div>
+                  <div
+                    class="flex items-center space-x-4"
+                  >
+                    <p
+                      class="text-sm text-muted-foreground"
+                    >
+                      0.99
+                       mi
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-center p-6 pt-0"
+              >
+                <a
+                  class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                  href="/settings/races"
+                >
+                  Edit Races
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

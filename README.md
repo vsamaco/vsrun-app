@@ -2,13 +2,15 @@
 
 A react project that highlights my runs, shoes, and races.
 
+Demo: [https://vsrun-app.vercel.app](https://vsrun-app.vercel.app)
+
 # Requirements
 
 - Node 18
 - Postgres
 - React 18
 
-# Local Setup
+# Setup
 
 1. Install dependencies
    `yarn install`
