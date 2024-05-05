@@ -31,6 +31,7 @@ import { useProfile } from "~/contexts/useProfile";
 
 export default function ShoesPage({
   slug,
+  profile,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: shoeRotation, isLoading } =
     api.shoeRotation.getShoeRotationBySlug.useQuery({
@@ -38,19 +39,13 @@ export default function ShoesPage({
     });
 
   const profileContext = useProfile();
+
   useEffect(() => {
-    if (
-      shoeRotation &&
-      shoeRotation.runProfile &&
-      shoeRotation.runProfile.slug !== profileContext.profile?.slug
-    ) {
-      profileContext.setProfile({
-        name: shoeRotation.runProfile.name,
-        slug: shoeRotation.runProfile.slug,
-      });
+    if (profile && profile?.slug !== profileContext.profile?.slug) {
+      profileContext.setProfile({ name: profile.name, slug: profile.slug });
+      profileContext.setShowProfileHeader(true);
     }
-    profileContext.setShowProfileHeader(true);
-  }, [profileContext, shoeRotation]);
+  }, [profileContext, profile]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -207,16 +202,27 @@ export async function getServerSideProps(
     transformer: superjson,
   });
   const slug = ctx.params?.slug as string;
-  await ssg.shoeRotation.getShoeRotationBySlug.prefetch({ slug });
+  const shoeRotation = await ssg.shoeRotation.getShoeRotationBySlug.fetch({
+    slug,
+  });
 
   return {
     props: {
       trpcState: ssg.dehydrate(),
       slug,
+      profile: shoeRotation?.runProfile
+        ? {
+            name: shoeRotation.runProfile.name,
+            slug: shoeRotation.runProfile.slug,
+          }
+        : null,
     },
   };
 }
 
-ShoesPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
+ShoesPage.getLayout = function getLayout(
+  page: React.ReactElement,
+  pageProps: InferGetServerSidePropsType<(args: any) => any>
+) {
+  return <Layout {...pageProps}>{page}</Layout>;
 };

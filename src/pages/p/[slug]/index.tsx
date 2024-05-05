@@ -43,7 +43,6 @@ function RunProfilePage(
       slug: slug,
     }
   );
-
   const profileContext = useProfile();
   const heroRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -223,18 +222,22 @@ export async function getServerSideProps(
     transformer: superjson,
   });
   const slug = ctx.params?.slug as string;
-  await ssg.runProfile.getProfileBySlug.prefetch({ slug });
+  const profile = await ssg.runProfile.getProfileBySlug.fetch({ slug });
 
   return {
     props: {
       trpcState: ssg.dehydrate(),
       slug,
+      profile: profile ? { name: profile.name, slug: profile.slug } : null,
     },
   };
 }
 
-RunProfilePage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout>{page}</Layout>;
+RunProfilePage.getLayout = function getLayout(
+  page: React.ReactElement,
+  pageProps: InferGetServerSidePropsType<(args: any) => any>
+) {
+  return <Layout {...pageProps}>{page}</Layout>;
 };
 
 export default RunProfilePage;
