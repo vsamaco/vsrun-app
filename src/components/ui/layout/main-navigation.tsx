@@ -3,12 +3,10 @@ import { cn } from "~/lib/utils";
 import { Separator } from "../separator";
 import { useProfile } from "~/contexts/useProfile";
 
-function MainNavigation({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLElement>) {
-  const profileContext = useProfile();
+type MainNavigationsProps = React.HTMLAttributes<HTMLElement>;
 
+function MainNavigation({ className, ...props }: MainNavigationsProps) {
+  const profileContext = useProfile();
   return (
     <nav
       className={cn("flex h-10 items-center space-x-4 lg:space-x-6", className)}
