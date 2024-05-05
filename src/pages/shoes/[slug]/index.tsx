@@ -122,7 +122,7 @@ export default function ShoesPage({
   );
 }
 
-export function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
+function ShoeCardDescription({ description }: { description: string }) {
   const [isTruncated, setIsTruncated] = useState(false);
   const [isReadingMore, setIsReadingMore] = useState(false);
   const readMoreRef = useRef<HTMLDivElement>(null);
@@ -138,6 +138,39 @@ export function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
   }, [readMoreRef]);
 
   return (
+    <>
+      <div
+        ref={readMoreRef}
+        className={cn("", !isReadingMore && "line-clamp-1")}
+      >
+        {description}
+      </div>
+      {isTruncated && (
+        <div onClick={() => setIsReadingMore((prev) => !prev)}>
+          {isReadingMore ? (
+            <span className="flex items-center hover:cursor-pointer">
+              Read less
+              <ChevronRight className="w-4" />
+            </span>
+          ) : (
+            <span className="flex items-center hover:cursor-pointer">
+              Read more
+              <ChevronDown className="w-4" />
+            </span>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
+export function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
+  const [showDescription, setShowDescription] = useState(false);
+  useEffect(() => {
+    setShowDescription(true);
+  }, [setShowDescription]);
+
+  return (
     <Card className={cn("group hover:border-black")}>
       <CardHeader className="flex flex-row justify-between space-y-0 pb-4">
         <CardTitle className="">
@@ -151,26 +184,8 @@ export function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
         </div>
       </CardHeader>
       <CardContent>
-        <div
-          ref={readMoreRef}
-          className={cn("", !isReadingMore && "line-clamp-1")}
-        >
-          {shoe.description}
-        </div>
-        {isTruncated && (
-          <div onClick={() => setIsReadingMore((prev) => !prev)}>
-            {isReadingMore ? (
-              <span className="flex items-center">
-                Read less
-                <ChevronRight className="w-4" />
-              </span>
-            ) : (
-              <span className="flex items-center">
-                Read more
-                <ChevronDown className="w-4" />
-              </span>
-            )}
-          </div>
+        {shoe.description && showDescription && (
+          <ShoeCardDescription description={shoe.description} />
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
