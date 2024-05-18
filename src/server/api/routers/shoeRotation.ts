@@ -2,6 +2,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { nanoid } from "nanoid";
 import { ShoeRotationFormSchema } from "~/utils/schemas";
+import { SHOE_BRANDS } from "~/utils/shoe";
+import { SHOE_CATEGORIES } from "~/types";
 
 // function filter<T extends object>(
 //   obj: T,
@@ -28,6 +30,60 @@ export const shoeRotationRouter = createTRPCRouter({
         where: {
           slug: input.slug,
         },
+        include: {
+          runProfile: {
+            select: {
+              name: true,
+              slug: true,
+
+              user: {
+                select: {
+                  accounts: {
+                    select: {
+                      provider: true,
+                      providerAccountId: true,
+                    },
+                  },
+                  image: true,
+                },
+              },
+            },
+          },
+          shoeList: true,
+        },
+      });
+      return shoeRotation;
+    }),
+
+  getShoeRotations: publicProcedure
+    .input(
+      z.object({
+        shoe_brands: z.array(z.enum(SHOE_BRANDS)),
+        shoe_categories: z.array(z.enum(SHOE_CATEGORIES)),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      let filters = {};
+      if (input.shoe_brands || input.shoe_categories) {
+        filters = {
+          shoeList: {
+            some: {
+              ...(input.shoe_brands.length && {
+                brand_name: { in: input.shoe_brands },
+              }),
+              ...(input.shoe_categories.length && {
+                categories: { hasSome: input.shoe_categories },
+              }),
+            },
+          },
+        };
+      }
+
+      console.log("========== FILTERS:", JSON.stringify(filters));
+
+      const shoeRotation = await ctx.prisma.shoeRotation.findMany({
+        where: filters,
+        take: 10,
         include: {
           runProfile: {
             select: {
