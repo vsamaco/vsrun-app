@@ -14,7 +14,12 @@ export const SHOE_BRANDS = [
   "Puma",
   "Reebok",
   "Saucony",
-];
+] as const;
+
+export type ShoeBrandType = (typeof SHOE_BRANDS)[number];
+export const isShoeBrand = (brand: string): brand is ShoeBrandType => {
+  return SHOE_BRANDS.includes(brand as ShoeBrandType);
+};
 
 export const parseShoeBrandModel = (shoeName: string) => {
   const regex = new RegExp(`^(${SHOE_BRANDS.join("|")})\\s(.+)$`, "i");
