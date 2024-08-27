@@ -1,8 +1,5 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import {
-  type GetServerSidePropsContext,
-  type InferGetServerSidePropsType,
-} from "next";
+import { type GetStaticPropsContext, type InferGetStaticPropsType } from "next";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
 import superjson from "superjson";
@@ -29,10 +26,10 @@ import Head from "next/head";
 import { Separator } from "~/components/ui/separator";
 import { useProfile } from "~/contexts/useProfile";
 
-export default function ShoesPage({
-  slug,
-  profile,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function ShoesPage(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
+  const { slug, profile } = props;
   const { data: shoeRotation, isLoading } =
     api.shoeRotation.getShoeRotationBySlug.useQuery({
       slug: slug,
@@ -205,8 +202,8 @@ export function ShoeCard({ shoe }: { shoe: Omit<Shoe, "slug"> }) {
   );
 }
 
-export async function getServerSideProps(
-  ctx: GetServerSidePropsContext<{ slug: string }>
+export async function getStaticProps(
+  ctx: GetStaticPropsContext<{ slug: string }>
 ) {
   const ssg = createServerSideHelpers({
     router: appRouter,
@@ -216,6 +213,7 @@ export async function getServerSideProps(
     },
     transformer: superjson,
   });
+
   const slug = ctx.params?.slug as string;
   const shoeRotation = await ssg.shoeRotation.getShoeRotationBySlug.fetch({
     slug,
@@ -232,12 +230,30 @@ export async function getServerSideProps(
           }
         : null,
     },
+    revalidate: 1,
+  };
+}
+
+export async function getStaticPaths() {
+  const shoeRotations = await prisma.shoeRotation.findMany({
+    select: {
+      slug: true,
+    },
+  });
+
+  return {
+    paths: shoeRotations.map((sr) => ({
+      params: {
+        slug: sr.slug,
+      },
+    })),
+    fallback: "blocking",
   };
 }
 
 ShoesPage.getLayout = function getLayout(
   page: React.ReactElement,
-  pageProps: InferGetServerSidePropsType<(args: any) => any>
+  pageProps: InferGetStaticPropsType<(args: any) => any>
 ) {
   return <Layout {...pageProps}>{page}</Layout>;
 };
