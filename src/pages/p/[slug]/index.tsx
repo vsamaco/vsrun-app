@@ -1,7 +1,4 @@
-import {
-  type InferGetServerSidePropsType,
-  type GetServerSidePropsContext,
-} from "next";
+import { type GetStaticPropsContext, type InferGetStaticPropsType } from "next";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import superjson from "superjson";
 import Head from "next/head";
@@ -34,9 +31,7 @@ import { totalShoeMiles } from "~/utils/shoe";
 import React, { useEffect, useRef } from "react";
 import { useProfile } from "~/contexts/useProfile";
 
-function RunProfilePage(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-) {
+function RunProfilePage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const { slug } = props;
   const { data: profile, isLoading } = api.runProfile.getProfileBySlug.useQuery(
     {
@@ -210,8 +205,9 @@ function Races({ races }: { races: RaceActivity[] }) {
     </div>
   );
 }
-export async function getServerSideProps(
-  ctx: GetServerSidePropsContext<{ slug: string }>
+
+export async function getStaticProps(
+  ctx: GetStaticPropsContext<{ slug: string }>
 ) {
   const ssg = createServerSideHelpers({
     router: appRouter,
@@ -230,12 +226,30 @@ export async function getServerSideProps(
       slug,
       profile: profile ? { name: profile.name, slug: profile.slug } : null,
     },
+    revalidate: 1,
+  };
+}
+
+export async function getStaticPaths() {
+  const profiles = await prisma.runProfile.findMany({
+    select: {
+      slug: true,
+    },
+  });
+
+  return {
+    paths: profiles.map((p) => ({
+      params: {
+        slug: p.slug,
+      },
+    })),
+    fallback: "blocking",
   };
 }
 
 RunProfilePage.getLayout = function getLayout(
   page: React.ReactElement,
-  pageProps: InferGetServerSidePropsType<(args: any) => any>
+  pageProps: InferGetStaticPropsType<(args: any) => any>
 ) {
   return <Layout {...pageProps}>{page}</Layout>;
 };
