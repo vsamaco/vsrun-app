@@ -226,7 +226,7 @@ export async function getStaticProps(
       slug,
       profile: profile ? { name: profile.name, slug: profile.slug } : null,
     },
-    revalidate: 1,
+    revalidate: 3600,
   };
 }
 
