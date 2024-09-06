@@ -24,7 +24,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { useFormContext } from "react-hook-form";
-import { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
 
 type ImportRunModalProps = {
   setSelectedActivity: (activity: StravaActivity) => void;

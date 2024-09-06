@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { default as strava } from "strava-v3";
+import { type DetailedActivityResponse, default as strava } from "strava-v3";
 import { z } from "zod";
 import { type ActivityWorkoutKeys } from "~/types";
 import { parseShoeBrandModel } from "~/utils/shoe";
@@ -89,7 +89,7 @@ export const stravaRouter = createTRPCRouter({
           message: "Account not found",
         });
       }
-      const response = await strava.activities.get({
+      const response: DetailedActivityResponse = await strava.activities.get({
         id: input.id,
         access_token: account.access_token,
       });
