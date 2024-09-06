@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import {
   ActivityWorkoutType,
@@ -36,20 +34,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useRouter } from "next/router";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
 import { type StravaActivity } from "~/server/api/routers/strava";
 import { z } from "zod";
 import { Calendar } from "../ui/calendar";
-import { API_CACHE_DURATION } from "~/utils/constants";
 import { Textarea } from "../ui/textarea";
+import ImportRunModal from "./import-run-modal";
 
 type FormValues = {
   highlightRun: Omit<RaceActivity, "id" | "slug">;
@@ -149,11 +138,38 @@ export function EditHighlightRun({
     }
   };
 
+  const setSelectedActivity = (activity: StravaActivity) => {
+    methods.setValue("highlightRun", {
+      name: activity.name,
+      start_date: new Date(activity.start_date),
+      description: "",
+      workout_type: activity.workout_type
+        ? ActivityWorkoutType[activity.workout_type]
+        : undefined,
+      moving_time: activity.moving_time,
+      moving_time_hms: formatDurationHMS(activity.moving_time),
+      distance: activity.distance,
+      distance_mi: metersToMiles(activity.distance),
+      start_latlng: activity.start_latlng,
+      end_latlng: activity.end_latlng,
+      summary_polyline: activity.map.summary_polyline,
+      total_elevation_gain: activity.total_elevation_gain,
+      total_elevation_gain_ft: activity.total_elevation_gain
+        ? feetToMeters(activity.total_elevation_gain)
+        : 0,
+      laps: [],
+      metadata: {
+        external_id: activity.id.toString(),
+        external_source: "strava",
+      },
+    });
+  };
+
   return (
     <>
       <FormProvider {...methods}>
         <form id="hook-form" onSubmit={onSubmit} className="space-y-8">
-          <ImportRunModal />
+          <ImportRunModal setSelectedActivity={setSelectedActivity} />
           <EditRunForm />
           <div className="flex w-full items-center justify-between">
             <Button type="button" variant="outline" onClick={handleRemove}>
@@ -349,117 +365,6 @@ function EditRunForm() {
           </FormItem>
         )}
       ></FormField>
-    </>
-  );
-}
-
-function ImportRunModal() {
-  const [open, setOpen] = useState(false);
-  const methods = useFormContext<FormValues>();
-
-  const setSelectedActivity = (activity: StravaActivity) => {
-    console.log("import activity:", activity);
-    methods.setValue("highlightRun", {
-      name: activity.name,
-      start_date: new Date(activity.start_date),
-      description: "",
-      workout_type: activity.workout_type
-        ? ActivityWorkoutType[activity.workout_type]
-        : undefined,
-      moving_time: activity.moving_time,
-      moving_time_hms: formatDurationHMS(activity.moving_time),
-      distance: activity.distance,
-      distance_mi: metersToMiles(activity.distance),
-      start_latlng: activity.start_latlng,
-      end_latlng: activity.end_latlng,
-      summary_polyline: activity.map.summary_polyline,
-      total_elevation_gain: activity.total_elevation_gain,
-      total_elevation_gain_ft: activity.total_elevation_gain
-        ? feetToMeters(activity.total_elevation_gain)
-        : 0,
-      laps: [],
-      metadata: {
-        external_id: activity.id.toString(),
-        external_source: "strava",
-      },
-    });
-    setOpen(false);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" className="w-full">
-          Import Activity from Strava
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Import Activity</DialogTitle>
-          <DialogDescription>
-            Choose an activity to import as highlighted run.
-          </DialogDescription>
-        </DialogHeader>
-
-        <ImportRunForm setSelectedActivity={setSelectedActivity} />
-
-        <DialogFooter></DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function ImportRunForm({
-  setSelectedActivity,
-}: {
-  setSelectedActivity: (activity: StravaActivity) => void;
-}) {
-  const { data: activities, isLoading } = api.strava.getActivities.useQuery(
-    undefined,
-    { staleTime: API_CACHE_DURATION.stravaGetActivities }
-  );
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!activities) {
-    return <div>No activities found</div>;
-  }
-
-  const handleImportSelect = (activity: StravaActivity) => {
-    setSelectedActivity({ ...activity });
-  };
-
-  return (
-    <>
-      <div className="max-h-[300px] overflow-y-scroll">
-        {activities.map((activity) => {
-          return (
-            <div
-              key={activity.id}
-              className="flex items-center justify-between space-x-5 space-y-2"
-            >
-              <div className="flex w-full justify-between text-sm">
-                <div className="w-[200px] truncate font-medium">
-                  {activity.name}
-                </div>
-                <div className="font-light">
-                  {metersToMiles(activity.distance).toLocaleString()} mi
-                </div>
-              </div>
-              <div>
-                <Button
-                  variant="secondary"
-                  onClick={() => handleImportSelect(activity)}
-                >
-                  Select
-                </Button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </>
   );
 }

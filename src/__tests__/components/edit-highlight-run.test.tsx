@@ -60,6 +60,34 @@ describe("edit-highlight-run form", () => {
             end_latlng: [37.8, -122.46],
           },
         ];
+      }),
+      trpcMsw.strava.getActivityById.query((_input) => {
+        return {
+          athlete: {
+            id: 2344567,
+            resource_state: 1,
+          },
+          name: "Foo Search Activity",
+          laps: [],
+          distance: 27527.2,
+          moving_time: 9946,
+          elapsed_time: 10137,
+          total_elevation_gain: 150,
+          type: "Run",
+          workout_type: 2,
+          id: 123456789,
+          start_date: "2024-03-31T20:48:06Z",
+          photo_count: 0,
+          map: {
+            id: "a11079920884",
+            summary_polyline: "",
+            polyline: "",
+            resource_state: 2,
+          },
+          gear_id: "gear_id",
+          start_latlng: [37.8, -122.46],
+          end_latlng: [37.8, -122.46],
+        };
       })
     );
     vi.mock("next/router", () => ({
@@ -90,7 +118,7 @@ describe("edit-highlight-run form", () => {
     ).toBeDefined();
   });
 
-  it("import run", async () => {
+  it("import run with browse", async () => {
     renderWithProviders(<EditHighlightRun highlightRun={null} />);
     const nameInput = screen.getByLabelText<HTMLInputElement>(/name/i);
     expect(nameInput.value).toBe("");
@@ -100,6 +128,12 @@ describe("edit-highlight-run form", () => {
     });
     fireEvent.click(importBtn);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+    const browseBtn = screen.getByRole("button", {
+      name: /browse/i,
+    });
+    fireEvent.click(browseBtn);
+
     await waitFor(() => {
       expect(screen.getByText(/Foo Activity/)).toBeInTheDocument();
 
@@ -108,6 +142,38 @@ describe("edit-highlight-run form", () => {
       fireEvent.click(selectBtn);
 
       expect(nameInput.value).toBe("Foo Activity");
+    });
+  });
+
+  it("import run with search", async () => {
+    renderWithProviders(<EditHighlightRun highlightRun={null} />);
+    const nameInput = screen.getByLabelText<HTMLInputElement>(/name/i);
+    expect(nameInput.value).toBe("");
+
+    const importBtn = screen.getByRole("button", {
+      name: /import activity from strava/i,
+    });
+    fireEvent.click(importBtn);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+    const stravaUrlInput =
+      screen.getByLabelText<HTMLInputElement>(/strava url/i);
+    await userEvent.type(
+      stravaUrlInput,
+      "https://www.strava.com/activities/123"
+    );
+
+    const searchBtn = screen.getByRole("button", {
+      name: /search/i,
+    });
+    fireEvent.click(searchBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Foo Search Activity/)).toBeInTheDocument();
+      const selectBtn = screen.getByRole("button", { name: /select/i });
+      expect(selectBtn).toBeInTheDocument();
+      fireEvent.click(selectBtn);
+      expect(nameInput.value).toBe("Foo Search Activity");
     });
   });
 
