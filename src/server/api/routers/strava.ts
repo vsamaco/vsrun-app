@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { default as strava } from "strava-v3";
 import { z } from "zod";
@@ -67,31 +68,55 @@ export const stravaRouter = createTRPCRouter({
     // console.log({ activities });
     return activities.filter((activity) => activity.type === "Run");
   }),
-  // getActivityById: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       id: z.string(),
-  //     })
-  //   )
-  //   .query(async ({ ctx, input }) => {
-  //     console.log("========== GET STRAVA SINGLE ACTIVITY ============");
-  //     const userId = ctx.session?.user.id;
-  //     const account = await ctx.prisma.account.findFirst({
-  //       where: {
-  //         userId,
-  //       },
-  //     });
+  getActivityById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      console.log("========== GET STRAVA SINGLE ACTIVITY ============");
+      const userId = ctx.session?.user.id;
+      const account = await ctx.prisma.account.findFirst({
+        where: {
+          userId,
+        },
+      });
 
-  //     if (!account) {
-  //       return null;
-  //     }
-  //     const activity = (await strava.athlete.get({
-  //       id: input.id,
-  //       access_token: account.access_token,
-  //     })) as StravaActivity;
+      if (!account) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Account not found",
+        });
+      }
+      const response = await strava.activities.get({
+        id: input.id,
+        access_token: account.access_token,
+      });
 
-  //     return activity;
-  //   }),
+      const activity: StravaActivity | null = response
+        ? {
+            id: +response.id,
+            type: response.sport_type,
+            name: response.name,
+            start_date: new Date(response.start_date).toISOString(),
+            workout_type: undefined,
+            moving_time: response.moving_time || 0,
+            distance: response.distance || 0,
+            start_latlng:
+              response.start_latlng as StravaActivity["start_latlng"],
+            end_latlng: response.end_latlng as StravaActivity["end_latlng"],
+            map: {
+              polyline: response.map?.summary_polyline || "",
+              summary_polyline: response.map?.summary_polyline || "",
+            },
+            total_elevation_gain: response.total_elevation_gain || 0,
+            laps: [],
+            gear_id: response.gear_id || "",
+          }
+        : null;
+      return activity;
+    }),
   getShoes: protectedProcedure.query(async ({ ctx }) => {
     console.log("======== GET STRAVA SHOES =========");
     const userId = ctx.session?.user.id;
